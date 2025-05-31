@@ -1,0 +1,10 @@
+modelagem.md
+node_modules
+build
+coverage
+regras.md
+.env
+.env.local
+.env.development
+.env.production
+.env.test

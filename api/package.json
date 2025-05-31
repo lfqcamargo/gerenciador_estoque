@@ -1,0 +1,32 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node build/server.js",
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest run --project unit",
+    "test:e2e": "vitest run --project e2e",
+    "test:watch": "vitest --project unit",
+    "test:e2e:watch": "vitest --project e2e",
+    "test:coverage": "vitest --coverage",
+    "build": "tsup src --out-dir build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "zod": "^3.25.42"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.8.0",
+    "@rocketseat/eslint-config": "^2.2.2",
+    "@types/node": "^22.15.29",
+    "faker-js": "^1.0.0",
+    "typescript": "^5.8.3",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.4"
+  }
+}

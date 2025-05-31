@@ -1,0 +1,116 @@
+import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryCompaniesRepository } from "test/repositories/in-memory-companies-repository";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { describe, it, beforeEach, expect } from "vitest";
+import { CreateTempUserUseCase } from "./create-temp-user";
+import { FakeHasher } from "test/cryptography/fake-hasher";
+import { InMemoryEmailsRepository } from "test/repositories/in-memory-emails-repository";
+import { FakeEmailSender } from "test/services/fake-email-sender";
+import { SendEmailUseCase } from "@/domain/notification/application/use-cases/send-email";
+import { OnTempUserCreated } from "@/domain/notification/application/subscribers/on-temp-user-created";
+import { DomainEvents } from "@/core/events/domain-events";
+import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
+import { AlreadyExistsEmailError } from "./errors/alreaady-exists-email-error";
+import { makeCompany } from "test/factories/make-company";
+import { makeUser } from "test/factories/make-user";
+
+let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
+let inMemoryEmailsRepository: InMemoryEmailsRepository;
+let fakeEmailSender: FakeEmailSender;
+let hashGenerator: FakeHasher;
+let createTempUser: CreateTempUserUseCase;
+let sendEmail: SendEmailUseCase;
+
+describe("Create temp user use case", () => {
+  beforeEach(() => {
+    // Limpa os handlers de eventos anteriores
+    DomainEvents.clearHandlers();
+
+    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
+      inMemoryUsersRepository
+    );
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryEmailsRepository = new InMemoryEmailsRepository();
+    fakeEmailSender = new FakeEmailSender();
+    hashGenerator = new FakeHasher();
+
+    sendEmail = new SendEmailUseCase(inMemoryEmailsRepository, fakeEmailSender);
+
+    // Registra o subscriber de email
+    new OnTempUserCreated(sendEmail);
+
+    createTempUser = new CreateTempUserUseCase(
+      inMemoryTempUsersRepository,
+      inMemoryCompaniesRepository,
+      inMemoryUsersRepository,
+      hashGenerator
+    );
+  });
+
+  it("should be able to create a temp user and send welcome email", async () => {
+    const result = await createTempUser.execute({
+      cnpj: "12345678901234",
+      companyName: "Test Company",
+      email: "test@test.com",
+      userName: "test",
+      password: "test",
+    });
+
+    expect(result.isRight()).toBe(true);
+
+    const tempUser = inMemoryTempUsersRepository.items[0];
+    expect(tempUser.id).toBeDefined();
+    expect(tempUser.cnpj).toBe("12345678901234");
+    expect(tempUser.companyName).toBe("Test Company");
+    expect(tempUser.email).toBe("test@test.com");
+    expect(tempUser.userName).toBe("test");
+    expect(tempUser.password).toBe("test-hashed");
+    expect(tempUser.token).toBe("test@test.com-hashed");
+    expect(tempUser.expiration).toBeDefined();
+
+    // Verifica se o email foi enviado
+    const sentEmail = fakeEmailSender.sentEmails[0];
+    expect(sentEmail).toBeDefined();
+    expect(sentEmail.to).toBe("test@test.com");
+    expect(sentEmail.subject).toBe(
+      "Bem-vindo ao Sistema de Controle de Vendas"
+    );
+    expect(sentEmail.body).toContain("test"); // nome do usuário
+    expect(sentEmail.body).toContain("test@test.com-hashed"); // token
+  });
+
+  it("should not be able to create a temp user with an already existing cnpj", async () => {
+    await inMemoryCompaniesRepository.create(
+      makeCompany({ cnpj: "12345678901234" })
+    );
+
+    const result = await createTempUser.execute({
+      cnpj: "12345678901234",
+      companyName: "Test Company",
+      email: "test@test.com",
+      userName: "test",
+      password: "test",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(AlreadyExistsCnpjError);
+  });
+
+  it("should not be able to create a temp user with an already existing email", async () => {
+    await inMemoryUsersRepository.create(makeUser({ email: "test@test.com" }));
+
+    const result = await createTempUser.execute({
+      cnpj: "12345678901235",
+      companyName: "Test Company",
+      email: "test@test.com",
+      userName: "test",
+      password: "test",
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(AlreadyExistsEmailError);
+  });
+});
