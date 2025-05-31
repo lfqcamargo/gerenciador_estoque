@@ -13,7 +13,7 @@ import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 import { makeCompany } from "test/factories/make-company";
 import { makeUser } from "test/factories/make-user";
-
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
 let inMemoryUsersRepository: InMemoryUsersRepository;
@@ -30,6 +30,7 @@ describe("Create temp user use case", () => {
 
     inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
+      inMemoryTempUsersRepository,
       inMemoryUsersRepository
     );
     inMemoryUsersRepository = new InMemoryUsersRepository();
@@ -83,9 +84,17 @@ describe("Create temp user use case", () => {
   });
 
   it("should not be able to create a temp user with an already existing cnpj", async () => {
-    await inMemoryCompaniesRepository.create(
-      makeCompany({ cnpj: "12345678901234" })
+    const user = makeUser({
+      email: "test@test.com",
+    });
+    const company = makeCompany(
+      {
+        cnpj: "12345678901234",
+        users: [user],
+      },
+      new UniqueEntityID(user.companyId)
     );
+    await inMemoryCompaniesRepository.create(company);
 
     const result = await createTempUser.execute({
       cnpj: "12345678901234",

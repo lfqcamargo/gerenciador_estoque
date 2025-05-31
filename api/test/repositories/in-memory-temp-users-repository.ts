@@ -26,7 +26,7 @@ export class InMemoryTempUsersRepository implements TempUsersRepository {
     return tempUser ?? null;
   }
 
-  async delete(id: string): Promise<void> {
-    this.items = this.items.filter((item) => item.id.toString() !== id);
+  async deleteByCnpj(cnpj: string): Promise<void> {
+    this.items = this.items.filter((item) => item.cnpj !== cnpj);
   }
 }

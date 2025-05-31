@@ -5,5 +5,5 @@ export abstract class TempUsersRepository {
   abstract findByEmail(email: string): Promise<TempUser | null>;
   abstract findByCnpj(cnpj: string): Promise<TempUser | null>;
   abstract findByToken(token: string): Promise<TempUser | null>;
-  abstract delete(id: string): Promise<void>;
+  abstract deleteByCnpj(cnpj: string): Promise<void>;
 }

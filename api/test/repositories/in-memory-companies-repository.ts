@@ -1,18 +1,20 @@
 import { CompaniesRepository } from "@/domain/user/application/repositories/companies-repository";
 import { Company } from "@/domain/user/enterprise/entities/company";
 import { InMemoryUsersRepository } from "./in-memory-users-repository";
-import { DomainEvents } from "@/core/events/domain-events";
+import { InMemoryTempUsersRepository } from "./in-memory-temp-users-repository";
 export class InMemoryCompaniesRepository implements CompaniesRepository {
   public items: Company[] = [];
 
-  constructor(private usersRepository: InMemoryUsersRepository) {}
+  constructor(
+    private tempUsersRepository: InMemoryTempUsersRepository,
+    private usersRepository: InMemoryUsersRepository
+  ) {}
 
   async create(company: Company): Promise<void> {
     this.items.push(company);
 
     await this.usersRepository.create(company.users[0]);
-
-    DomainEvents.dispatchEventsForAggregate(company.id);
+    await this.tempUsersRepository.deleteByCnpj(company.cnpj);
   }
 
   async findByCnpj(cnpj: string): Promise<Company | null> {

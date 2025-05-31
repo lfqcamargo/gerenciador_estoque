@@ -83,6 +83,10 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.companyId;
   }
 
+  isAdmin() {
+    return this.props.role === UserRole.ADMIN;
+  }
+
   static create(props: Optional<UserProps, "createdAt">, id?: UniqueEntityID) {
     const user = new User({ ...props, createdAt: new Date() }, id);
 
