@@ -8,3 +8,12 @@ RULES.md
 .env.development
 .env.production
 .env.test
+data
+dist
+data
+node_modules
+build
+coverage
+RULES.md
+.env
+.env.local

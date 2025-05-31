@@ -50,12 +50,12 @@ export class CreateTempUserUseCase {
     const alreadyExists = await this.tempUsersRepository.findByEmail(email);
 
     if (alreadyExists) {
-      await this.tempUsersRepository.delete(alreadyExists.id.toString());
+      await this.tempUsersRepository.delete(alreadyExists);
     } else {
       const alreadyExists = await this.tempUsersRepository.findByCnpj(cnpj);
 
       if (alreadyExists) {
-        await this.tempUsersRepository.delete(alreadyExists.id.toString());
+        await this.tempUsersRepository.delete(alreadyExists);
       }
     }
 

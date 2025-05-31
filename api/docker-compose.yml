@@ -1,11 +1,15 @@
-version: "3"
+version: "3.8"
 
 services:
-  finfinance:
-    image: bitnami/postgresql
+  postgres:
+    container_name: gerenciamento_estoque-pg
+    image: postgres
     ports:
       - 5432:5432
     environment:
-      - POSTGRESQL_USERNAME=admin
-      - POSTGRESQL_PASSWORD=admin
-      - POSTGRESQL_DATABASE=finfinance
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: gerenciamento_estoque
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
