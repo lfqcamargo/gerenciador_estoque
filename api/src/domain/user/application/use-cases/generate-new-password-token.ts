@@ -44,7 +44,7 @@ export class GenerateNewPasswordTokenUseCase {
     const passwordToken = PasswordToken.create({
       token,
       expiration,
-      user,
+      userId: user.id.toString(),
     });
 
     await this.passwordTokensRepository.create(passwordToken);

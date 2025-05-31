@@ -6,29 +6,38 @@ import { makePasswordToken } from "test/factories/make-password-token";
 import { DomainEvents } from "@/core/events/domain-events";
 import { describe, it, beforeEach, expect } from "vitest";
 import { SendEmailUseCase } from "../use-cases/send-email";
+import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { InMemoryPasswordTokensRepository } from "test/repositories/in-memory-password-tokens-repository";
 
 let inMemoryEmailsRepository: InMemoryEmailsRepository;
 let fakeEmailSender: FakeEmailSender;
 let sendEmail: SendEmailUseCase;
+let inMemoryUsersRepository: InMemoryUsersRepository;
+let inMemoryPasswordTokensRepository: InMemoryPasswordTokensRepository;
 
 describe("On Password Token Created", () => {
   beforeEach(() => {
     inMemoryEmailsRepository = new InMemoryEmailsRepository();
     fakeEmailSender = new FakeEmailSender();
     sendEmail = new SendEmailUseCase(inMemoryEmailsRepository, fakeEmailSender);
-
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    inMemoryPasswordTokensRepository = new InMemoryPasswordTokensRepository();
     // Limpa os handlers de eventos anteriores
     DomainEvents.clearHandlers();
   });
 
   it("should send a password reset email when password token is created", async () => {
     // Registra o subscriber
-    new OnPasswordTokenCreated(sendEmail);
+    new OnPasswordTokenCreated(sendEmail, inMemoryUsersRepository);
 
     const user = makeUser();
+    await inMemoryUsersRepository.create(user);
+
     const passwordToken = makePasswordToken({
-      user: user,
+      userId: user.id.toString(),
     });
+
+    await inMemoryPasswordTokensRepository.create(passwordToken);
 
     // Dispara o evento
     DomainEvents.dispatchEventsForAggregate(passwordToken.id);

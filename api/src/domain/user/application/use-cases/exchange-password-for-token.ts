@@ -37,9 +37,7 @@ export class ExchangePasswordForTokenUseCase {
       return left(new ResourceTokenNotFoundError());
     }
 
-    const user = await this.usersRepository.findById(
-      passwordToken.user.id.toString()
-    );
+    const user = await this.usersRepository.findById(passwordToken.userId);
 
     if (!user) {
       return left(new UserNotFoundError());

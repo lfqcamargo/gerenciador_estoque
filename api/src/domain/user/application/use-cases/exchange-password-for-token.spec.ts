@@ -51,7 +51,7 @@ describe("Exchange password for token use case", () => {
     await inMemoryUsersRepository.create(user);
 
     const passwordToken = makePasswordToken({
-      user: user,
+      userId: user.id.toString(),
       token: "token-test",
       expiration: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
@@ -70,7 +70,7 @@ describe("Exchange password for token use case", () => {
     expect(updatedPasswordToken.id).toBeDefined();
     expect(updatedPasswordToken.token).toBe("token-test");
     expect(updatedPasswordToken.expiration).toBeDefined();
-    expect(updatedPasswordToken.user.id).toBe(user.id);
+    expect(updatedPasswordToken.userId).toBe(user.id.toString());
 
     const sentEmail = fakeEmailSender.sentEmails[0];
 
@@ -84,7 +84,7 @@ describe("Exchange password for token use case", () => {
     await inMemoryUsersRepository.create(user);
 
     const passwordToken = makePasswordToken({
-      user: user,
+      userId: user.id.toString(),
       token: "token-test",
       expiration: new Date(Date.now() - 1000 * 60 * 60 * 24),
     });

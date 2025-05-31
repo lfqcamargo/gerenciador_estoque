@@ -8,9 +8,7 @@ export class InMemoryPasswordTokensRepository
   public items: PasswordToken[] = [];
 
   async create(data: PasswordToken): Promise<void> {
-    this.items = this.items.filter(
-      (item) => item.user.id.toString() !== data.user.id.toString()
-    );
+    this.items = this.items.filter((item) => item.userId !== data.userId);
 
     DomainEvents.dispatchEventsForAggregate(data.id);
 

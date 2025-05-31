@@ -1,9 +1,13 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { PasswordTokenCreatedEvent } from "@/domain/user/enterprise/events/password-token-created.event";
 import { SendEmailUseCase } from "../use-cases/send-email";
+import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
 
 export class OnPasswordTokenCreated {
-  constructor(private sendEmail: SendEmailUseCase) {
+  constructor(
+    private sendEmail: SendEmailUseCase,
+    private usersRepository: UsersRepository
+  ) {
     this.setupSubscriptions();
   }
 
@@ -16,7 +20,13 @@ export class OnPasswordTokenCreated {
 
   private async sendPasswordResetEmail(event: unknown) {
     const passwordTokenCreatedEvent = event as PasswordTokenCreatedEvent;
-    const { passwordToken, user } = passwordTokenCreatedEvent;
+    const { passwordToken, userId } = passwordTokenCreatedEvent;
+
+    const user = await this.usersRepository.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     await this.sendEmail.execute({
       to: user.email,

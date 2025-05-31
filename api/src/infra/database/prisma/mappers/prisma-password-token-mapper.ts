@@ -9,7 +9,7 @@ export class PrismaPasswordTokenMapper {
       {
         token: raw.token,
         expiration: raw.expiration,
-        user: raw.userId,
+        userId: raw.userId,
       },
       new UniqueEntityID(raw.id)
     );

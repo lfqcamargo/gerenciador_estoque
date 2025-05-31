@@ -13,7 +13,7 @@ export function makePasswordToken(
     {
       token: faker.string.uuid(),
       expiration: faker.date.future(),
-      user: makeUser(),
+      userId: makeUser().id.toString(),
       ...override,
     },
     id
