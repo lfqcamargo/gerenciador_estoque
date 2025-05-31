@@ -1,19 +1,22 @@
-/*
-  Warnings:
-
-  - Added the required column `company_id` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `role` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `updated_at` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "company_id" TEXT NOT NULL,
-ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "role" "UserRole" NOT NULL,
-ADD COLUMN     "updated_at" TIMESTAMP(3) NOT NULL;
+-- CreateEnum
+CREATE TYPE "EmailStatus" AS ENUM ('PENDING', 'SENT', 'FAILED');
+
+-- CreateTable
+CREATE TABLE "users" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "company_id" TEXT NOT NULL,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "temp_users" (
@@ -51,6 +54,22 @@ CREATE TABLE "password_tokens" (
 
     CONSTRAINT "password_tokens_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateTable
+CREATE TABLE "emails" (
+    "id" TEXT NOT NULL,
+    "to" TEXT NOT NULL,
+    "subject" TEXT NOT NULL,
+    "body" TEXT NOT NULL,
+    "from" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "sent_at" TIMESTAMP(3),
+
+    CONSTRAINT "emails_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "temp_users_email_key" ON "temp_users"("email");
