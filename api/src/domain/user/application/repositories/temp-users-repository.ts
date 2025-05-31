@@ -1,4 +1,4 @@
-import { TempUser } from "@/domain/user/enterprise/entities/temp_user";
+import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
 
 export abstract class TempUsersRepository {
   abstract create(tempUser: TempUser): Promise<void>;

@@ -2,7 +2,7 @@ modelagem.md
 node_modules
 build
 coverage
-regras.md
+RULES.md
 .env
 .env.local
 .env.development

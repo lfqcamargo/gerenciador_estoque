@@ -1,11 +1,11 @@
-import { TempUser } from "@/domain/user/enterprise/entities/temp_user";
+import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
 import { UsersRepository } from "../repositories/users-repository";
 import { TempUsersRepository } from "../repositories/temp-users-repository";
 import { CompaniesRepository } from "../repositories/companies-repository";
 import { HashGenerator } from "../cryptography/hash-generator";
 import { Either, left, right } from "@/core/either";
 import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
-import { AlreadyExistsEmailError } from "./errors/alreaady-exists-email-error";
+import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 
 interface CreateTempUserUseCaseRequest {
   cnpj: string;

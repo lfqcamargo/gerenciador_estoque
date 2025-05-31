@@ -1,5 +1,5 @@
 import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
-import { TempUser } from "@/domain/user/enterprise/entities/temp_user";
+import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
 import { DomainEvents } from "@/core/events/domain-events";
 
 export class InMemoryTempUsersRepository implements TempUsersRepository {

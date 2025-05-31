@@ -1,6 +1,6 @@
 import { DomainEvents } from "@/core/events/domain-events";
-import { CompanyCreatedEvent } from "../../enterprise/events/company-created.event";
-import { TempUsersRepository } from "../repositories/temp-users-repository";
+import { CompanyCreatedEvent } from "@/domain/user/enterprise/events/company-created.event";
+import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
 
 export class OnCompanyCreated {
   constructor(private tempUsersRepository: TempUsersRepository) {

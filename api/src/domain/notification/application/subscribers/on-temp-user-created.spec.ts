@@ -2,7 +2,7 @@ import { InMemoryEmailsRepository } from "test/repositories/in-memory-emails-rep
 import { FakeEmailSender } from "test/services/fake-email-sender";
 import { SendEmailUseCase } from "../use-cases/send-email";
 import { OnTempUserCreated } from "./on-temp-user-created";
-import { TempUser } from "@/domain/user/enterprise/entities/temp_user";
+import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
 import { DomainEvents } from "@/core/events/domain-events";
 import { describe, it, beforeEach, expect } from "vitest";
 

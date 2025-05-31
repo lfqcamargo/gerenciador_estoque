@@ -10,7 +10,7 @@ import { SendEmailUseCase } from "@/domain/notification/application/use-cases/se
 import { OnTempUserCreated } from "@/domain/notification/application/subscribers/on-temp-user-created";
 import { DomainEvents } from "@/core/events/domain-events";
 import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
-import { AlreadyExistsEmailError } from "./errors/alreaady-exists-email-error";
+import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 import { makeCompany } from "test/factories/make-company";
 import { makeUser } from "test/factories/make-user";
 

@@ -2,7 +2,7 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import {
   TempUser,
   TempUserProps,
-} from "@/domain/user/enterprise/entities/temp_user";
+} from "@/domain/user/enterprise/entities/tempUser";
 import { faker } from "@faker-js/faker";
 import { makeUser } from "./make-user";
 export function makeTempUser(

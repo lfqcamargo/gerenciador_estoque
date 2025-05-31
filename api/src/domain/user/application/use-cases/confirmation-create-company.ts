@@ -4,7 +4,7 @@ import { TempUsersRepository } from "../repositories/temp-users-repository";
 import { UsersRepository } from "../repositories/users-repository";
 import { ResourceTokenNotFoundError } from "./errors/resource-token-not-found-error";
 import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
-import { AlreadyExistsEmailError } from "./errors/alreaady-exists-email-error";
+import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 import { User, UserRole } from "../../enterprise/entities/user";
 import { Company } from "../../enterprise/entities/company";
 
