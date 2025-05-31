@@ -6,6 +6,7 @@ import { HashGenerator } from "../cryptography/hash-generator";
 import { Either, left, right } from "@/core/either";
 import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
+import { Injectable } from "@nestjs/common";
 
 interface CreateTempUserUseCaseRequest {
   cnpj: string;
@@ -20,6 +21,7 @@ type CreateTempUserUseCaseResponse = Either<
   { tempUser: TempUser }
 >;
 
+@Injectable()
 export class CreateTempUserUseCase {
   constructor(
     private tempUsersRepository: TempUsersRepository,

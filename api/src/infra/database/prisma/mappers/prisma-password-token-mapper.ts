@@ -1,7 +1,6 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { PasswordToken } from "@/domain/user/enterprise/entities/passwordToken";
-import { PasswordToken as PrismaPasswordToken } from "generated/prisma";
-import { PrismaUserMapper } from "./prisma-user-mapper";
+import { PasswordToken as PrismaPasswordToken, Prisma } from "generated/prisma";
 
 export class PrismaPasswordTokenMapper {
   static toDomain(raw: PrismaPasswordToken): PasswordToken {
@@ -13,5 +12,16 @@ export class PrismaPasswordTokenMapper {
       },
       new UniqueEntityID(raw.id)
     );
+  }
+
+  static toPrisma(
+    passwordToken: PasswordToken
+  ): Prisma.PasswordTokenUncheckedCreateInput {
+    return {
+      id: passwordToken.id.toString(),
+      token: passwordToken.token,
+      expiration: passwordToken.expiration,
+      userId: passwordToken.userId,
+    };
   }
 }

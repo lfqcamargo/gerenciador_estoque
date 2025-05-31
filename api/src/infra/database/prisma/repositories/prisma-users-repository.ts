@@ -1,19 +1,34 @@
 import { Injectable } from "@nestjs/common";
 import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
 import { User } from "@/domain/user/enterprise/entities/user";
+import { PrismaService } from "../prisma.service";
+import { PrismaUserMapper } from "../mappers/prisma-user-mapper";
 
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
-  create(user: User): Promise<void> {
-    throw new Error("Method not implemented.");
+  constructor(private prisma: PrismaService) {}
+
+  async create(user: User): Promise<void> {
+    await this.prisma.user.create({
+      data: PrismaUserMapper.toPrisma(user),
+    });
   }
-  findByEmail(email: string): Promise<User | null> {
-    throw new Error("Method not implemented.");
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    return user ? PrismaUserMapper.toDomain(user) : null;
   }
-  findById(id: string): Promise<User | null> {
-    throw new Error("Method not implemented.");
+  async findById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    return user ? PrismaUserMapper.toDomain(user) : null;
   }
-  update(user: User): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(user: User): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: user.id.toString() },
+      data: PrismaUserMapper.toPrisma(user),
+    });
   }
 }

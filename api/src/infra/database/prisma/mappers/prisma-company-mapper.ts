@@ -1,6 +1,6 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Company } from "@/domain/user/enterprise/entities/company";
-import { Company as PrismaCompany } from "generated/prisma";
+import { Company as PrismaCompany, Prisma } from "generated/prisma";
 
 export class PrismaCompanyMapper {
   static toDomain(raw: PrismaCompany): Company {
@@ -11,5 +11,13 @@ export class PrismaCompanyMapper {
       },
       new UniqueEntityID(raw.id)
     );
+  }
+
+  static toPrisma(company: Company): Prisma.CompanyUncheckedCreateInput {
+    return {
+      id: company.id.toString(),
+      name: company.name,
+      cnpj: company.cnpj,
+    };
   }
 }
