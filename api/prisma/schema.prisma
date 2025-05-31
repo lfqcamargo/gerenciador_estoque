@@ -16,6 +16,12 @@ enum UserRole {
   USER
 }
 
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -69,4 +75,16 @@ model PasswordToken {
   user   User   @relation(fields: [userId], references: [id])
 
   @@map("password_tokens")
+}
+
+model Email {
+  id        String    @id @default(uuid())
+  to        String
+  subject   String
+  body      String
+  from      String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  sentAt    DateTime? @map("sent_at")
+
+  @@map("emails")
 }

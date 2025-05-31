@@ -2,6 +2,7 @@ import { Either, left, right } from "@/core/either";
 import { Email } from "../../enterprise/entities/email";
 import { EmailsRepository } from "../repositories/emails-repository";
 import { EmailSender } from "../services/email-sender";
+import { Injectable } from "@nestjs/common";
 
 interface SendEmailUseCaseRequest {
   to: string;
@@ -12,6 +13,7 @@ interface SendEmailUseCaseRequest {
 
 type SendEmailUseCaseResponse = Either<Error, { email: Email }>;
 
+@Injectable()
 export class SendEmailUseCase {
   constructor(
     private emailsRepository: EmailsRepository,

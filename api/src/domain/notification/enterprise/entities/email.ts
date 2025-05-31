@@ -1,5 +1,6 @@
 import { Entity } from "@/core/entities/entity";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
+import { Optional } from "@/core/types/optional";
 
 export interface EmailProps {
   to: string;
@@ -39,7 +40,7 @@ export class Email extends Entity<EmailProps> {
     this.props.sentAt = new Date();
   }
 
-  static create(props: Omit<EmailProps, "createdAt">, id?: UniqueEntityID) {
+  static create(props: Optional<EmailProps, "createdAt">, id?: UniqueEntityID) {
     const email = new Email({ ...props, createdAt: new Date() }, id);
 
     return email;

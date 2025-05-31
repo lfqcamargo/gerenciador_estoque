@@ -6,6 +6,8 @@ import { PrismaUsersRepository } from "./prisma/repositories/prisma-users-reposi
 import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
 import { CompaniesRepository } from "@/domain/user/application/repositories/companies-repository";
 import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
+import { EmailsRepository } from "@/domain/notification/application/repositories/emails-repository";
+import { PrismaEmailsRepository } from "./prisma/repositories/prisma-emails-repository";
 
 @Module({
   providers: [
@@ -13,12 +15,14 @@ import { UsersRepository } from "@/domain/user/application/repositories/users-re
     { provide: TempUsersRepository, useClass: PrismaTempUsersRepository },
     { provide: CompaniesRepository, useClass: PrismaCompaniesRepository },
     { provide: UsersRepository, useClass: PrismaUsersRepository },
+    { provide: EmailsRepository, useClass: PrismaEmailsRepository },
   ],
   exports: [
     PrismaService,
     TempUsersRepository,
     CompaniesRepository,
     UsersRepository,
+    EmailsRepository,
   ],
 })
 export class DatabaseModule {}

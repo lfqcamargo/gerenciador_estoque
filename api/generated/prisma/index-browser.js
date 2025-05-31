@@ -159,6 +159,16 @@ exports.Prisma.PasswordTokenScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.EmailScalarFieldEnum = {
+  id: 'id',
+  to: 'to',
+  subject: 'subject',
+  body: 'body',
+  from: 'from',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -167,6 +177,11 @@ exports.Prisma.SortOrder = {
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
@@ -177,7 +192,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   TempUser: 'TempUser',
   Company: 'Company',
-  PasswordToken: 'PasswordToken'
+  PasswordToken: 'PasswordToken',
+  Email: 'Email'
 };
 
 /**

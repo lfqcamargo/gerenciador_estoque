@@ -2,12 +2,17 @@ import { Module } from "@nestjs/common";
 
 import { DatabaseModule } from "../database/database.module";
 import { CryptographyModule } from "../cryptography/cryptography.module";
-import { CreateUserTempController } from "./controllers/user/create-user-temp.controller";
-import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/create-temp-user";
+import { UserModule } from "./controllers/user/user.module";
+import { EmailModule } from "../notification/email/email.module";
+import { NotificationModule } from "@/infra/notification/notification.module";
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
-  controllers: [CreateUserTempController],
-  providers: [CreateTempUserUseCase],
+  imports: [
+    DatabaseModule,
+    CryptographyModule,
+    UserModule,
+    EmailModule,
+    NotificationModule,
+  ],
 })
 export class HttpModule {}

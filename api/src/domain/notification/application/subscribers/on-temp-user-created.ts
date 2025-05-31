@@ -1,7 +1,9 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { TempUserCreatedEvent } from "@/domain/user/enterprise/events/temp-user-created.event";
 import { SendEmailUseCase } from "../use-cases/send-email";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class OnTempUserCreated {
   constructor(private sendEmail: SendEmailUseCase) {
     this.setupSubscriptions();
@@ -17,6 +19,8 @@ export class OnTempUserCreated {
   private async sendWelcomeEmail(event: unknown) {
     const tempUserCreatedEvent = event as TempUserCreatedEvent;
     const { tempUser } = tempUserCreatedEvent;
+
+    console.log("enviado");
 
     await this.sendEmail.execute({
       to: tempUser.email,
