@@ -6,7 +6,7 @@ import { PasswordTokenCreatedEvent } from "../events/password-token-created.even
 export interface PasswordTokenProps {
   token: string;
   expiration: Date;
-  user: User;
+  user: string;
 }
 
 export class PasswordToken extends AggregateRoot<PasswordTokenProps> {

@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -8,11 +11,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String
+  role      UserRole
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  companyId String  @map("company_id")
+  company   Company @relation(fields: [companyId], references: [id])
+
+  passwordTokens PasswordToken[]
 
   @@map("users")
+}
+
+model TempUser {
+  id          String   @id @default(uuid())
+  userName    String   @map("user_name")
+  email      String   @unique
+  password   String
+  companyName String   @map("company_name")
+  cnpj       String   @unique
+  token      String   @unique
+  expiration DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("temp_users")
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  cnpj      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users User[]
+
+  @@map("companies")
+}
+
+model PasswordToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiration DateTime
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("password_tokens")
 }
