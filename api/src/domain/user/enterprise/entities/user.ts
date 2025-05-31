@@ -1,6 +1,7 @@
-import { Entity } from "@/core/entities/entity";
+import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
+import { PasswordChangeEvent } from "../events/password-change.event";
 
 export enum UserRole {
   ADMIN = "admin",
@@ -19,7 +20,7 @@ export interface UserProps {
   companyId: string;
 }
 
-export class User extends Entity<UserProps> {
+export class User extends AggregateRoot<UserProps> {
   get email() {
     return this.props.email;
   }
@@ -42,6 +43,8 @@ export class User extends Entity<UserProps> {
 
   set password(password: string) {
     this.props.password = password;
+
+    this.addDomainEvent(new PasswordChangeEvent(this));
   }
 
   get role() {
