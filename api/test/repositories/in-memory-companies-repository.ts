@@ -1,7 +1,7 @@
 import { CompaniesRepository } from "@/domain/user/application/repositories/companies-repository";
 import { Company } from "@/domain/user/enterprise/entities/company";
 import { InMemoryUsersRepository } from "./in-memory-users-repository";
-
+import { DomainEvents } from "@/core/events/domain-events";
 export class InMemoryCompaniesRepository implements CompaniesRepository {
   public items: Company[] = [];
 
@@ -11,6 +11,8 @@ export class InMemoryCompaniesRepository implements CompaniesRepository {
     this.items.push(company);
 
     await this.usersRepository.create(company.users[0]);
+
+    DomainEvents.dispatchEventsForAggregate(company.id);
   }
 
   async findByCnpj(cnpj: string): Promise<Company | null> {

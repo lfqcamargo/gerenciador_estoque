@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { ConfirmationCreateCompanyUseCase } from "./confirmation-create-company";
 import { makeTempUser } from "test/factories/make-temp-user";
 import { ResourceTokenNotFoundError } from "./errors/resource-token-not-found-error";
+import { OnCompanyCreated } from "../subscribers/on-company-created";
+import { DomainEvents } from "@/core/events/domain-events";
 
 let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
@@ -24,6 +26,12 @@ describe("Confirmation create company use case", () => {
       inMemoryUsersRepository,
       inMemoryCompaniesRepository
     );
+
+    // Limpa os handlers de eventos anteriores
+    DomainEvents.clearHandlers();
+
+    // Registra o subscriber
+    new OnCompanyCreated(inMemoryTempUsersRepository);
   });
   it("should be able to confirm create company", async () => {
     const userTemp = makeTempUser({
@@ -78,5 +86,22 @@ describe("Confirmation create company use case", () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(ResourceTokenNotFoundError);
+  });
+
+  it("should delete temp user after successful confirmation", async () => {
+    const userTemp = makeTempUser({
+      cnpj: "12345678901234",
+      companyName: "Test Company",
+      email: "test@test.com",
+      userName: "Test User",
+      password: "123456",
+    });
+
+    await inMemoryTempUsersRepository.create(userTemp);
+
+    const result = await sut.execute({ token: userTemp.token });
+
+    expect(result.isRight()).toBe(true);
+    expect(inMemoryTempUsersRepository.items).toHaveLength(0);
   });
 });
