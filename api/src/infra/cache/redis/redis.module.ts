@@ -28,6 +28,6 @@ import { RedisTempUsersRepository } from "./repositories/redis-temp-users-reposi
       useClass: RedisTempUsersRepository,
     },
   ],
-  exports: [PasswordTokensRepository, TempUsersRepository],
+  exports: [Redis, PasswordTokensRepository, TempUsersRepository],
 })
 export class RedisModule {}
