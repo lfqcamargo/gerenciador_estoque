@@ -1,7 +1,8 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 import { User } from "./user";
-import { Entity } from "@/core/entities/entity";
+import { AggregateRoot } from "@/core/entities/aggregate-root";
+import { CompanyCreatedEvent } from "../events/company-created.event";
 
 export interface CompanyProps {
   cnpj: string;
@@ -10,7 +11,7 @@ export interface CompanyProps {
   users: User[];
 }
 
-export class Company extends Entity<CompanyProps> {
+export class Company extends AggregateRoot<CompanyProps> {
   get cnpj() {
     return this.props.cnpj;
   }
@@ -55,6 +56,12 @@ export class Company extends Entity<CompanyProps> {
       },
       id
     );
+
+    const isNewCompany = !id;
+
+    if (isNewCompany) {
+      company.addDomainEvent(new CompanyCreatedEvent(company));
+    }
 
     return company;
   }

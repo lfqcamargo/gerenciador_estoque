@@ -17,6 +17,11 @@ export class InMemoryCompaniesRepository implements CompaniesRepository {
     await this.tempUsersRepository.deleteByCnpj(company.cnpj);
   }
 
+  async findById(id: string): Promise<Company | null> {
+    const company = this.items.find((item) => item.id.toString() === id);
+    return company ?? null;
+  }
+
   async findByCnpj(cnpj: string): Promise<Company | null> {
     const company = this.items.find((item) => item.cnpj === cnpj);
     return company ?? null;

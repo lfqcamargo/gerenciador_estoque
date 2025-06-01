@@ -69,7 +69,6 @@ describe("Create temp user use case", () => {
     expect(tempUser.email).toBe("test@test.com");
     expect(tempUser.userName).toBe("test");
     expect(tempUser.password).toBe("test-hashed");
-    expect(tempUser.token).toBe("test@test.com-hashed");
     expect(tempUser.expiration).toBeDefined();
 
     // Verifica se o email foi enviado

@@ -13,9 +13,10 @@ import { ExchangePasswordForTokenUseCase } from "@/domain/user/application/use-c
 import { AuthenticateUserUseCase } from "@/domain/user/application/use-cases/authenticate-user";
 import { AuthenticateUserController } from "./authenticate-user.controller";
 import { RedisModule } from "@/infra/cache/redis/redis.module";
+import { EventModule } from "@/infra/event/event.module";
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule, RedisModule],
+  imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
   controllers: [
     CreateUserTempController,
     ConfirmationCreateCompanyController,

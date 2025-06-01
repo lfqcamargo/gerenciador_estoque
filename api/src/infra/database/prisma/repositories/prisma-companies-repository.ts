@@ -4,6 +4,7 @@ import { Company } from "@/domain/user/enterprise/entities/company";
 import { PrismaService } from "../prisma.service";
 import { PrismaCompanyMapper } from "../mappers/prisma-company-mapper";
 import { PrismaUserMapper } from "../mappers/prisma-user-mapper";
+import { DomainEvents } from "@/core/events/domain-events";
 
 @Injectable()
 export class PrismaCompaniesRepository implements CompaniesRepository {
@@ -21,6 +22,15 @@ export class PrismaCompaniesRepository implements CompaniesRepository {
         });
       }
     });
+
+    DomainEvents.dispatchEventsForAggregate(company.id);
+  }
+
+  async findById(id: string): Promise<Company | null> {
+    const company = await this.prisma.company.findUnique({
+      where: { id },
+    });
+    return company ? PrismaCompanyMapper.toDomain(company) : null;
   }
 
   async findByCnpj(cnpj: string): Promise<Company | null> {

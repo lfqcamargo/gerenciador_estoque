@@ -3,8 +3,8 @@ import { Module } from "@nestjs/common";
 import { DatabaseModule } from "../database/database.module";
 import { CryptographyModule } from "../cryptography/cryptography.module";
 import { UserModule } from "./controllers/user/user.module";
-import { EmailModule } from "../notification/email/email.module";
-import { NotificationModule } from "@/infra/notification/notification.module";
+import { EmailModule } from "../event/email/email.module";
+import { EventModule } from "@/infra/event/event.module";
 
 @Module({
   imports: [
@@ -12,7 +12,7 @@ import { NotificationModule } from "@/infra/notification/notification.module";
     CryptographyModule,
     UserModule,
     EmailModule,
-    NotificationModule,
+    EventModule,
   ],
 })
 export class HttpModule {}
