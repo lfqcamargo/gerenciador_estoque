@@ -1,4 +1,4 @@
-import { left, right } from "@/core/either";
+import { Either, left, right } from "@/core/either";
 import { CompaniesRepository } from "../repositories/companies-repository";
 import { TempUsersRepository } from "../repositories/temp-users-repository";
 import { UsersRepository } from "../repositories/users-repository";
@@ -7,11 +7,20 @@ import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 import { User, UserRole } from "../../enterprise/entities/user";
 import { Company } from "../../enterprise/entities/company";
+import { Injectable } from "@nestjs/common";
 
 interface ConfirmationCreateCompanyUseCaseRequest {
   token: string;
 }
 
+type ConfirmationCreateCompanyUseCaseResponse = Either<
+  ResourceTokenNotFoundError | AlreadyExistsCnpjError | AlreadyExistsEmailError,
+  {
+    user: User;
+  }
+>;
+
+@Injectable()
 export class ConfirmationCreateCompanyUseCase {
   constructor(
     private tempUsersRepository: TempUsersRepository,
@@ -19,7 +28,9 @@ export class ConfirmationCreateCompanyUseCase {
     private companiesRepository: CompaniesRepository
   ) {}
 
-  async execute({ token }: ConfirmationCreateCompanyUseCaseRequest) {
+  async execute({
+    token,
+  }: ConfirmationCreateCompanyUseCaseRequest): Promise<ConfirmationCreateCompanyUseCaseResponse> {
     const tempUser = await this.tempUsersRepository.findByToken(token);
 
     if (!tempUser) {
