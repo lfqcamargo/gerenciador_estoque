@@ -11,6 +11,7 @@ import z from "zod";
 import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/create-temp-user";
 import { AlreadyExistsCnpjError } from "@/domain/user/application/use-cases/errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "@/domain/user/application/use-cases/errors/already-exists-email-error";
+import { Public } from "@/infra/auth/public";
 
 const createTempUserBodySchema = z.object({
   cnpj: z
@@ -64,15 +65,16 @@ const createTempUserBodySchema = z.object({
 });
 
 type CreateTempUserBody = z.infer<typeof createTempUserBodySchema>;
+const bodyValidationPipe = new ZodValidationPipe(createTempUserBodySchema);
 
 @Controller("/companies")
+@Public()
 export class CreateUserTempController {
   constructor(private createTempUserUseCase: CreateTempUserUseCase) {}
 
   @Post()
   @HttpCode(201)
-  @UsePipes(new ZodValidationPipe(createTempUserBodySchema))
-  async create(@Body() body: CreateTempUserBody) {
+  async create(@Body(bodyValidationPipe) body: CreateTempUserBody) {
     const { cnpj, companyName, email, userName, password } = body;
 
     const result = await this.createTempUserUseCase.execute({

@@ -1,17 +1,18 @@
 import {
   Controller,
-  Post,
-  Body,
   UsePipes,
   HttpCode,
   NotFoundException,
+  Get,
+  Param,
 } from "@nestjs/common";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import z from "zod";
 import { GenerateNewPasswordTokenUseCase } from "@/domain/user/application/use-cases/generate-new-password-token";
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
+import { Public } from "@/infra/auth/public";
 
-const generateNewPasswordTokenBodySchema = z.object({
+const generateNewPasswordTokenParamsSchema = z.object({
   email: z
     .string({
       required_error: "Email is required",
@@ -23,21 +24,26 @@ const generateNewPasswordTokenBodySchema = z.object({
     .transform((email) => email.toLowerCase().trim()),
 });
 
-type GenerateNewPasswordTokenBody = z.infer<
-  typeof generateNewPasswordTokenBodySchema
+type GenerateNewPasswordTokenParams = z.infer<
+  typeof generateNewPasswordTokenParamsSchema
 >;
+const paramsValidationPipe = new ZodValidationPipe(
+  generateNewPasswordTokenParamsSchema
+);
 
-@Controller("password/forgot")
+@Controller("users/forgot-password/:email")
+@Public()
 export class GenerateNewPasswordTokenController {
   constructor(
     private generateNewPasswordTokenUseCase: GenerateNewPasswordTokenUseCase
   ) {}
 
-  @Post()
+  @Get()
   @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(generateNewPasswordTokenBodySchema))
-  async create(@Body() body: GenerateNewPasswordTokenBody) {
-    const { email } = body;
+  async create(
+    @Param(paramsValidationPipe) params: GenerateNewPasswordTokenParams
+  ) {
+    const { email } = params;
 
     const result = await this.generateNewPasswordTokenUseCase.execute({
       email,
@@ -52,13 +58,5 @@ export class GenerateNewPasswordTokenController {
 
       throw new NotFoundException("Unexpected error");
     }
-
-    const { token, expiration } = result.value;
-
-    return {
-      token,
-      expiration,
-      message: "Password reset token generated successfully",
-    };
   }
 }

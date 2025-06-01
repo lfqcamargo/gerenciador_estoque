@@ -1,8 +1,9 @@
 import { DomainEvents } from "@/core/events/domain-events";
 import { PasswordChangeEvent } from "@/domain/user/enterprise/events/password-change.event";
 import { SendEmailUseCase } from "../use-cases/send-email";
-import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class OnChangePassword {
   constructor(private sendEmail: SendEmailUseCase) {
     this.setupSubscriptions();

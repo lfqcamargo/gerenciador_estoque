@@ -8,6 +8,8 @@ import { CompaniesRepository } from "@/domain/user/application/repositories/comp
 import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
 import { EmailsRepository } from "@/domain/notification/application/repositories/emails-repository";
 import { PrismaEmailsRepository } from "./prisma/repositories/prisma-emails-repository";
+import { PasswordTokensRepository } from "@/domain/user/application/repositories/password-tokens-repository";
+import { PrismaPasswordTokensRepository } from "./prisma/repositories/prisma-password-tokens-repository";
 
 @Module({
   providers: [
@@ -16,6 +18,10 @@ import { PrismaEmailsRepository } from "./prisma/repositories/prisma-emails-repo
     { provide: CompaniesRepository, useClass: PrismaCompaniesRepository },
     { provide: UsersRepository, useClass: PrismaUsersRepository },
     { provide: EmailsRepository, useClass: PrismaEmailsRepository },
+    {
+      provide: PasswordTokensRepository,
+      useClass: PrismaPasswordTokensRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -23,6 +29,7 @@ import { PrismaEmailsRepository } from "./prisma/repositories/prisma-emails-repo
     CompaniesRepository,
     UsersRepository,
     EmailsRepository,
+    PasswordTokensRepository,
   ],
 })
 export class DatabaseModule {}

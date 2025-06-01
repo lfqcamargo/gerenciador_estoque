@@ -3,6 +3,7 @@ import { HashComparer } from "../cryptography/hash-comparer";
 import { Encrypter } from "../cryptography/encrypter";
 import { Either, left, right } from "@/core/either";
 import { WrongCredentialsError } from "@/domain/user/application/use-cases/errors/wrong-credentials-error";
+import { Injectable } from "@nestjs/common";
 
 interface AuthenticateUserRequest {
   email: string;
@@ -16,6 +17,7 @@ type AuthenticateUserResponse = Either<
   }
 >;
 
+@Injectable()
 export class AuthenticateUserUseCase {
   constructor(
     private usersRepository: UsersRepository,

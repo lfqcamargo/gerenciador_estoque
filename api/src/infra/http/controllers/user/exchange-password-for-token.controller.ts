@@ -6,6 +6,7 @@ import {
   HttpCode,
   BadRequestException,
   NotFoundException,
+  Param,
 } from "@nestjs/common";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import z from "zod";
@@ -13,15 +14,18 @@ import { ExchangePasswordForTokenUseCase } from "@/domain/user/application/use-c
 import { ResourceTokenNotFoundError } from "@/domain/user/application/use-cases/errors/resource-token-not-found-error";
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
 import { TokenExpiratedError } from "@/domain/user/application/use-cases/errors/token-expirated-error";
+import { Public } from "@/infra/auth/public";
 
-const exchangePasswordForTokenBodySchema = z.object({
+const exchangePasswordForTokenParamsSchema = z.object({
   token: z
     .string({
       required_error: "Token is required",
       invalid_type_error: "Token must be a string",
     })
-    .uuid("Invalid token format")
     .transform((token) => token.trim()),
+});
+
+const exchangePasswordForTokenBodySchema = z.object({
   password: z
     .string({
       required_error: "Password is required",
@@ -38,18 +42,32 @@ const exchangePasswordForTokenBodySchema = z.object({
 type ExchangePasswordForTokenBody = z.infer<
   typeof exchangePasswordForTokenBodySchema
 >;
+type ExchangePasswordForTokenParams = z.infer<
+  typeof exchangePasswordForTokenParamsSchema
+>;
 
-@Controller("password/reset")
+const paramsValidationPipe = new ZodValidationPipe(
+  exchangePasswordForTokenParamsSchema
+);
+const bodyValidationPipe = new ZodValidationPipe(
+  exchangePasswordForTokenBodySchema
+);
+
+@Controller("users/password/reset/:token")
+@Public()
 export class ExchangePasswordForTokenController {
   constructor(
     private exchangePasswordForTokenUseCase: ExchangePasswordForTokenUseCase
   ) {}
 
   @Post()
-  @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(exchangePasswordForTokenBodySchema))
-  async create(@Body() body: ExchangePasswordForTokenBody) {
-    const { token, password } = body;
+  @HttpCode(204)
+  async create(
+    @Param(paramsValidationPipe) params: ExchangePasswordForTokenParams,
+    @Body(bodyValidationPipe) body: ExchangePasswordForTokenBody
+  ) {
+    const { token } = params;
+    const { password } = body;
 
     const result = await this.exchangePasswordForTokenUseCase.execute({
       token,
@@ -73,7 +91,5 @@ export class ExchangePasswordForTokenController {
 
       throw new BadRequestException("Unexpected error");
     }
-
-    return { message: "Password changed successfully" };
   }
 }

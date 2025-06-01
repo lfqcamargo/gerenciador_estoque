@@ -13,18 +13,21 @@ export class PrismaUsersRepository implements UsersRepository {
       data: PrismaUserMapper.toPrisma(user),
     });
   }
+
   async findByEmail(email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
     return user ? PrismaUserMapper.toDomain(user) : null;
   }
+
   async findById(id: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
     });
     return user ? PrismaUserMapper.toDomain(user) : null;
   }
+
   async update(user: User): Promise<void> {
     await this.prisma.user.update({
       where: { id: user.id.toString() },

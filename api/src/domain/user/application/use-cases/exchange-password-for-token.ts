@@ -6,7 +6,7 @@ import { UserNotFoundError } from "./errors/user-not-found-error";
 import { HashComparer } from "../cryptography/hash-comparer";
 import { ResourceTokenNotFoundError } from "./errors/resource-token-not-found-error";
 import { TokenExpiratedError } from "./errors/token-expirated-error";
-import { PasswordChangeEvent } from "../../enterprise/events/password-change.event";
+import { Injectable } from "@nestjs/common";
 
 interface ExchangePasswordForTokenUseCaseRequest {
   token: string;
@@ -18,11 +18,11 @@ type ExchangePasswordForTokenUseCaseResult = Either<
   {}
 >;
 
+@Injectable()
 export class ExchangePasswordForTokenUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private passwordTokensRepository: PasswordTokensRepository,
-    private hashComparer: HashComparer,
     private hashGenerator: HashGenerator
   ) {}
 

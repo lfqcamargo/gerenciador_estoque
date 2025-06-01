@@ -2,7 +2,9 @@ import { DomainEvents } from "@/core/events/domain-events";
 import { PasswordTokenCreatedEvent } from "@/domain/user/enterprise/events/password-token-created.event";
 import { SendEmailUseCase } from "../use-cases/send-email";
 import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class OnPasswordTokenCreated {
   constructor(
     private sendEmail: SendEmailUseCase,

@@ -4,6 +4,7 @@ import { HashGenerator } from "../cryptography/hash-generator";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { PasswordTokensRepository } from "../repositories/password-tokens-repository";
 import { PasswordToken } from "../../enterprise/entities/passwordToken";
+import { Injectable } from "@nestjs/common";
 
 interface GenerateNewPasswordTokenUseCaseRequest {
   email: string;
@@ -19,6 +20,7 @@ type GenerateNewPasswordTokenUseCaseResult = Either<
   GenerateNewPasswordTokenUseCaseResponse
 >;
 
+@Injectable()
 export class GenerateNewPasswordTokenUseCase {
   constructor(
     private usersRepository: UsersRepository,
