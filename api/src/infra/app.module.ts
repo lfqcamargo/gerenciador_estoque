@@ -12,9 +12,9 @@ import { CacheModule } from "./cache/cache.module";
       validate: (env) => envSchema.parse(env),
       isGlobal: true,
     }),
+    EnvModule,
     AuthModule,
     HttpModule,
-    EnvModule,
     CacheModule,
   ],
 })

@@ -12,7 +12,7 @@ export type UserPayload = z.infer<typeof tokenPayloadSchema>;
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(config: EnvService) {
+  constructor(private config: EnvService) {
     const publicKey = config.get("JWT_PUBLIC_KEY");
 
     super({

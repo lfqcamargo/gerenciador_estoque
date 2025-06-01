@@ -27,8 +27,8 @@ import { EnvModule } from "../env/env.module";
     }),
   ],
   providers: [
-    JwtStrategy,
     EnvService,
+    JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
