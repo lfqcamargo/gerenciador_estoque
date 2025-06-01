@@ -10,7 +10,6 @@ import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import z from "zod";
 import { AuthenticateUserUseCase } from "@/domain/user/application/use-cases/authenticate-user";
 import { WrongCredentialsError } from "@/domain/user/application/use-cases/errors/wrong-credentials-error";
-import { AuthenticateUserDocs } from "./swagger/authenticate-user.swagger";
 
 const authenticateUserBodySchema = z.object({
   email: z
@@ -40,7 +39,6 @@ export class AuthenticateUserController {
   @Post()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(authenticateUserBodySchema))
-  @AuthenticateUserDocs()
   async create(@Body() body: AuthenticateUserBody) {
     const { email, password } = body;
 

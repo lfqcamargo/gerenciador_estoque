@@ -10,7 +10,6 @@ import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import z from "zod";
 import { GenerateNewPasswordTokenUseCase } from "@/domain/user/application/use-cases/generate-new-password-token";
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
-import { GenerateNewPasswordTokenDocs } from "./swagger/generate-new-password-token.swagger";
 
 const generateNewPasswordTokenBodySchema = z.object({
   email: z
@@ -37,7 +36,6 @@ export class GenerateNewPasswordTokenController {
   @Post()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(generateNewPasswordTokenBodySchema))
-  @GenerateNewPasswordTokenDocs()
   async create(@Body() body: GenerateNewPasswordTokenBody) {
     const { email } = body;
 

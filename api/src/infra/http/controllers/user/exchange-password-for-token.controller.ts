@@ -13,7 +13,6 @@ import { ExchangePasswordForTokenUseCase } from "@/domain/user/application/use-c
 import { ResourceTokenNotFoundError } from "@/domain/user/application/use-cases/errors/resource-token-not-found-error";
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
 import { TokenExpiratedError } from "@/domain/user/application/use-cases/errors/token-expirated-error";
-import { ExchangePasswordForTokenDocs } from "./swagger/exchange-password-for-token.swagger";
 
 const exchangePasswordForTokenBodySchema = z.object({
   token: z
@@ -49,7 +48,6 @@ export class ExchangePasswordForTokenController {
   @Post()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(exchangePasswordForTokenBodySchema))
-  @ExchangePasswordForTokenDocs()
   async create(@Body() body: ExchangePasswordForTokenBody) {
     const { token, password } = body;
 
