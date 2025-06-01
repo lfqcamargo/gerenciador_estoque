@@ -13,3 +13,14 @@ services:
       PGDATA: /data/postgres
     volumes:
       - ./data/pg:/data/postgres
+  redis:
+    image: redis:alpine
+    container_name: gerenciamento_estoque-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  redis_data:

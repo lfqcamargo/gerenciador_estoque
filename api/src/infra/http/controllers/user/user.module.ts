@@ -12,9 +12,10 @@ import { GenerateNewPasswordTokenUseCase } from "@/domain/user/application/use-c
 import { ExchangePasswordForTokenUseCase } from "@/domain/user/application/use-cases/exchange-password-for-token";
 import { AuthenticateUserUseCase } from "@/domain/user/application/use-cases/authenticate-user";
 import { AuthenticateUserController } from "./authenticate-user.controller";
+import { RedisModule } from "@/infra/cache/redis/redis.module";
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, RedisModule],
   controllers: [
     CreateUserTempController,
     ConfirmationCreateCompanyController,

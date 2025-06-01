@@ -151,14 +151,6 @@ exports.Prisma.CompanyScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.PasswordTokenScalarFieldEnum = {
-  id: 'id',
-  token: 'token',
-  expiration: 'expiration',
-  createdAt: 'createdAt',
-  userId: 'userId'
-};
-
 exports.Prisma.EmailScalarFieldEnum = {
   id: 'id',
   to: 'to',
@@ -192,7 +184,6 @@ exports.Prisma.ModelName = {
   User: 'User',
   TempUser: 'TempUser',
   Company: 'Company',
-  PasswordToken: 'PasswordToken',
   Email: 'Email'
 };
 

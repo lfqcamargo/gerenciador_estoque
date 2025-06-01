@@ -1,10 +1,10 @@
 import { Either, left, right } from "@/core/either";
 import { UsersRepository } from "../repositories/users-repository";
-import { HashGenerator } from "../cryptography/hash-generator";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { PasswordTokensRepository } from "../repositories/password-tokens-repository";
 import { PasswordToken } from "../../enterprise/entities/passwordToken";
 import { Injectable } from "@nestjs/common";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 interface GenerateNewPasswordTokenUseCaseRequest {
   email: string;
@@ -24,8 +24,7 @@ type GenerateNewPasswordTokenUseCaseResult = Either<
 export class GenerateNewPasswordTokenUseCase {
   constructor(
     private usersRepository: UsersRepository,
-    private passwordTokensRepository: PasswordTokensRepository,
-    private hashGenerator: HashGenerator
+    private passwordTokensRepository: PasswordTokensRepository
   ) {}
 
   async execute({
@@ -37,9 +36,7 @@ export class GenerateNewPasswordTokenUseCase {
       return left(new UserNotFoundError());
     }
 
-    const token = await this.hashGenerator.hash(
-      user.id.toString() + new Date().getTime().toString()
-    );
+    const token = new UniqueEntityID().toString();
 
     const expiration = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
 

@@ -20,8 +20,6 @@ export class OnTempUserCreated {
     const tempUserCreatedEvent = event as TempUserCreatedEvent;
     const { tempUser } = tempUserCreatedEvent;
 
-    console.log("enviado");
-
     await this.sendEmail.execute({
       to: tempUser.email,
       subject: "Bem-vindo ao Sistema de Controle de Vendas",
