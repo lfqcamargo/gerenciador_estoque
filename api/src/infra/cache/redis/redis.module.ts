@@ -5,6 +5,7 @@ import { PasswordTokensRepository } from "@/domain/user/application/repositories
 import { RedisPasswordTokensRepository } from "./repositories/redis-password-tokens-repository";
 import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
 import { RedisTempUsersRepository } from "./repositories/redis-temp-users-repository";
+import { RedisCacheRepository } from "./redis-cache-repository";
 
 @Module({
   imports: [ConfigModule],
@@ -19,15 +20,27 @@ import { RedisTempUsersRepository } from "./repositories/redis-temp-users-reposi
         });
       },
     },
+    RedisCacheRepository,
     {
       provide: PasswordTokensRepository,
-      useClass: RedisPasswordTokensRepository,
+      useFactory: (cacheRepository: RedisCacheRepository, redis: Redis) => {
+        return new RedisPasswordTokensRepository(cacheRepository, redis);
+      },
+      inject: [RedisCacheRepository, Redis],
     },
     {
       provide: TempUsersRepository,
-      useClass: RedisTempUsersRepository,
+      useFactory: (cacheRepository: RedisCacheRepository, redis: Redis) => {
+        return new RedisTempUsersRepository(cacheRepository, redis);
+      },
+      inject: [RedisCacheRepository, Redis],
     },
   ],
-  exports: [Redis, PasswordTokensRepository, TempUsersRepository],
+  exports: [
+    Redis,
+    RedisCacheRepository,
+    PasswordTokensRepository,
+    TempUsersRepository,
+  ],
 })
 export class RedisModule {}

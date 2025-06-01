@@ -1,15 +1,27 @@
 import { Injectable } from "@nestjs/common";
-import { Redis } from "ioredis";
 import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
 import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
 import { DomainEvents } from "@/core/events/domain-events";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
+import { RedisCacheRepository } from "../redis-cache-repository";
+import { Redis } from "ioredis";
 
 @Injectable()
 export class RedisTempUsersRepository implements TempUsersRepository {
-  constructor(private redis: Redis) {}
+  private prefix = "temp-user:";
+
+  constructor(
+    private cacheRepository: RedisCacheRepository,
+    private redis: Redis
+  ) {}
 
   async create(tempUser: TempUser): Promise<void> {
+    const ttl = Math.floor((tempUser.expiration.getTime() - Date.now()) / 1000);
+
+    if (ttl <= 0) {
+      return;
+    }
+
     const data = {
       id: tempUser.id.toString(),
       userName: tempUser.userName,
@@ -21,24 +33,20 @@ export class RedisTempUsersRepository implements TempUsersRepository {
       expiration: tempUser.expiration.toISOString(),
     };
 
-    await this.redis.set(
-      `temp-user:${tempUser.id.toString()}`,
-      JSON.stringify(data)
-    );
+    await this.cacheRepository.set(this.prefix + tempUser.cnpj, data, ttl);
 
     DomainEvents.dispatchEventsForAggregate(tempUser.id);
   }
 
   async findByEmail(email: string): Promise<TempUser | null> {
-    const keys = await this.redis.keys("temp-user:*");
+    const keys = await this.redis.keys(this.prefix + "*");
 
     for (const key of keys) {
-      const data = await this.redis.get(key);
+      const data = await this.cacheRepository.get(key);
       if (!data) continue;
 
-      const tempUser = JSON.parse(data);
-      if (tempUser.email === email) {
-        return this.mapToTempUser(tempUser);
+      if (data.email === email) {
+        return this.mapToTempUser(data);
       }
     }
 
@@ -46,31 +54,21 @@ export class RedisTempUsersRepository implements TempUsersRepository {
   }
 
   async findByCnpj(cnpj: string): Promise<TempUser | null> {
-    const keys = await this.redis.keys("temp-user:*");
+    const data = await this.cacheRepository.get(this.prefix + cnpj);
+    if (!data) return null;
 
-    for (const key of keys) {
-      const data = await this.redis.get(key);
-      if (!data) continue;
-
-      const tempUser = JSON.parse(data);
-      if (tempUser.cnpj === cnpj) {
-        return this.mapToTempUser(tempUser);
-      }
-    }
-
-    return null;
+    return this.mapToTempUser(data);
   }
 
   async findByToken(token: string): Promise<TempUser | null> {
-    const keys = await this.redis.keys("temp-user:*");
+    const keys = await this.redis.keys(this.prefix + "*");
 
     for (const key of keys) {
-      const data = await this.redis.get(key);
+      const data = await this.cacheRepository.get(key);
       if (!data) continue;
 
-      const tempUser = JSON.parse(data);
-      if (tempUser.token === token) {
-        return this.mapToTempUser(tempUser);
+      if (data.token === token) {
+        return this.mapToTempUser(data);
       }
     }
 
@@ -78,7 +76,7 @@ export class RedisTempUsersRepository implements TempUsersRepository {
   }
 
   async delete(tempUser: TempUser): Promise<void> {
-    await this.redis.del(`temp-user:${tempUser.id.toString()}`);
+    await this.cacheRepository.delete(this.prefix + tempUser.cnpj);
   }
 
   async deleteByCnpj(cnpj: string): Promise<void> {
