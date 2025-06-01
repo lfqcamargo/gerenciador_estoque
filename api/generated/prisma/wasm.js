@@ -131,18 +131,6 @@ exports.Prisma.UserScalarFieldEnum = {
   companyId: 'companyId'
 };
 
-exports.Prisma.TempUserScalarFieldEnum = {
-  id: 'id',
-  userName: 'userName',
-  email: 'email',
-  password: 'password',
-  companyName: 'companyName',
-  cnpj: 'cnpj',
-  token: 'token',
-  expiration: 'expiration',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -182,7 +170,6 @@ exports.UserRole = exports.$Enums.UserRole = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  TempUser: 'TempUser',
   Company: 'Company',
   Email: 'Email'
 };

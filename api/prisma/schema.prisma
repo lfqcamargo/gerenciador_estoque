@@ -37,20 +37,6 @@ model User {
   @@map("users")
 }
 
-model TempUser {
-  id          String   @id @default(uuid())
-  userName    String   @map("user_name")
-  email      String   @unique
-  password   String
-  companyName String   @map("company_name")
-  cnpj       String   @unique
-  token      String   @unique
-  expiration DateTime
-  createdAt  DateTime @default(now()) @map("created_at")
-
-  @@map("temp_users")
-}
-
 model Company {
   id        String   @id @default(uuid())
   name      String

@@ -20,10 +20,6 @@ export class PrismaCompaniesRepository implements CompaniesRepository {
           data: PrismaUserMapper.toPrisma(user),
         });
       }
-
-      await tx.tempUser.deleteMany({
-        where: { cnpj: company.cnpj },
-      });
     });
   }
 

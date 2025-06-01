@@ -7,6 +7,7 @@ import { Either, left, right } from "@/core/either";
 import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 import { Injectable } from "@nestjs/common";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 interface CreateTempUserUseCaseRequest {
   cnpj: string;
@@ -61,7 +62,7 @@ export class CreateTempUserUseCase {
       }
     }
 
-    const token = await this.hashGenerator.hash(email);
+    const token = new UniqueEntityID().toString();
     const expiration = new Date(Date.now() + 1000 * 60 * 60 * 24); // 1 day
     const hashedPassword = await this.hashGenerator.hash(password);
 

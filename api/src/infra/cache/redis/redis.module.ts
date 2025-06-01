@@ -3,6 +3,8 @@ import { ConfigModule } from "@nestjs/config";
 import Redis from "ioredis";
 import { PasswordTokensRepository } from "@/domain/user/application/repositories/password-tokens-repository";
 import { RedisPasswordTokensRepository } from "./repositories/redis-password-tokens-repository";
+import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
+import { RedisTempUsersRepository } from "./repositories/redis-temp-users-repository";
 
 @Module({
   imports: [ConfigModule],
@@ -21,7 +23,11 @@ import { RedisPasswordTokensRepository } from "./repositories/redis-password-tok
       provide: PasswordTokensRepository,
       useClass: RedisPasswordTokensRepository,
     },
+    {
+      provide: TempUsersRepository,
+      useClass: RedisTempUsersRepository,
+    },
   ],
-  exports: [PasswordTokensRepository],
+  exports: [PasswordTokensRepository, TempUsersRepository],
 })
 export class RedisModule {}
