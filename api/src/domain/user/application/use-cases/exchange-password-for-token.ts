@@ -32,7 +32,6 @@ export class ExchangePasswordForTokenUseCase {
   }: ExchangePasswordForTokenUseCaseRequest): Promise<ExchangePasswordForTokenUseCaseResult> {
     const passwordToken =
       await this.passwordTokensRepository.findByToken(token);
-
     if (!passwordToken) {
       return left(new ResourceTokenNotFoundError());
     }

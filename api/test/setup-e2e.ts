@@ -3,14 +3,20 @@ import { randomUUID } from "node:crypto";
 import { PrismaClient } from "../generated/prisma";
 import { config } from "dotenv";
 import { envSchema } from "../src/infra/env/env";
-import { beforeAll, afterAll, beforeEach } from "vitest";
+import { beforeAll, afterAll } from "vitest";
+import Redis from "ioredis";
+import { DomainEvents } from "@/core/events/domain-events";
 
 config({ path: ".env", override: true });
 config({ path: ".env.test", override: true });
 
 const env = envSchema.parse(process.env);
 
-let prisma: PrismaClient;
+const prisma = new PrismaClient();
+const redis = new Redis({
+  host: env.REDIS_HOST,
+  port: env.REDIS_PORT,
+});
 
 function generateUniqueDatabaseURL(schemaId: string) {
   if (!env.DATABASE_URL) {
@@ -28,18 +34,21 @@ beforeAll(async () => {
   const databaseURL = generateUniqueDatabaseURL(schemaId);
   process.env.DATABASE_URL = databaseURL;
 
-  execSync("npx prisma migrate deploy");
+  DomainEvents.shouldRun = false;
 
-  prisma = new PrismaClient();
+  await redis.flushdb();
+
+  execSync("npx prisma migrate deploy");
 });
 
 afterAll(async () => {
   await prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${schemaId}" CASCADE`);
   await prisma.$disconnect();
+  await redis.flushdb();
 });
 
-// Limpa o banco de dados antes de cada teste
-beforeEach(async () => {
-  await prisma.user.deleteMany();
-  await prisma.company.deleteMany();
-});
+// // Limpa o banco de dados antes de cada teste
+// beforeEach(async () => {
+//   await prisma.user.deleteMany();
+//   await prisma.company.deleteMany();
+// });

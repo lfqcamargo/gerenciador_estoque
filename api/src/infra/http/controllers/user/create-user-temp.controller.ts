@@ -12,6 +12,7 @@ import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/creat
 import { AlreadyExistsCnpjError } from "@/domain/user/application/use-cases/errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "@/domain/user/application/use-cases/errors/already-exists-email-error";
 import { Public } from "@/infra/auth/public";
+import { validateCNPJ } from "@/utils/validate-cnpj";
 
 const createTempUserBodySchema = z.object({
   cnpj: z
@@ -21,7 +22,10 @@ const createTempUserBodySchema = z.object({
     })
     .length(14, "CNPJ must be exactly 14 characters")
     .regex(/^\d+$/, "CNPJ must contain only numbers")
-    .transform((cnpj) => cnpj.trim()),
+    .transform((cnpj) => cnpj.trim())
+    .refine((cnpj) => validateCNPJ(cnpj), {
+      message: "CNPJ inválido",
+    }),
 
   companyName: z
     .string({

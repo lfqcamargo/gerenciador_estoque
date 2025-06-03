@@ -34,7 +34,7 @@ type AuthenticateUserBody = z.infer<typeof authenticateUserBodySchema>;
 
 const bodyValidationPipe = new ZodValidationPipe(authenticateUserBodySchema);
 
-@Controller("auth")
+@Controller("/auth")
 @Public()
 export class AuthenticateUserController {
   constructor(private authenticateUserUseCase: AuthenticateUserUseCase) {}

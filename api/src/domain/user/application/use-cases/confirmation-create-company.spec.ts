@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { ConfirmationCreateCompanyUseCase } from "./confirmation-create-company";
 import { makeTempUser } from "test/factories/make-temp-user";
 import { ResourceTokenNotFoundError } from "./errors/resource-token-not-found-error";
-import { DomainEvents } from "@/core/events/domain-events";
 
 let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
