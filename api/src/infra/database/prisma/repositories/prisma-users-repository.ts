@@ -3,6 +3,7 @@ import { UsersRepository } from "@/domain/user/application/repositories/users-re
 import { User } from "@/domain/user/enterprise/entities/user";
 import { PrismaService } from "../prisma.service";
 import { PrismaUserMapper } from "../mappers/prisma-user-mapper";
+import { DomainEvents } from "@/core/events/domain-events";
 
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
@@ -33,5 +34,7 @@ export class PrismaUsersRepository implements UsersRepository {
       where: { id: user.id.toString() },
       data: PrismaUserMapper.toPrisma(user),
     });
+
+    DomainEvents.dispatchEventsForAggregate(user.id);
   }
 }

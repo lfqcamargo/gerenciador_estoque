@@ -98,4 +98,16 @@ export class RedisPasswordTokensRepository implements PasswordTokensRepository {
 
     return tokens;
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    const keys = await this.redis.keys(this.prefix + "*");
+    for (const key of keys) {
+      const data = await this.cacheRepository.get(key);
+      if (!data) continue;
+
+      if (data.userId === userId) {
+        await this.cacheRepository.delete(key);
+      }
+    }
+  }
 }

@@ -61,6 +61,8 @@ describe("Confirmation Create Company (E2E)", () => {
       expiration: tempUser.expiration.toISOString(),
     });
 
+    DomainEvents.shouldRun = true;
+
     const response = await request(app.getHttpServer()).get(
       `/companies/token/${token}`
     );
@@ -84,5 +86,8 @@ describe("Confirmation Create Company (E2E)", () => {
     expect(company?.users[0].email).toBe(tempUser.email);
     expect(company?.users[0].name).toBe(tempUser.userName);
     expect(company?.users[0].role).toBe("ADMIN");
+
+    const cachedUser = await cacheRepository.get("temp-user:" + tempUser.cnpj);
+    expect(cachedUser).toBeNull();
   });
 });

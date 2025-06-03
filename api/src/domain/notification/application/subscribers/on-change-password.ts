@@ -2,10 +2,14 @@ import { DomainEvents } from "@/core/events/domain-events";
 import { PasswordChangeEvent } from "@/domain/user/enterprise/events/password-change.event";
 import { SendEmailUseCase } from "../use-cases/send-email";
 import { Injectable } from "@nestjs/common";
+import { PasswordTokensRepository } from "@/domain/user/application/repositories/password-tokens-repository";
 
 @Injectable()
 export class OnChangePassword {
-  constructor(private sendEmail: SendEmailUseCase) {
+  constructor(
+    private sendEmail: SendEmailUseCase,
+    private passwordTokensRepository: PasswordTokensRepository
+  ) {
     this.setupSubscriptions();
   }
 
@@ -17,8 +21,11 @@ export class OnChangePassword {
   }
 
   private async sendPasswordChangeEmail(event: unknown) {
+    console.log("EVENTO RECEBIDO");
     const passwordChangeEvent = event as PasswordChangeEvent;
     const { user } = passwordChangeEvent;
+
+    await this.passwordTokensRepository.deleteByUserId(user.id.toString());
 
     await this.sendEmail.execute({
       to: user.email,

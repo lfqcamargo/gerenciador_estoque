@@ -34,8 +34,6 @@ beforeAll(async () => {
   const databaseURL = generateUniqueDatabaseURL(schemaId);
   process.env.DATABASE_URL = databaseURL;
 
-  DomainEvents.shouldRun = false;
-
   await redis.flushdb();
 
   execSync("npx prisma migrate deploy");
@@ -47,8 +45,9 @@ afterAll(async () => {
   await redis.flushdb();
 });
 
-// // Limpa o banco de dados antes de cada teste
-// beforeEach(async () => {
-//   await prisma.user.deleteMany();
-//   await prisma.company.deleteMany();
-// });
+beforeEach(async () => {
+  await prisma.user.deleteMany();
+  await prisma.company.deleteMany();
+
+  DomainEvents.shouldRun = false;
+});

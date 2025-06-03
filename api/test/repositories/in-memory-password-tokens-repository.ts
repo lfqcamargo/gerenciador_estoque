@@ -23,4 +23,8 @@ export class InMemoryPasswordTokensRepository
   async deleteByToken(token: string): Promise<void> {
     this.items = this.items.filter((item) => item.token !== token);
   }
+
+  async deleteByUserId(userId: string): Promise<void> {
+    this.items = this.items.filter((item) => item.userId !== userId);
+  }
 }

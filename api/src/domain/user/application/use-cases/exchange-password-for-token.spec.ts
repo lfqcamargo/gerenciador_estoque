@@ -36,12 +36,11 @@ describe("Exchange password for token use case", () => {
 
     sendEmail = new SendEmailUseCase(inMemoryEmailsRepository, fakeEmailSender);
 
-    new OnChangePassword(sendEmail);
+    new OnChangePassword(sendEmail, inMemoryPasswordTokensRepository);
 
     exchangePasswordForToken = new ExchangePasswordForTokenUseCase(
       inMemoryUsersRepository,
       inMemoryPasswordTokensRepository,
-      hashComparer,
       hashGenerator
     );
   });
@@ -64,13 +63,7 @@ describe("Exchange password for token use case", () => {
     });
 
     expect(result.isRight()).toBe(true);
-
-    const updatedPasswordToken = inMemoryPasswordTokensRepository.items[0];
-
-    expect(updatedPasswordToken.id).toBeDefined();
-    expect(updatedPasswordToken.token).toBe("token-test");
-    expect(updatedPasswordToken.expiration).toBeDefined();
-    expect(updatedPasswordToken.userId).toBe(user.id.toString());
+    expect(inMemoryPasswordTokensRepository.items).toHaveLength(0);
 
     const sentEmail = fakeEmailSender.sentEmails[0];
 

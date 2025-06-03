@@ -19,8 +19,7 @@ describe("Generate new password token", () => {
 
     sut = new GenerateNewPasswordTokenUseCase(
       inMemoryUsersRepository,
-      inMemoryPasswordTokensRepository,
-      fakeHasher
+      inMemoryPasswordTokensRepository
     );
   });
 

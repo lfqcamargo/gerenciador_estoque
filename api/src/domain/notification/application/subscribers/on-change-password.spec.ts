@@ -6,16 +6,19 @@ import { describe, it, beforeEach, expect } from "vitest";
 import { SendEmailUseCase } from "../use-cases/send-email";
 import { OnChangePassword } from "./on-change-password";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
+import { InMemoryPasswordTokensRepository } from "test/repositories/in-memory-password-tokens-repository";
 
 let inMemoryEmailsRepository: InMemoryEmailsRepository;
 let fakeEmailSender: FakeEmailSender;
 let sendEmail: SendEmailUseCase;
 let inMemoryUsersRepository: InMemoryUsersRepository;
+let inMemoryPasswordTokensRepository: InMemoryPasswordTokensRepository;
 
 describe("On Change Password", () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryEmailsRepository = new InMemoryEmailsRepository();
+    inMemoryPasswordTokensRepository = new InMemoryPasswordTokensRepository();
     fakeEmailSender = new FakeEmailSender();
     sendEmail = new SendEmailUseCase(inMemoryEmailsRepository, fakeEmailSender);
 
@@ -25,17 +28,14 @@ describe("On Change Password", () => {
 
   it("should send a password change email when password is changed", async () => {
     // Registra o subscriber
-    new OnChangePassword(sendEmail);
-
+    new OnChangePassword(sendEmail, inMemoryPasswordTokensRepository);
     const user = makeUser();
-
     user.password = "new-password";
-    // Dispara o evento
+    await inMemoryUsersRepository.create(user);
     DomainEvents.dispatchEventsForAggregate(user.id);
+    await new Promise(setImmediate);
 
-    // Verifica se o email foi enviado
     const sentEmail = fakeEmailSender.sentEmails[0];
-
     expect(sentEmail).toBeDefined();
     expect(sentEmail.to).toBe(user.email);
     expect(sentEmail.subject).toBe("Senha alterada com sucesso");
