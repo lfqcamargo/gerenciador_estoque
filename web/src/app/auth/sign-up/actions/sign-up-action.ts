@@ -32,7 +32,7 @@ export async function signUpAction(
       if (error.response?.status === 409) {
         return {
           success: false,
-          message: "Email ou CNPJ já cadastrado",
+          message: error.response.data?.message,
         };
       }
 
