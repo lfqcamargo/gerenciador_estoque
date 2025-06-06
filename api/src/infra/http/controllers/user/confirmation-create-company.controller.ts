@@ -65,5 +65,9 @@ export class ConfirmationCreateCompanyController {
 
       throw new BadRequestException("Unexpected error");
     }
+
+    return {
+      email: result.value.user.email,
+    };
   }
 }

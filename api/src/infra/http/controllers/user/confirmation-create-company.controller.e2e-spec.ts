@@ -68,6 +68,7 @@ describe("Confirmation Create Company (E2E)", () => {
     );
 
     expect(response.statusCode).toBe(201);
+    expect(response.body.email).toBe(tempUser.email);
 
     const company = await prisma.company.findUnique({
       where: {

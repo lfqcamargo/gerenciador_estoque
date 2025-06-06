@@ -1,42 +1,55 @@
 export function validateCNPJ(cnpj: string): boolean {
   // Remove caracteres não numéricos
-  cnpj = cnpj.replace(/[^\d]/g, "");
+  const cleanCNPJ = cnpj.replace(/\D/g, "");
 
   // Verifica se tem 14 dígitos
-  if (cnpj.length !== 14) return false;
+  if (cleanCNPJ.length !== 14) return false;
 
   // Verifica se todos os dígitos são iguais
-  if (/^(\d)\1+$/.test(cnpj)) return false;
+  if (/^(\d)\1+$/.test(cleanCNPJ)) return false;
 
-  // Validação dos dígitos verificadores
-  let tamanho = cnpj.length - 2;
-  let numeros = cnpj.substring(0, tamanho);
-  const digitos = cnpj.substring(tamanho);
-  let soma = 0;
-  let pos = tamanho - 7;
+  // Validação do primeiro dígito verificador
+  let sum = 0;
+  let weight = 5;
 
-  // Validação do primeiro dígito
-  for (let i = tamanho; i >= 1; i--) {
-    soma += Number(numeros.charAt(tamanho - i)) * pos--;
-    if (pos < 2) pos = 9;
+  for (let i = 0; i < 12; i++) {
+    sum += Number.parseInt(cleanCNPJ.charAt(i)) * weight;
+    weight = weight === 2 ? 9 : weight - 1;
   }
 
-  let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-  if (resultado !== Number(digitos.charAt(0))) return false;
+  let remainder = sum % 11;
+  const digit1 = remainder < 2 ? 0 : 11 - remainder;
 
-  // Validação do segundo dígito
-  tamanho = tamanho + 1;
-  numeros = cnpj.substring(0, tamanho);
-  soma = 0;
-  pos = tamanho - 7;
+  if (Number.parseInt(cleanCNPJ.charAt(12)) !== digit1) return false;
 
-  for (let i = tamanho; i >= 1; i--) {
-    soma += Number(numeros.charAt(tamanho - i)) * pos--;
-    if (pos < 2) pos = 9;
+  // Validação do segundo dígito verificador
+  sum = 0;
+  weight = 6;
+
+  for (let i = 0; i < 13; i++) {
+    sum += Number.parseInt(cleanCNPJ.charAt(i)) * weight;
+    weight = weight === 2 ? 9 : weight - 1;
   }
 
-  resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
-  if (resultado !== Number(digitos.charAt(1))) return false;
+  remainder = sum % 11;
+  const digit2 = remainder < 2 ? 0 : 11 - remainder;
 
-  return true;
+  return Number.parseInt(cleanCNPJ.charAt(13)) === digit2;
+}
+
+export function formatCNPJ(cnpj: string): string {
+  const cleanCNPJ = cnpj.replace(/\D/g, "");
+
+  if (cleanCNPJ.length <= 2) return cleanCNPJ;
+  if (cleanCNPJ.length <= 5)
+    return cleanCNPJ.replace(/^(\d{2})(\d{0,3})/, "$1.$2");
+  if (cleanCNPJ.length <= 8)
+    return cleanCNPJ.replace(/^(\d{2})(\d{3})(\d{0,3})/, "$1.$2.$3");
+  if (cleanCNPJ.length <= 12)
+    return cleanCNPJ.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4})/, "$1.$2.$3/$4");
+
+  return cleanCNPJ.replace(
+    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/,
+    "$1.$2.$3/$4-$5"
+  );
 }

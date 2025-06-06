@@ -8,6 +8,11 @@ async function bootstrap() {
     // logger: false,
   });
 
+  app.enableCors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  });
+
   const configService = app.get<ConfigService<Env, true>>(ConfigService);
   const port = configService.get("PORT", { infer: true });
 

@@ -69,7 +69,7 @@ export default function SignIn() {
 
     if (fromPage === "signup") {
       setSuccessMessage(
-        "Conta criada com sucesso! Agora você pode fazer login com suas credenciais."
+        "Conta criada com sucesso! Entre no seu e-mail para confirmar sua conta."
       );
       setShowSuccessMessage(true);
     } else if (fromPage === "forgot-password") {
