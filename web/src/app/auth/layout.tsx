@@ -1,4 +1,5 @@
 import { isAuthenticated } from "@/auth/auth";
+import ThemeToggle from "@/components/theme-toggle";
 import { redirect } from "next/navigation";
 import type React from "react";
 
@@ -27,6 +28,9 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
       </div>
 
       <div className="flex flex-col items-center justify-center bg-muted dark:bg-muted">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
         {children}
       </div>
     </div>

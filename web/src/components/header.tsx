@@ -8,7 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-// import { ThemeToggle } from "@/components/theme-toggle";
+import ThemeToggle from "@/components/theme-toggle";
 
 export function Header() {
   return (
@@ -28,7 +28,9 @@ export function Header() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="ml-auto px-4">{/* <ThemeToggle /> */}</div>
+      <div className="ml-auto px-4">
+        <ThemeToggle />
+      </div>
     </header>
   );
 }
