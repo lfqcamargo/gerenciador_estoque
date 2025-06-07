@@ -14,6 +14,10 @@ import { AuthenticateUserUseCase } from "@/domain/user/application/use-cases/aut
 import { AuthenticateUserController } from "./authenticate-user.controller";
 import { RedisModule } from "@/infra/cache/redis/redis.module";
 import { EventModule } from "@/infra/event/event.module";
+import { GetProfileCompanyController } from "./get-profile-company.controller";
+import { GetProfileCompanyUseCase } from "@/domain/user/application/use-cases/get-profile-company";
+import { GetProfileUserController } from "./get-profile-user.controller";
+import { GetProfileUserUseCase } from "@/domain/user/application/use-cases/get-profile-user";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
@@ -23,6 +27,8 @@ import { EventModule } from "@/infra/event/event.module";
     GenerateNewPasswordTokenController,
     ExchangePasswordForTokenController,
     AuthenticateUserController,
+    GetProfileCompanyController,
+    GetProfileUserController,
   ],
   providers: [
     CreateTempUserUseCase,
@@ -30,6 +36,8 @@ import { EventModule } from "@/infra/event/event.module";
     GenerateNewPasswordTokenUseCase,
     ExchangePasswordForTokenUseCase,
     AuthenticateUserUseCase,
+    GetProfileCompanyUseCase,
+    GetProfileUserUseCase,
   ],
 })
 export class UserModule {}

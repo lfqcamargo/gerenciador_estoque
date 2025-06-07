@@ -26,7 +26,7 @@ export default function SignInPage() {
             Acessar painel
           </CardTitle>
           <CardDescription className="text-base text-muted-foreground">
-            Acompanhe suas finanças pelo painel do FinControl!
+            Acompanhe suas estoque pelo painel do StockManager!
           </CardDescription>
         </CardHeader>
         <CardContent className="pb-8">

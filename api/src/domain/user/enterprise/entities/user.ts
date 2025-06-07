@@ -4,8 +4,8 @@ import { Optional } from "@/core/types/optional";
 import { PasswordChangeEvent } from "../events/password-change.event";
 
 export enum UserRole {
-  ADMIN = "admin",
-  USER = "user",
+  ADMIN = "ADMIN",
+  USER = "USER",
 }
 
 export interface UserProps {

@@ -51,7 +51,7 @@ describe("Confirmation create company use case", () => {
     expect(inMemoryUsersRepository.items[0].password).toEqual(
       userTemp.password
     );
-    expect(inMemoryUsersRepository.items[0].role).toEqual("admin");
+    expect(inMemoryUsersRepository.items[0].role).toEqual("ADMIN");
     expect(inMemoryUsersRepository.items[0].companyId).toEqual(
       inMemoryCompaniesRepository.items[0].id.toString()
     );
