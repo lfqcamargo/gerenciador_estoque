@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,7 +23,6 @@ import { signInSchema, type SignInFormData } from "../lib/validations";
 export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -34,7 +33,7 @@ export function SignInForm() {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -82,27 +81,24 @@ export function SignInForm() {
   const emailWatch = watch("email");
   const passwordWatch = watch("password");
 
-  const activeButton = Boolean(emailWatch && passwordWatch && !isPending);
+  const activeButton = Boolean(emailWatch && passwordWatch && !isSubmitting);
 
-  const onSubmit = async (data: SignInFormData) => {
+  async function onSubmit(data: SignInFormData) {
     setError(null);
 
-    startTransition(async () => {
-      try {
-        const result = await signInAction(data);
+    try {
+      const result = await signInAction(data);
 
-        if (result.success) {
-          // Redirecionar para o dashboard após login bem-sucedido
-          router.push("/dashboard");
-        } else {
-          setError(result.message || "Erro ao fazer login");
-        }
-      } catch (error) {
-        console.error("Sign in error:", error);
-        setError("Erro inesperado. Tente novamente.");
+      if (result.success) {
+        router.push("/dashboard");
+      } else {
+        setError(result.message || "Erro ao fazer login");
       }
-    });
-  };
+    } catch (error) {
+      console.error("Sign in error:", error);
+      setError("Erro inesperado. Tente novamente.");
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -139,7 +135,7 @@ export function SignInForm() {
               type="email"
               className="h-12 border-input bg-background pl-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="seu@email.com"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("email")}
             />
           </div>
@@ -162,7 +158,7 @@ export function SignInForm() {
               type={showPassword ? "text" : "password"}
               className="h-12 border-input bg-background pl-10 pr-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="••••••••"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("password")}
             />
             <Button
@@ -171,7 +167,7 @@ export function SignInForm() {
               size="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               onClick={() => setShowPassword(!showPassword)}
-              disabled={isPending}
+              disabled={isSubmitting}
             >
               {showPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -192,7 +188,7 @@ export function SignInForm() {
             <Checkbox
               id="rememberMe"
               {...register("rememberMe")}
-              disabled={isPending}
+              disabled={isSubmitting}
               className="border-input data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:border-input/70"
             />
             <Label
@@ -215,7 +211,7 @@ export function SignInForm() {
           className="h-12 w-full bg-primary text-base font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-md disabled:opacity-50 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
           type="submit"
         >
-          {isPending ? "Processando..." : "Acessar painel"}
+          {isSubmitting ? "Processando..." : "Acessar painel"}
         </Button>
       </form>
     </div>

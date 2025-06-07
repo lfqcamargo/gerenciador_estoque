@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { SignUpForm } from "./components/sign-up-form";
 import { User } from "lucide-react";
@@ -36,12 +37,12 @@ export default function SignUpPage() {
 
       <div className="mt-4 flex w-full max-w-[500px] items-center justify-center space-x-2">
         <span className="text-muted-foreground">Já tem uma conta?</span>
-        <a
+        <Link
           href="/auth/sign-in"
           className="text-primary hover:text-primary/80 dark:text-primary dark:hover:text-primary/90 font-medium"
         >
           Faça Login
-        </a>
+        </Link>
       </div>
     </div>
   );

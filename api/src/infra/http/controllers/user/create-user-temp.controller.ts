@@ -5,6 +5,8 @@ import {
   UsePipes,
   HttpCode,
   BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
 } from "@nestjs/common";
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import z from "zod";
@@ -93,14 +95,14 @@ export class CreateUserTempController {
       const error = result.value;
 
       if (error instanceof AlreadyExistsCnpjError) {
-        throw new BadRequestException(error.message);
+        throw new ConflictException(error.message);
       }
 
       if (error instanceof AlreadyExistsEmailError) {
-        throw new BadRequestException(error.message);
+        throw new ConflictException(error.message);
       }
 
-      throw new BadRequestException("Unexpected error");
+      throw new InternalServerErrorException("Unexpected error");
     }
   }
 }

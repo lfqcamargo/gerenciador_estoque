@@ -37,6 +37,22 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
 
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/auth/sign-out", {
+        method: "GET",
+      });
+
+      if (res.redirected) {
+        window.location.href = res.url;
+      } else {
+        console.error("Logout falhou");
+      }
+    } catch (err) {
+      console.error("Erro ao deslogar:", err);
+    }
+  };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -114,7 +130,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Sair
             </DropdownMenuItem>

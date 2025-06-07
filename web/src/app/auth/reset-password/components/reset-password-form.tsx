@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,7 +31,6 @@ import {
 export function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +51,7 @@ export function ResetPasswordForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -61,7 +60,7 @@ export function ResetPasswordForm() {
     },
   });
 
-  const onSubmit = async (data: ResetPasswordFormData) => {
+  async function handleResetPassword(data: ResetPasswordFormData) {
     if (!token) {
       setError(
         "Token de redefinição não encontrado. Solicite um novo link de recuperação."
@@ -71,24 +70,21 @@ export function ResetPasswordForm() {
 
     setError(null);
 
-    startTransition(async () => {
-      try {
-        const result = await resetPasswordAction({
-          token,
-          password: data.password,
-        });
-
-        if (result.success) {
-          setIsPasswordReset(true);
-        } else {
-          setError(result.message || "Erro ao redefinir senha");
-        }
-      } catch (error) {
-        console.error("Reset password error:", error);
-        setError("Erro inesperado. Tente novamente.");
+    try {
+      const result = await resetPasswordAction({
+        token,
+        password: data.password,
+      });
+      if (result.success) {
+        setIsPasswordReset(true);
+      } else {
+        setError(result.message || "Erro ao redefinir senha");
       }
-    });
-  };
+    } catch (error) {
+      console.error("Reset password error:", error);
+      setError("Erro inesperado. Tente novamente.");
+    }
+  }
 
   if (isPasswordReset) {
     return (
@@ -129,7 +125,7 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleResetPassword)} className="space-y-6">
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -151,7 +147,7 @@ export function ResetPasswordForm() {
             type={showPassword ? "text" : "password"}
             className="h-12 border-input bg-background pl-10 pr-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
             placeholder="Digite sua nova senha"
-            disabled={isPending}
+            disabled={isSubmitting}
             {...register("password")}
           />
           <Button
@@ -160,7 +156,7 @@ export function ResetPasswordForm() {
             size="icon"
             className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             onClick={() => setShowPassword(!showPassword)}
-            disabled={isPending}
+            disabled={isSubmitting}
           >
             {showPassword ? (
               <EyeOff className="h-5 w-5" />
@@ -188,7 +184,7 @@ export function ResetPasswordForm() {
             type={showConfirmPassword ? "text" : "password"}
             className="h-12 border-input bg-background pl-10 pr-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
             placeholder="Confirme sua nova senha"
-            disabled={isPending}
+            disabled={isSubmitting}
             {...register("confirmPassword")}
           />
           <Button
@@ -197,7 +193,7 @@ export function ResetPasswordForm() {
             size="icon"
             className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            disabled={isPending}
+            disabled={isSubmitting}
           >
             {showConfirmPassword ? (
               <EyeOff className="h-5 w-5" />
@@ -227,9 +223,9 @@ export function ResetPasswordForm() {
       <Button
         type="submit"
         className="h-12 w-full bg-primary text-base font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-md disabled:opacity-50"
-        disabled={isPending || !token}
+        disabled={isSubmitting || !token}
       >
-        {isPending ? (
+        {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Redefinindo...

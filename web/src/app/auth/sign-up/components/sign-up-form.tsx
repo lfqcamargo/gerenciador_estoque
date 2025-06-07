@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import type React from "react";
 
 import { useRouter } from "next/navigation";
@@ -24,7 +24,6 @@ import { formatCNPJ } from "@/utils/validate-cnpj";
 
 export function SignUpForm() {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +33,7 @@ export function SignUpForm() {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
   });
@@ -53,7 +52,7 @@ export function SignUpForm() {
       userNameWatch &&
       passwordWatch &&
       confirmPasswordWatch &&
-      !isPending
+      !isSubmitting
   );
 
   // Formatação automática do CNPJ
@@ -63,29 +62,27 @@ export function SignUpForm() {
     setValue("cnpj", formatted);
   };
 
-  const onSubmit = async (data: SignUpFormData) => {
+  async function handleSignUp(data: SignUpFormData) {
     setError(null);
 
-    startTransition(async () => {
-      try {
-        const result = await signUpAction(data);
+    try {
+      const result = await signUpAction(data);
 
-        if (result.success) {
-          router.push(
-            `/auth/sign-in?email=${encodeURIComponent(data.email)}&from=signup`
-          );
-        } else {
-          setError(result.message || "Erro interno do servidor");
-        }
-      } catch (error) {
-        console.error("Sign up error:", error);
-        setError("Erro inesperado. Tente novamente.");
+      if (result.success) {
+        router.push(
+          `/auth/sign-in?email=${encodeURIComponent(data.email)}&from=signup`
+        );
+      } else {
+        setError(result.message || "Erro interno do servidor");
       }
-    });
-  };
+    } catch (error) {
+      console.error("Sign up error:", error);
+      setError("Erro inesperado. Tente novamente.");
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(handleSignUp)}>
       {error && (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
@@ -108,7 +105,7 @@ export function SignUpForm() {
               type="text"
               className="h-12 border-input bg-background pl-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="00.000.000/0000-00"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("cnpj")}
               onChange={handleCNPJChange}
               maxLength={18}
@@ -133,7 +130,7 @@ export function SignUpForm() {
               type="text"
               className="h-12 border-input bg-background pl-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="Nome da sua empresa"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("companyName")}
             />
           </div>
@@ -156,7 +153,7 @@ export function SignUpForm() {
               type="text"
               className="h-12 border-input bg-background pl-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="Seu nome de usuário"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("userName")}
             />
           </div>
@@ -179,7 +176,7 @@ export function SignUpForm() {
               type="email"
               className="h-12 border-input bg-background pl-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="seu@email.com"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("email")}
             />
           </div>
@@ -202,7 +199,7 @@ export function SignUpForm() {
               type={showPassword ? "text" : "password"}
               className="h-12 border-input bg-background pl-10 pr-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="Mínimo de 8 caracteres"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("password")}
             />
             <Button
@@ -212,7 +209,7 @@ export function SignUpForm() {
               size="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               onClick={() => setShowPassword(!showPassword)}
-              disabled={isPending}
+              disabled={isSubmitting}
             >
               {showPassword ? (
                 <EyeOff focusable={"false"} className="h-5 w-5" />
@@ -240,7 +237,7 @@ export function SignUpForm() {
               type={showRepeatPassword ? "text" : "password"}
               className="h-12 border-input bg-background pl-10 pr-10 text-base text-foreground transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-input/50 dark:bg-background/80 dark:focus:border-primary dark:focus:ring-primary/30"
               placeholder="Repita sua senha"
-              disabled={isPending}
+              disabled={isSubmitting}
               {...register("confirmPassword")}
             />
             <Button
@@ -250,7 +247,7 @@ export function SignUpForm() {
               size="icon"
               className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               onClick={() => setShowRepeatPassword(!showRepeatPassword)}
-              disabled={isPending}
+              disabled={isSubmitting}
             >
               {showRepeatPassword ? (
                 <EyeOff className="h-5 w-5" />
@@ -270,7 +267,7 @@ export function SignUpForm() {
         className="mt-6 h-12 w-full bg-primary text-base font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:shadow-md disabled:opacity-50 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90"
         type="submit"
       >
-        {isPending ? (
+        {isSubmitting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Processando...

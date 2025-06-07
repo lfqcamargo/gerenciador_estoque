@@ -1,11 +1,12 @@
 import {
   Controller,
   Param,
-  UsePipes,
   HttpCode,
   BadRequestException,
   Get,
+  InternalServerErrorException,
 } from "@nestjs/common";
+
 import { ZodValidationPipe } from "@/infra/http/pipes/zod-validation-pipe";
 import z from "zod";
 import { ConfirmationCreateCompanyUseCase } from "@/domain/user/application/use-cases/confirmation-create-company";
@@ -63,7 +64,7 @@ export class ConfirmationCreateCompanyController {
         throw new BadRequestException(error.message);
       }
 
-      throw new BadRequestException("Unexpected error");
+      throw new InternalServerErrorException("Unexpected error");
     }
 
     return {

@@ -15,43 +15,31 @@ export async function forgotPasswordAction(
   data: ForgotPasswordFormData
 ): Promise<ForgotPasswordActionResult> {
   try {
-    // Validação no servidor
     const validatedData = forgotPasswordSchema.parse(data);
 
-    // Chamar a API
-    await forgotPassword(validatedData.email);
+    await forgotPassword({ email: validatedData.email });
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("Forgot password action error:", error);
-
     if (error instanceof AxiosError) {
-      if (error.response?.status === 429) {
+      if (error.response?.data?.message?.name === "ZodValidationError") {
         return {
           success: false,
-          message: "Muitas tentativas. Tente novamente em alguns minutos.",
+          message:
+            "Erro de validação, verifique os campos preenchidos e tente novamente",
         };
       }
 
       if (error.response?.status === 404) {
-        // Não informamos ao usuário que o email não existe por segurança
-        return { success: true };
-      }
-
-      if (error.response?.status === 400) {
         return {
-          success: false,
-          message: error.response.data?.message || "Dados inválidos",
+          success: true,
         };
       }
 
-      // Erro de validação do Zod
-      if (error.name === "ZodError") {
-        return {
-          success: false,
-          message: "Email inválido. Verifique e tente novamente.",
-        };
-      }
+      return {
+        success: false,
+        message: error.response?.data?.message,
+      };
     }
 
     return {
