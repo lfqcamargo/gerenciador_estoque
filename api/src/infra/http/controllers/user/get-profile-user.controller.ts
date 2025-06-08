@@ -19,7 +19,7 @@ export class GetProfileUserController {
   @Get()
   @HttpCode(200)
   async handle(@CurrentUser() user: UserPayload) {
-    const { sub: userId } = user;
+    const { userId } = user;
 
     const result = await this.getProfileUserUseCase.execute({
       userId,

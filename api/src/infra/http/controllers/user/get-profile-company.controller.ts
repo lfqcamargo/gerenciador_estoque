@@ -19,11 +19,11 @@ export class GetProfileCompanyController {
   @Get()
   @HttpCode(200)
   async handle(@CurrentUser() user: UserPayload) {
-    const { companyId, sub } = user;
+    const { companyId, userId } = user;
 
     const result = await this.getProfileCompanyUseCase.execute({
       companyId,
-      userAuthenticateId: sub,
+      userAuthenticateId: userId,
     });
 
     if (result.isLeft()) {

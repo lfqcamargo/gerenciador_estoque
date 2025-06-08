@@ -21,10 +21,19 @@ export async function signInAction(
     });
 
     const cookieStore = await cookies();
-    cookieStore.set("token", result.token, {
+
+    cookieStore.set("token", result.access_token, {
       path: "/",
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: 60 * 60 * 24 * 30, // 30 dias
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     });
+
+    // Também salvar no localStorage para o cliente
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", result.access_token);
+    }
 
     return { success: true };
   } catch (error: unknown) {

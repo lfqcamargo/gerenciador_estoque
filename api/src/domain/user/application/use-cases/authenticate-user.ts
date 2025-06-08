@@ -46,7 +46,7 @@ export class AuthenticateUserUseCase {
 
     const accessToken = await this.encrypter.encrypt({
       companyId: user.companyId.toString(),
-      user: user.id.toString(),
+      userId: user.id.toString(),
       role: user.role,
     });
 

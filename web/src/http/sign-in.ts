@@ -1,4 +1,4 @@
-import api from "./api-client";
+import { api } from "./api-client";
 
 interface SignInRequest {
   email: string;
@@ -6,7 +6,7 @@ interface SignInRequest {
 }
 
 interface SignInResponse {
-  token: string;
+  access_token: string;
 }
 
 export const signIn = async (data: SignInRequest): Promise<SignInResponse> => {

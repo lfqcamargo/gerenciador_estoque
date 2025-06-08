@@ -42,8 +42,8 @@ describe("[GET] /users/me (E2E)", () => {
     });
 
     const accessToken = jwtService.sign({
-      sub: user.id.toString(),
       companyId: company.id.toString(),
+      userId: user.id.toString(),
       role: "ADMIN",
     });
 
@@ -61,10 +61,5 @@ describe("[GET] /users/me (E2E)", () => {
         role: user.role,
       })
     );
-  });
-
-  afterAll(async () => {
-    await prisma.$disconnect();
-    await app.close();
   });
 });

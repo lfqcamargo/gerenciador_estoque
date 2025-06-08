@@ -1,11 +1,10 @@
 "use client";
 
 import type * as React from "react";
-import { BarChart3, Box, Home, Settings, Package } from "lucide-react";
+import { BarChart3, Box, Home, Settings } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -13,109 +12,54 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import type { GetProfileCompanyResponse } from "@/http/get-profile-company";
+import type { GetProfileUserResponse } from "@/http/get-profile-user";
 
-// Dados de navegação
-const data = {
-  user: {
-    name: "Lucas Fernando",
-    email: "lucas@stockmanager.com",
-    avatar: "/placeholder.svg?height=32&width=32",
-  },
-  teams: [
-    {
-      name: "StockManager Pro",
-      logo: Package,
-      plan: "Empresarial",
-    },
-    {
-      name: "Filial Centro",
-      logo: Package,
-      plan: "Básico",
-    },
-    {
-      name: "Filial Norte",
-      logo: Package,
-      plan: "Básico",
-    },
-  ],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: Home,
-      isActive: true,
-    },
-    {
-      title: "Estoque",
-      url: "#",
-      icon: Box,
-      items: [
-        {
-          title: "Grupos de Material",
-          url: "/grupos-material",
-        },
-        {
-          title: "Materiais",
-          url: "/materiais",
-        },
-        {
-          title: "Locais de Estoque",
-          url: "/locais",
-        },
-        {
-          title: "Movimentações",
-          url: "/movimentacoes",
-        },
-      ],
-    },
-    {
-      title: "Relatórios",
-      url: "/relatorios",
-      icon: BarChart3,
-      items: [
-        {
-          title: "Estoque Atual",
-          url: "/relatorios/estoque-atual",
-        },
-        {
-          title: "Movimentações",
-          url: "/relatorios/movimentacoes",
-        },
-        {
-          title: "Análise de Consumo",
-          url: "/relatorios/consumo",
-        },
-      ],
-    },
-    {
-      title: "Administração",
-      url: "#",
-      icon: Settings,
-      items: [
-        {
-          title: "Usuários",
-          url: "/usuarios",
-        },
-        {
-          title: "Configurações",
-          url: "/configuracoes",
-        },
-      ],
-    },
-  ],
+// Mapeamento de strings para componentes Lucide
+const iconMap = {
+  Home: Home,
+  Box: Box,
+  BarChart3: BarChart3,
+  Settings: Settings,
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  profileCompany,
+  profileUser,
+  navData,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  profileCompany: GetProfileCompanyResponse | null;
+  profileUser: GetProfileUserResponse | null;
+  navData: {
+    navMain: {
+      title: string;
+      url: string;
+      icon: string;
+    }[];
+  };
+}) {
+  // Converter strings de ícones para componentes reais
+  const navMainWithIcons = navData.navMain.map((item) => ({
+    ...item,
+    icon: iconMap[item.icon as keyof typeof iconMap] || Box,
+  }));
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        {profileCompany && (
+          <>
+            <p>{profileCompany?.name}</p>
+            <p>{profileCompany?.cnpj}</p>
+          </>
+        )}
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMainWithIcons} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {profileUser && <NavUser user={profileUser} />}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
