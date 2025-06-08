@@ -8,7 +8,7 @@ export interface CompanyProps {
   cnpj: string;
   name: string;
   createdAt: Date;
-  photo?: string | null;
+  photoId?: string | null;
   lealName?: string | null;
 
   users: User[];
@@ -47,12 +47,12 @@ export class Company extends AggregateRoot<CompanyProps> {
     this.props.lealName = lealName;
   }
 
-  get photo() {
-    return this.props.photo ?? null;
+  get photoId() {
+    return this.props.photoId ?? null;
   }
 
-  set photo(photo: string | null) {
-    this.props.photo = photo;
+  set photoId(photoId: string | null) {
+    this.props.photoId = photoId;
   }
 
   get users() {

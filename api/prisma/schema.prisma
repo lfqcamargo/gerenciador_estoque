@@ -23,6 +23,21 @@ enum EmailStatus {
   FAILED
 }
 
+model Company {
+  id        String   @id @default(uuid())
+  cnpj      String   @unique
+  name      String  
+  lealName  String?  @map("leal_name")
+  createdAt DateTime @default(now()) @map("created_at")  
+
+  photoId   String?  @map("photo_id")
+  photo     Attachment?  @relation(fields: [photoId], references: [id])
+
+  users User[]
+
+  @@map("companies")
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String
@@ -38,18 +53,7 @@ model User {
   @@map("users")
 }
 
-model Company {
-  id        String   @id @default(uuid())
-  cnpj      String   @unique
-  name      String  
-  createdAt DateTime @default(now()) @map("created_at")
-  lealName  String?  @map("leal_name")
-  photo     String?  @map("photo")
 
-  users User[]
-
-  @@map("companies")
-}
 
 model Email {
   id        String    @id @default(uuid())
@@ -69,5 +73,7 @@ model Attachment {
   title      String
   url        String
 
+
+  companies Company[]
   @@map("attachments")
 }

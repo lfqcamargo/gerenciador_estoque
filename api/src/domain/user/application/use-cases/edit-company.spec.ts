@@ -41,7 +41,7 @@ describe("Edit company", () => {
       authenticateUserId: user.id.toString(),
       name: "New name",
       lealName: "New leal name",
-      photo: "New photo",
+      photoId: "New photo",
     });
 
     expect(result.isRight()).toBe(true);
@@ -57,6 +57,9 @@ describe("Edit company", () => {
     const result = await sut.execute({
       companyId: company.id.toString(),
       authenticateUserId: "non-existent-user-id",
+      name: "New name",
+      lealName: "New leal name",
+      photoId: "New photo",
     });
 
     expect(result.isLeft()).toBe(true);
@@ -70,6 +73,9 @@ describe("Edit company", () => {
     const result = await sut.execute({
       companyId: "non-existent-company-id",
       authenticateUserId: user.id.toString(),
+      name: "New name",
+      lealName: "New leal name",
+      photoId: "New photo",
     });
 
     expect(result.isLeft()).toBe(true);
@@ -88,6 +94,9 @@ describe("Edit company", () => {
     const result = await sut.execute({
       companyId: anotherCompany.id.toString(),
       authenticateUserId: user.id.toString(),
+      name: "New name",
+      lealName: "New leal name",
+      photoId: "New photo",
     });
 
     expect(result.isLeft()).toBe(true);
@@ -107,6 +116,9 @@ describe("Edit company", () => {
     const result = await sut.execute({
       companyId: company.id.toString(),
       authenticateUserId: user.id.toString(),
+      name: "New name",
+      lealName: "New leal name",
+      photoId: "New photo",
     });
 
     expect(result.isLeft()).toBe(true);

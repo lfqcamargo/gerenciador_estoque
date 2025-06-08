@@ -36,7 +36,7 @@ const editCompanyBodySchema = z.object({
     .max(100, "Leal name must be at most 100 characters")
     .transform((name) => name.trim())
     .optional(),
-  photo: z
+  photoId: z
     .string({
       required_error: "Photo is required",
       invalid_type_error: "Photo must be a string",
@@ -61,7 +61,7 @@ export class EditCompanyController {
     @CurrentUser() user: UserPayload
   ) {
     const { companyId, userId, role } = user;
-    const { name, lealName, photo } = body;
+    const { name, lealName, photoId } = body;
 
     if (role !== UserRole.ADMIN) {
       throw new ForbiddenException("User is not an admin");
@@ -72,7 +72,7 @@ export class EditCompanyController {
       authenticateUserId: userId,
       name,
       lealName: lealName ?? null,
-      photo: photo ?? null,
+      photoId: photoId ?? null,
     });
 
     if (result.isLeft()) {

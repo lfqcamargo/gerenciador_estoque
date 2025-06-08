@@ -9,7 +9,7 @@ export class PrismaCompanyMapper {
         cnpj: raw.cnpj,
         name: raw.name,
         lealName: raw.lealName,
-        photo: raw.photo,
+        photoId: raw.photoId,
         createdAt: raw.createdAt,
       },
       new UniqueEntityID(raw.id)
@@ -22,7 +22,7 @@ export class PrismaCompanyMapper {
       cnpj: company.cnpj,
       name: company.name,
       lealName: company.lealName,
-      photo: company.photo,
+      photoId: company.photoId,
       createdAt: company.createdAt,
     };
   }

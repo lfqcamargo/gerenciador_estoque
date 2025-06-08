@@ -2,6 +2,7 @@ import { CompaniesRepository } from "@/domain/user/application/repositories/comp
 import { Company } from "@/domain/user/enterprise/entities/company";
 import { InMemoryUsersRepository } from "./in-memory-users-repository";
 import { InMemoryTempUsersRepository } from "./in-memory-temp-users-repository";
+
 export class InMemoryCompaniesRepository implements CompaniesRepository {
   public items: Company[] = [];
 

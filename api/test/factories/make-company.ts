@@ -17,7 +17,7 @@ export function makeCompany(
       cnpj: faker.string.numeric(14),
       name: faker.company.name(),
       lealName: faker.company.name(),
-      photo: faker.image.url(),
+      photoId: null,
       createdAt: new Date(),
       ...override,
     },

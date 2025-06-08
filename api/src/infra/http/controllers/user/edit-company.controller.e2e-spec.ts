@@ -9,6 +9,7 @@ import { CompanyFactory } from "test/factories/make-company";
 import { UserFactory } from "test/factories/make-user";
 import { CacheModule } from "@/infra/cache/cache.module";
 import { JwtService } from "@nestjs/jwt";
+import { AttachmentFactory } from "test/factories/make-attachment";
 
 describe("[PUT] /companies (E2E)", () => {
   let app: INestApplication;
@@ -16,11 +17,12 @@ describe("[PUT] /companies (E2E)", () => {
   let companyFactory: CompanyFactory;
   let userFactory: UserFactory;
   let jwtService: JwtService;
+  let attachmentFactory: AttachmentFactory;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule, CacheModule],
-      providers: [CompanyFactory, UserFactory],
+      providers: [CompanyFactory, UserFactory, AttachmentFactory],
     }).compile();
 
     app = moduleRef.createNestApplication();
@@ -29,6 +31,7 @@ describe("[PUT] /companies (E2E)", () => {
     companyFactory = moduleRef.get(CompanyFactory);
     userFactory = moduleRef.get(UserFactory);
     jwtService = moduleRef.get(JwtService);
+    attachmentFactory = moduleRef.get(AttachmentFactory);
 
     await app.init();
   });
@@ -45,6 +48,8 @@ describe("[PUT] /companies (E2E)", () => {
       password: "12345678A@",
     });
 
+    const attachment = await attachmentFactory.makePrismaAttachment();
+
     const accessToken = jwtService.sign({
       companyId: company.id.toString(),
       userId: user.id.toString(),
@@ -57,7 +62,7 @@ describe("[PUT] /companies (E2E)", () => {
       .send({
         name: "NewCompany1@",
         lealName: "New Legal Name",
-        photo: "https://example.com/photo.png",
+        photoId: attachment.id.toString(),
       });
 
     expect(response.statusCode).toBe(204);
@@ -68,6 +73,6 @@ describe("[PUT] /companies (E2E)", () => {
 
     expect(updatedCompany?.name).toBe("NewCompany1@");
     expect(updatedCompany?.lealName).toBe("New Legal Name");
-    expect(updatedCompany?.photo).toBe("https://example.com/photo.png");
+    expect(updatedCompany?.photoId).toBe(attachment.id.toString());
   });
 });

@@ -13,7 +13,7 @@ interface EditCompanyUseCaseRequest {
   authenticateUserId: string;
   name: string;
   lealName: string | null;
-  photo: string | null;
+  photoId: string | null;
 }
 
 type EditCompanyUseCaseResponse = Either<
@@ -35,7 +35,7 @@ export class EditCompanyUseCase {
     authenticateUserId,
     name,
     lealName,
-    photo,
+    photoId,
   }: EditCompanyUseCaseRequest): Promise<EditCompanyUseCaseResponse> {
     const company = await this.companiesRepository.findById(companyId);
 
@@ -59,8 +59,11 @@ export class EditCompanyUseCase {
 
     company.name = name;
     company.lealName = lealName;
-    company.photo = photo;
+    console.log("Antes do photoId", photoId);
+    company.photoId = photoId;
+    console.log("Depois do photoId", company.photoId);
 
+    console.log("Antes do save", company);
     await this.companiesRepository.save(company);
 
     return right({ company });
