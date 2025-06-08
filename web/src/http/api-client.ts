@@ -16,21 +16,11 @@ api.interceptors.request.use(async (config) => {
     const tokenCookie = cookieStore.get("token");
     token = tokenCookie?.value;
   } else {
-    // Cliente - usar getCookie diretamente
     token = getCookie("token") as string;
   }
 
-  // console.log("🔍 Debug API:");
-  // console.log(
-  //   "- Ambiente:",
-  //   typeof window === "undefined" ? "servidor" : "cliente"
-  // );
-  // console.log("- Token encontrado:", token ? "✅ Sim" : "❌ Não");
-  // console.log("- Token value:", token);
-
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log("- Authorization header:", config.headers.Authorization);
   }
 
   return config;

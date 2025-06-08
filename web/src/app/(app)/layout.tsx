@@ -3,7 +3,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Header } from "@/components/header";
 import { isAuthenticated } from "@/auth/auth";
 import { redirect } from "next/navigation";
-import { SidebarDataProvider } from "@/components/sidebar-data-provider";
+import { SidebarDataProvider } from "@/components/side-bar/sidebar-data-provider";
 
 export default async function DashboardLayout({
   children,

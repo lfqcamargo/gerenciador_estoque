@@ -3,8 +3,8 @@
 import type * as React from "react";
 import { BarChart3, Box, Home, Settings } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavUser } from "@/components/nav-user";
+import { NavMain } from "@/components/side-bar/nav-main";
+import { NavUser } from "@/components/side-bar/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import type { GetProfileCompanyResponse } from "@/http/get-profile-company";
 import type { GetProfileUserResponse } from "@/http/get-profile-user";
+import { CompanyInfo } from "./company-info";
 
 // Mapeamento de strings para componentes Lucide
 const iconMap = {
@@ -48,12 +49,7 @@ export function AppSidebar({
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {profileCompany && (
-          <>
-            <p>{profileCompany?.name}</p>
-            <p>{profileCompany?.cnpj}</p>
-          </>
-        )}
+        {profileCompany && <CompanyInfo company={profileCompany} />}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMainWithIcons} />

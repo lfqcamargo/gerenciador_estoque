@@ -21,29 +21,29 @@ import { UserNotAdminError } from "@/domain/user/application/use-cases/errors/us
 const editCompanyBodySchema = z.object({
   name: z
     .string({
-      required_error: "Name is required",
-      invalid_type_error: "Name must be a string",
+      required_error: "Company name is required",
+      invalid_type_error: "Company name must be a string",
     })
-    .min(3, "Name must be at least 3 characters")
-    .max(100, "Name must be at most 100 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
-      "Name must contain at least one uppercase letter, one lowercase letter, one number and one special character"
-    ),
+    .min(3, "Company name must be at least 3 characters")
+    .max(255, "Company name must be at most 255 characters")
+    .transform((name) => name.trim()),
   lealName: z
     .string({
       required_error: "Leal name is required",
       invalid_type_error: "Leal name must be a string",
     })
     .min(3, "Leal name must be at least 3 characters")
-    .max(100, "Leal name must be at most 100 characters"),
+    .max(100, "Leal name must be at most 100 characters")
+    .transform((name) => name.trim())
+    .optional(),
   photo: z
     .string({
       required_error: "Photo is required",
       invalid_type_error: "Photo must be a string",
     })
-    .min(3, "Photo must be at least 3 characters")
-    .max(100, "Photo must be at most 100 characters"),
+    .max(100, "Photo must be at most 100 characters")
+    .optional()
+    .nullable(),
 });
 
 type EditCompanyBody = z.infer<typeof editCompanyBodySchema>;
@@ -71,8 +71,8 @@ export class EditCompanyController {
       companyId,
       authenticateUserId: userId,
       name,
-      lealName,
-      photo,
+      lealName: lealName ?? null,
+      photo: photo ?? null,
     });
 
     if (result.isLeft()) {
