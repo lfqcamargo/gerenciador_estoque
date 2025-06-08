@@ -150,6 +150,12 @@ exports.Prisma.EmailScalarFieldEnum = {
   sentAt: 'sentAt'
 };
 
+exports.Prisma.AttachmentScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  url: 'url'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -173,7 +179,8 @@ exports.UserRole = exports.$Enums.UserRole = {
 exports.Prisma.ModelName = {
   User: 'User',
   Company: 'Company',
-  Email: 'Email'
+  Email: 'Email',
+  Attachment: 'Attachment'
 };
 
 /**

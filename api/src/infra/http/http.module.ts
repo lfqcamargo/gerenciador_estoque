@@ -5,6 +5,7 @@ import { CryptographyModule } from "../cryptography/cryptography.module";
 import { UserModule } from "./controllers/user/user.module";
 import { EmailModule } from "../event/email/email.module";
 import { EventModule } from "@/infra/event/event.module";
+import { SharedModule } from "./controllers/shared/shared.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { EventModule } from "@/infra/event/event.module";
     UserModule,
     EmailModule,
     EventModule,
+    SharedModule,
   ],
 })
 export class HttpModule {}
