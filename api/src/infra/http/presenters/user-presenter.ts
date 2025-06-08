@@ -9,6 +9,7 @@ export class UserPresenter {
       email: user.email,
       photo: user.photo,
       role: user.role,
+      createdAt: user.createdAt.toISOString(),
     };
   }
 }

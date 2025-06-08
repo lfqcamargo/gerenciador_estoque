@@ -6,8 +6,11 @@ export class PrismaCompanyMapper {
   static toDomain(raw: PrismaCompany): Company {
     return Company.create(
       {
-        name: raw.name,
         cnpj: raw.cnpj,
+        name: raw.name,
+        lealName: raw.lealName,
+        photo: raw.photo,
+        createdAt: raw.createdAt,
       },
       new UniqueEntityID(raw.id)
     );
@@ -16,8 +19,11 @@ export class PrismaCompanyMapper {
   static toPrisma(company: Company): Prisma.CompanyUncheckedCreateInput {
     return {
       id: company.id.toString(),
-      name: company.name,
       cnpj: company.cnpj,
+      name: company.name,
+      lealName: company.lealName,
+      photo: company.photo,
+      createdAt: company.createdAt,
     };
   }
 }

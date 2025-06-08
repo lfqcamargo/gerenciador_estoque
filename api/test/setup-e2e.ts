@@ -45,9 +45,9 @@ afterAll(async () => {
   await redis.flushdb();
 });
 
-// beforeEach(async () => {
-//   await prisma.user.deleteMany();
-//   await prisma.company.deleteMany();
+beforeEach(async () => {
+  // await prisma.user.deleteMany();
+  // await prisma.company.deleteMany();
 
-//   DomainEvents.shouldRun = false;
-// });
+  DomainEvents.shouldRun = false;
+});

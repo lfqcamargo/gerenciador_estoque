@@ -38,11 +38,6 @@ describe("Generate New Password Token (E2E)", () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await redis.quit();
-    await app.close();
-  });
-
   test("[GET] /users/forgot-password/:email", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({

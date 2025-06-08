@@ -14,8 +14,10 @@ export function makeCompany(
 ) {
   const company = Company.create(
     {
-      name: faker.company.name(),
       cnpj: faker.string.numeric(14),
+      name: faker.company.name(),
+      lealName: faker.company.name(),
+      photo: faker.image.url(),
       createdAt: new Date(),
       ...override,
     },

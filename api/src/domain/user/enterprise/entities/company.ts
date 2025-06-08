@@ -8,6 +8,9 @@ export interface CompanyProps {
   cnpj: string;
   name: string;
   createdAt: Date;
+  photo?: string | null;
+  lealName?: string | null;
+
   users: User[];
 }
 
@@ -34,6 +37,22 @@ export class Company extends AggregateRoot<CompanyProps> {
 
   set createdAt(createdAt: Date) {
     this.props.createdAt = createdAt;
+  }
+
+  get lealName() {
+    return this.props.lealName ?? null;
+  }
+
+  set lealName(lealName: string | null) {
+    this.props.lealName = lealName;
+  }
+
+  get photo() {
+    return this.props.photo ?? null;
+  }
+
+  set photo(photo: string | null) {
+    this.props.photo = photo;
   }
 
   get users() {

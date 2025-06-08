@@ -35,6 +35,7 @@ export type Email = $Result.DefaultSelection<Prisma.$EmailPayload>
 export namespace $Enums {
   export const UserRole: {
   ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
   USER: 'USER'
 };
 
@@ -2220,52 +2221,58 @@ export namespace Prisma {
 
   export type CompanyMinAggregateOutputType = {
     id: string | null
-    name: string | null
     cnpj: string | null
+    name: string | null
     createdAt: Date | null
-    updatedAt: Date | null
+    lealName: string | null
+    photo: string | null
   }
 
   export type CompanyMaxAggregateOutputType = {
     id: string | null
-    name: string | null
     cnpj: string | null
+    name: string | null
     createdAt: Date | null
-    updatedAt: Date | null
+    lealName: string | null
+    photo: string | null
   }
 
   export type CompanyCountAggregateOutputType = {
     id: number
-    name: number
     cnpj: number
+    name: number
     createdAt: number
-    updatedAt: number
+    lealName: number
+    photo: number
     _all: number
   }
 
 
   export type CompanyMinAggregateInputType = {
     id?: true
-    name?: true
     cnpj?: true
+    name?: true
     createdAt?: true
-    updatedAt?: true
+    lealName?: true
+    photo?: true
   }
 
   export type CompanyMaxAggregateInputType = {
     id?: true
-    name?: true
     cnpj?: true
+    name?: true
     createdAt?: true
-    updatedAt?: true
+    lealName?: true
+    photo?: true
   }
 
   export type CompanyCountAggregateInputType = {
     id?: true
-    name?: true
     cnpj?: true
+    name?: true
     createdAt?: true
-    updatedAt?: true
+    lealName?: true
+    photo?: true
     _all?: true
   }
 
@@ -2343,10 +2350,11 @@ export namespace Prisma {
 
   export type CompanyGroupByOutputType = {
     id: string
-    name: string
     cnpj: string
+    name: string
     createdAt: Date
-    updatedAt: Date
+    lealName: string | null
+    photo: string | null
     _count: CompanyCountAggregateOutputType | null
     _min: CompanyMinAggregateOutputType | null
     _max: CompanyMaxAggregateOutputType | null
@@ -2368,39 +2376,43 @@ export namespace Prisma {
 
   export type CompanySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
     cnpj?: boolean
+    name?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
+    lealName?: boolean
+    photo?: boolean
     users?: boolean | Company$usersArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
     cnpj?: boolean
+    name?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
+    lealName?: boolean
+    photo?: boolean
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
     cnpj?: boolean
+    name?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
+    lealName?: boolean
+    photo?: boolean
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectScalar = {
     id?: boolean
-    name?: boolean
     cnpj?: boolean
+    name?: boolean
     createdAt?: boolean
-    updatedAt?: boolean
+    lealName?: boolean
+    photo?: boolean
   }
 
-  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "cnpj" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+  export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cnpj" | "name" | "createdAt" | "lealName" | "photo", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | Company$usersArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
@@ -2415,10 +2427,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      name: string
       cnpj: string
+      name: string
       createdAt: Date
-      updatedAt: Date
+      lealName: string | null
+      photo: string | null
     }, ExtArgs["result"]["company"]>
     composites: {}
   }
@@ -2844,10 +2857,11 @@ export namespace Prisma {
    */
   interface CompanyFieldRefs {
     readonly id: FieldRef<"Company", 'String'>
-    readonly name: FieldRef<"Company", 'String'>
     readonly cnpj: FieldRef<"Company", 'String'>
+    readonly name: FieldRef<"Company", 'String'>
     readonly createdAt: FieldRef<"Company", 'DateTime'>
-    readonly updatedAt: FieldRef<"Company", 'DateTime'>
+    readonly lealName: FieldRef<"Company", 'String'>
+    readonly photo: FieldRef<"Company", 'String'>
   }
     
 
@@ -4329,10 +4343,11 @@ export namespace Prisma {
 
   export const CompanyScalarFieldEnum: {
     id: 'id',
-    name: 'name',
     cnpj: 'cnpj',
+    name: 'name',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    lealName: 'lealName',
+    photo: 'photo'
   };
 
   export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -4514,19 +4529,21 @@ export namespace Prisma {
     OR?: CompanyWhereInput[]
     NOT?: CompanyWhereInput | CompanyWhereInput[]
     id?: StringFilter<"Company"> | string
-    name?: StringFilter<"Company"> | string
     cnpj?: StringFilter<"Company"> | string
+    name?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
-    updatedAt?: DateTimeFilter<"Company"> | Date | string
+    lealName?: StringNullableFilter<"Company"> | string | null
+    photo?: StringNullableFilter<"Company"> | string | null
     users?: UserListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
     cnpj?: SortOrder
+    name?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
+    lealName?: SortOrderInput | SortOrder
+    photo?: SortOrderInput | SortOrder
     users?: UserOrderByRelationAggregateInput
   }
 
@@ -4538,16 +4555,18 @@ export namespace Prisma {
     NOT?: CompanyWhereInput | CompanyWhereInput[]
     name?: StringFilter<"Company"> | string
     createdAt?: DateTimeFilter<"Company"> | Date | string
-    updatedAt?: DateTimeFilter<"Company"> | Date | string
+    lealName?: StringNullableFilter<"Company"> | string | null
+    photo?: StringNullableFilter<"Company"> | string | null
     users?: UserListRelationFilter
   }, "id" | "cnpj">
 
   export type CompanyOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
     cnpj?: SortOrder
+    name?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
+    lealName?: SortOrderInput | SortOrder
+    photo?: SortOrderInput | SortOrder
     _count?: CompanyCountOrderByAggregateInput
     _max?: CompanyMaxOrderByAggregateInput
     _min?: CompanyMinOrderByAggregateInput
@@ -4558,10 +4577,11 @@ export namespace Prisma {
     OR?: CompanyScalarWhereWithAggregatesInput[]
     NOT?: CompanyScalarWhereWithAggregatesInput | CompanyScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Company"> | string
-    name?: StringWithAggregatesFilter<"Company"> | string
     cnpj?: StringWithAggregatesFilter<"Company"> | string
+    name?: StringWithAggregatesFilter<"Company"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Company"> | Date | string
+    lealName?: StringNullableWithAggregatesFilter<"Company"> | string | null
+    photo?: StringNullableWithAggregatesFilter<"Company"> | string | null
   }
 
   export type EmailWhereInput = {
@@ -4704,62 +4724,69 @@ export namespace Prisma {
 
   export type CompanyCreateInput = {
     id?: string
-    name: string
     cnpj: string
+    name: string
     createdAt?: Date | string
-    updatedAt?: Date | string
+    lealName?: string | null
+    photo?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
     id?: string
-    name: string
     cnpj: string
+    name: string
     createdAt?: Date | string
-    updatedAt?: Date | string
+    lealName?: string | null
+    photo?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
     id?: string
-    name: string
     cnpj: string
+    name: string
     createdAt?: Date | string
-    updatedAt?: Date | string
+    lealName?: string | null
+    photo?: string | null
   }
 
   export type CompanyUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanyUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmailCreateInput = {
@@ -4945,40 +4972,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
-  }
-
-  export type UserOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type CompanyCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    cnpj?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    cnpj?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type CompanyMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    cnpj?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -4994,6 +4987,66 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CompanyCountOrderByAggregateInput = {
+    id?: SortOrder
+    cnpj?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    lealName?: SortOrder
+    photo?: SortOrder
+  }
+
+  export type CompanyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cnpj?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    lealName?: SortOrder
+    photo?: SortOrder
+  }
+
+  export type CompanyMinOrderByAggregateInput = {
+    id?: SortOrder
+    cnpj?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    lealName?: SortOrder
+    photo?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -5003,11 +5056,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type EmailCountOrderByAggregateInput = {
@@ -5038,24 +5086,6 @@ export namespace Prisma {
     from?: SortOrder
     createdAt?: SortOrder
     sentAt?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -5112,6 +5142,10 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type UserUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -5138,10 +5172,6 @@ export namespace Prisma {
     update?: UserUpdateWithWhereUniqueWithoutCompanyInput | UserUpdateWithWhereUniqueWithoutCompanyInput[]
     updateMany?: UserUpdateManyWithWhereWithoutCompanyInput | UserUpdateManyWithWhereWithoutCompanyInput[]
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -5246,17 +5276,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -5285,6 +5304,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -5301,18 +5331,20 @@ export namespace Prisma {
 
   export type CompanyCreateWithoutUsersInput = {
     id?: string
-    name: string
     cnpj: string
+    name: string
     createdAt?: Date | string
-    updatedAt?: Date | string
+    lealName?: string | null
+    photo?: string | null
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
     id?: string
-    name: string
     cnpj: string
+    name: string
     createdAt?: Date | string
-    updatedAt?: Date | string
+    lealName?: string | null
+    photo?: string | null
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
@@ -5333,18 +5365,20 @@ export namespace Prisma {
 
   export type CompanyUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
     cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserCreateWithoutCompanyInput = {

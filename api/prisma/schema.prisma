@@ -13,6 +13,7 @@ datasource db {
 
 enum UserRole {
   ADMIN
+  MANAGER
   USER
 }
 
@@ -39,10 +40,11 @@ model User {
 
 model Company {
   id        String   @id @default(uuid())
-  name      String
   cnpj      String   @unique
+  name      String  
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  lealName  String?  @map("leal_name")
+  photo     String?  @map("photo")
 
   users User[]
 

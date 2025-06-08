@@ -4,8 +4,11 @@ export class CompanyPresenter {
   static toHTTP(company: Company) {
     return {
       id: company.id.toString(),
-      name: company.name,
       cnpj: company.cnpj,
+      name: company.name,
+      lealName: company.lealName,
+      photo: company.photo,
+      createdAt: company.createdAt.toISOString(),
     };
   }
 }

@@ -133,10 +133,11 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.CompanyScalarFieldEnum = {
   id: 'id',
-  name: 'name',
   cnpj: 'cnpj',
+  name: 'name',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  lealName: 'lealName',
+  photo: 'photo'
 };
 
 exports.Prisma.EmailScalarFieldEnum = {
@@ -165,6 +166,7 @@ exports.Prisma.NullsOrder = {
 };
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER',
   USER: 'USER'
 };
 

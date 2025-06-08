@@ -18,6 +18,8 @@ import { GetProfileCompanyController } from "./get-profile-company.controller";
 import { GetProfileCompanyUseCase } from "@/domain/user/application/use-cases/get-profile-company";
 import { GetProfileUserController } from "./get-profile-user.controller";
 import { GetProfileUserUseCase } from "@/domain/user/application/use-cases/get-profile-user";
+import { EditCompanyController } from "./edit-company.controller";
+import { EditCompanyUseCase } from "@/domain/user/application/use-cases/edit-company";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
@@ -29,6 +31,7 @@ import { GetProfileUserUseCase } from "@/domain/user/application/use-cases/get-p
     AuthenticateUserController,
     GetProfileCompanyController,
     GetProfileUserController,
+    EditCompanyController,
   ],
   providers: [
     CreateTempUserUseCase,
@@ -38,6 +41,7 @@ import { GetProfileUserUseCase } from "@/domain/user/application/use-cases/get-p
     AuthenticateUserUseCase,
     GetProfileCompanyUseCase,
     GetProfileUserUseCase,
+    EditCompanyUseCase,
   ],
 })
 export class UserModule {}
