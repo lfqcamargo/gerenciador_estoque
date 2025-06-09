@@ -4,15 +4,26 @@ import { InvalidAttachmentTypeError } from "./errors/invalid-attachment-type-err
 import { Attachment } from "../../enterprise/entities/attachment";
 import { AttachmentsRepository } from "../repositories/attachments-repository";
 import { Uploader } from "../storage/uploader";
+import { CompaniesRepository } from "@/domain/user/application/repositories/companies-repository";
+import { CompanyNotFoundError } from "@/domain/user/application/use-cases/errors/company-not-found-error";
+import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
+import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
+import { UserNotBelongToCompanyError } from "@/domain/user/application/use-cases/errors/user-not-belong-to-company-error";
 
 interface UploadAndCreateAttachmentRequest {
   fileName: string;
   fileType: string;
   body: Buffer;
+
+  companyId: string;
+  userId: string;
 }
 
 type UploadAndCreateAttachmentResponse = Either<
-  InvalidAttachmentTypeError,
+  | InvalidAttachmentTypeError
+  | CompanyNotFoundError
+  | UserNotFoundError
+  | UserNotBelongToCompanyError,
   { attachment: Attachment }
 >;
 
@@ -20,16 +31,34 @@ type UploadAndCreateAttachmentResponse = Either<
 export class UploadAndCreateAttachmentUseCase {
   constructor(
     private attachmentsRepository: AttachmentsRepository,
-    private uploader: Uploader
+    private uploader: Uploader,
+    private companiesRepository: CompaniesRepository,
+    private usersRepository: UsersRepository
   ) {}
 
   async execute({
     fileName,
     fileType,
     body,
+    companyId,
+    userId,
   }: UploadAndCreateAttachmentRequest): Promise<UploadAndCreateAttachmentResponse> {
     if (!/^(image\/(jpeg|png))$|^application\/pdf$/.test(fileType)) {
       return left(new InvalidAttachmentTypeError(fileType));
+    }
+
+    const company = await this.companiesRepository.findById(companyId);
+    if (!company) {
+      return left(new CompanyNotFoundError());
+    }
+
+    const user = await this.usersRepository.findById(userId);
+    if (!user) {
+      return left(new UserNotFoundError());
+    }
+
+    if (user.companyId !== companyId) {
+      return left(new UserNotBelongToCompanyError());
     }
 
     const { url } = await this.uploader.upload({ fileName, fileType, body });
@@ -37,6 +66,8 @@ export class UploadAndCreateAttachmentUseCase {
     const attachment = Attachment.create({
       title: fileName,
       url,
+      companyId,
+      userId,
     });
 
     await this.attachmentsRepository.create(attachment);

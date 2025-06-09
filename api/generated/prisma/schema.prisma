@@ -30,10 +30,10 @@ model Company {
   lealName  String?  @map("leal_name")
   createdAt DateTime @default(now()) @map("created_at")
 
-  photoId String?     @map("photo_id")
-  photo   Attachment? @relation(fields: [photoId], references: [id])
+  photoId String? @map("photo_id")
 
-  users User[]
+  users       User[]
+  attachments Attachment[]
 
   @@map("companies")
 }
@@ -49,6 +49,8 @@ model User {
 
   companyId String  @map("company_id")
   company   Company @relation(fields: [companyId], references: [id])
+
+  attachments Attachment[]
 
   @@map("users")
 }
@@ -70,7 +72,11 @@ model Attachment {
   title String
   url   String
 
-  companies Company[]
+  companyId String  @map("company_id")
+  company   Company @relation(fields: [companyId], references: [id])
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
 
   @@map("attachments")
 }

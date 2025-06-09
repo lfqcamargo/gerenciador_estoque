@@ -11,7 +11,7 @@ import { CacheModule } from "@/infra/cache/cache.module";
 import { JwtService } from "@nestjs/jwt";
 import { AttachmentFactory } from "test/factories/make-attachment";
 
-describe("[PUT] /companies (E2E)", () => {
+describe("[GET] /attachments/:id (E2E)", () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let companyFactory: CompanyFactory;
@@ -36,18 +36,11 @@ describe("[PUT] /companies (E2E)", () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await app.close();
-  });
-
-  it("should update company information when user is admin", async () => {
+  it("should return attachment when authenticated", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
       companyId: company.id.toString(),
-      email: "admin@company.com",
-      password: "12345678A@",
     });
-
     const attachment = await attachmentFactory.makePrismaAttachment({
       companyId: company.id.toString(),
       userId: user.id.toString(),
@@ -60,22 +53,18 @@ describe("[PUT] /companies (E2E)", () => {
     });
 
     const response = await request(app.getHttpServer())
-      .put("/companies")
-      .set("Authorization", `Bearer ${accessToken}`)
-      .send({
-        name: "NewCompany1@",
-        lealName: "New Legal Name",
-        photoId: attachment.id.toString(),
-      });
+      .get(`/attachments/${attachment.id}`)
+      .set("Authorization", `Bearer ${accessToken}`);
 
-    expect(response.statusCode).toBe(204);
-
-    const updatedCompany = await prisma.company.findUnique({
-      where: { id: company.id.toString() },
-    });
-
-    expect(updatedCompany?.name).toBe("NewCompany1@");
-    expect(updatedCompany?.lealName).toBe("New Legal Name");
-    expect(updatedCompany?.photoId).toBe(attachment.id.toString());
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: attachment.id.toString(),
+        title: attachment.title,
+        url: attachment.url,
+        companyId: attachment.companyId.toString(),
+        userId: attachment.userId.toString(),
+      })
+    );
   });
 });

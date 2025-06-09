@@ -15,4 +15,11 @@ export class PrismaAttachmentsRepository implements AttachmentsRepository {
       data,
     });
   }
+
+  async findById(id: string): Promise<Attachment | null> {
+    const attachment = await this.prisma.attachment.findUnique({
+      where: { id },
+    });
+    return attachment ? PrismaAttachmentMapper.toDomain(attachment) : null;
+  }
 }

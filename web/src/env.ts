@@ -8,10 +8,12 @@ const envSchema = z.object({
   NEXT_PUBLIC_ENABLE_API_DELAY: z
     .string()
     .transform((value) => value === "true"),
+  NEXT_CLOUD_URL: z.string().url(),
 });
 
 export const env = envSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   NEXT_PUBLIC_ENABLE_API_DELAY: process.env.NEXT_PUBLIC_ENABLE_API_DELAY,
+  NEXT_CLOUD_URL: process.env.NEXT_CLOUD_URL,
 });

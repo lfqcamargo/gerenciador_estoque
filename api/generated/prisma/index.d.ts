@@ -1174,10 +1174,12 @@ export namespace Prisma {
 
   export type CompanyCountOutputType = {
     users: number
+    attachments: number
   }
 
   export type CompanyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     users?: boolean | CompanyCountOutputTypeCountUsersArgs
+    attachments?: boolean | CompanyCountOutputTypeCountAttachmentsArgs
   }
 
   // Custom InputTypes
@@ -1198,35 +1200,42 @@ export namespace Prisma {
     where?: UserWhereInput
   }
 
-
   /**
-   * Count Type AttachmentCountOutputType
+   * CompanyCountOutputType without action
    */
-
-  export type AttachmentCountOutputType = {
-    companies: number
+  export type CompanyCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
   }
 
-  export type AttachmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    companies?: boolean | AttachmentCountOutputTypeCountCompaniesArgs
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+  export type UserCountOutputType = {
+    attachments: number
+  }
+
+  export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attachments?: boolean | UserCountOutputTypeCountAttachmentsArgs
   }
 
   // Custom InputTypes
   /**
-   * AttachmentCountOutputType without action
+   * UserCountOutputType without action
    */
-  export type AttachmentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the AttachmentCountOutputType
+     * Select specific fields to fetch from the UserCountOutputType
      */
-    select?: AttachmentCountOutputTypeSelect<ExtArgs> | null
+    select?: UserCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * AttachmentCountOutputType without action
+   * UserCountOutputType without action
    */
-  export type AttachmentCountOutputTypeCountCompaniesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CompanyWhereInput
+  export type UserCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttachmentWhereInput
   }
 
 
@@ -1406,8 +1415,8 @@ export namespace Prisma {
     lealName?: boolean
     createdAt?: boolean
     photoId?: boolean
-    photo?: boolean | Company$photoArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
+    attachments?: boolean | Company$attachmentsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
@@ -1418,7 +1427,6 @@ export namespace Prisma {
     lealName?: boolean
     createdAt?: boolean
     photoId?: boolean
-    photo?: boolean | Company$photoArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1428,7 +1436,6 @@ export namespace Prisma {
     lealName?: boolean
     createdAt?: boolean
     photoId?: boolean
-    photo?: boolean | Company$photoArgs<ExtArgs>
   }, ExtArgs["result"]["company"]>
 
   export type CompanySelectScalar = {
@@ -1442,22 +1449,18 @@ export namespace Prisma {
 
   export type CompanyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cnpj" | "name" | "lealName" | "createdAt" | "photoId", ExtArgs["result"]["company"]>
   export type CompanyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    photo?: boolean | Company$photoArgs<ExtArgs>
     users?: boolean | Company$usersArgs<ExtArgs>
+    attachments?: boolean | Company$attachmentsArgs<ExtArgs>
     _count?: boolean | CompanyCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    photo?: boolean | Company$photoArgs<ExtArgs>
-  }
-  export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    photo?: boolean | Company$photoArgs<ExtArgs>
-  }
+  export type CompanyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type CompanyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $CompanyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Company"
     objects: {
-      photo: Prisma.$AttachmentPayload<ExtArgs> | null
       users: Prisma.$UserPayload<ExtArgs>[]
+      attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1860,8 +1863,8 @@ export namespace Prisma {
    */
   export interface Prisma__CompanyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    photo<T extends Company$photoArgs<ExtArgs> = {}>(args?: Subset<T, Company$photoArgs<ExtArgs>>): Prisma__AttachmentClient<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     users<T extends Company$usersArgs<ExtArgs> = {}>(args?: Subset<T, Company$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends Company$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Company$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2146,10 +2149,6 @@ export namespace Prisma {
      */
     data: CompanyCreateManyInput | CompanyCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2220,10 +2219,6 @@ export namespace Prisma {
      * Limit how many Companies to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2293,25 +2288,6 @@ export namespace Prisma {
   }
 
   /**
-   * Company.photo
-   */
-  export type Company$photoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Attachment
-     */
-    select?: AttachmentSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Attachment
-     */
-    omit?: AttachmentOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AttachmentInclude<ExtArgs> | null
-    where?: AttachmentWhereInput
-  }
-
-  /**
    * Company.users
    */
   export type Company$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2333,6 +2309,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+  }
+
+  /**
+   * Company.attachments
+   */
+  export type Company$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    cursor?: AttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
   }
 
   /**
@@ -2543,6 +2543,8 @@ export namespace Prisma {
     updatedAt?: boolean
     companyId?: boolean
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    attachments?: boolean | User$attachmentsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2583,6 +2585,8 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "createdAt" | "updatedAt" | "companyId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
+    attachments?: boolean | User$attachmentsArgs<ExtArgs>
+    _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     company?: boolean | CompanyDefaultArgs<ExtArgs>
@@ -2595,6 +2599,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       company: Prisma.$CompanyPayload<ExtArgs>
+      attachments: Prisma.$AttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3000,6 +3005,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    attachments<T extends User$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3430,6 +3436,30 @@ export namespace Prisma {
      * Limit how many Users to delete.
      */
     limit?: number
+  }
+
+  /**
+   * User.attachments
+   */
+  export type User$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attachment
+     */
+    select?: AttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attachment
+     */
+    omit?: AttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentInclude<ExtArgs> | null
+    where?: AttachmentWhereInput
+    orderBy?: AttachmentOrderByWithRelationInput | AttachmentOrderByWithRelationInput[]
+    cursor?: AttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttachmentScalarFieldEnum | AttachmentScalarFieldEnum[]
   }
 
   /**
@@ -4486,18 +4516,24 @@ export namespace Prisma {
     id: string | null
     title: string | null
     url: string | null
+    companyId: string | null
+    userId: string | null
   }
 
   export type AttachmentMaxAggregateOutputType = {
     id: string | null
     title: string | null
     url: string | null
+    companyId: string | null
+    userId: string | null
   }
 
   export type AttachmentCountAggregateOutputType = {
     id: number
     title: number
     url: number
+    companyId: number
+    userId: number
     _all: number
   }
 
@@ -4506,18 +4542,24 @@ export namespace Prisma {
     id?: true
     title?: true
     url?: true
+    companyId?: true
+    userId?: true
   }
 
   export type AttachmentMaxAggregateInputType = {
     id?: true
     title?: true
     url?: true
+    companyId?: true
+    userId?: true
   }
 
   export type AttachmentCountAggregateInputType = {
     id?: true
     title?: true
     url?: true
+    companyId?: true
+    userId?: true
     _all?: true
   }
 
@@ -4597,6 +4639,8 @@ export namespace Prisma {
     id: string
     title: string
     url: string
+    companyId: string
+    userId: string
     _count: AttachmentCountAggregateOutputType | null
     _min: AttachmentMinAggregateOutputType | null
     _max: AttachmentMaxAggregateOutputType | null
@@ -4620,45 +4664,66 @@ export namespace Prisma {
     id?: boolean
     title?: boolean
     url?: boolean
-    companies?: boolean | Attachment$companiesArgs<ExtArgs>
-    _count?: boolean | AttachmentCountOutputTypeDefaultArgs<ExtArgs>
+    companyId?: boolean
+    userId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attachment"]>
 
   export type AttachmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     url?: boolean
+    companyId?: boolean
+    userId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attachment"]>
 
   export type AttachmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     url?: boolean
+    companyId?: boolean
+    userId?: boolean
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["attachment"]>
 
   export type AttachmentSelectScalar = {
     id?: boolean
     title?: boolean
     url?: boolean
+    companyId?: boolean
+    userId?: boolean
   }
 
-  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "url", ExtArgs["result"]["attachment"]>
+  export type AttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "url" | "companyId" | "userId", ExtArgs["result"]["attachment"]>
   export type AttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    companies?: boolean | Attachment$companiesArgs<ExtArgs>
-    _count?: boolean | AttachmentCountOutputTypeDefaultArgs<ExtArgs>
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type AttachmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type AttachmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type AttachmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AttachmentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    company?: boolean | CompanyDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $AttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Attachment"
     objects: {
-      companies: Prisma.$CompanyPayload<ExtArgs>[]
+      company: Prisma.$CompanyPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
       url: string
+      companyId: string
+      userId: string
     }, ExtArgs["result"]["attachment"]>
     composites: {}
   }
@@ -5053,7 +5118,8 @@ export namespace Prisma {
    */
   export interface Prisma__AttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    companies<T extends Attachment$companiesArgs<ExtArgs> = {}>(args?: Subset<T, Attachment$companiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    company<T extends CompanyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CompanyDefaultArgs<ExtArgs>>): Prisma__CompanyClient<$Result.GetResult<Prisma.$CompanyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5086,6 +5152,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Attachment", 'String'>
     readonly title: FieldRef<"Attachment", 'String'>
     readonly url: FieldRef<"Attachment", 'String'>
+    readonly companyId: FieldRef<"Attachment", 'String'>
+    readonly userId: FieldRef<"Attachment", 'String'>
   }
     
 
@@ -5335,6 +5403,10 @@ export namespace Prisma {
      */
     data: AttachmentCreateManyInput | AttachmentCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5405,6 +5477,10 @@ export namespace Prisma {
      * Limit how many Attachments to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttachmentIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5471,30 +5547,6 @@ export namespace Prisma {
      * Limit how many Attachments to delete.
      */
     limit?: number
-  }
-
-  /**
-   * Attachment.companies
-   */
-  export type Attachment$companiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Company
-     */
-    select?: CompanySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Company
-     */
-    omit?: CompanyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompanyInclude<ExtArgs> | null
-    where?: CompanyWhereInput
-    orderBy?: CompanyOrderByWithRelationInput | CompanyOrderByWithRelationInput[]
-    cursor?: CompanyWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CompanyScalarFieldEnum | CompanyScalarFieldEnum[]
   }
 
   /**
@@ -5572,7 +5624,9 @@ export namespace Prisma {
   export const AttachmentScalarFieldEnum: {
     id: 'id',
     title: 'title',
-    url: 'url'
+    url: 'url',
+    companyId: 'companyId',
+    userId: 'userId'
   };
 
   export type AttachmentScalarFieldEnum = (typeof AttachmentScalarFieldEnum)[keyof typeof AttachmentScalarFieldEnum]
@@ -5676,8 +5730,8 @@ export namespace Prisma {
     lealName?: StringNullableFilter<"Company"> | string | null
     createdAt?: DateTimeFilter<"Company"> | Date | string
     photoId?: StringNullableFilter<"Company"> | string | null
-    photo?: XOR<AttachmentNullableScalarRelationFilter, AttachmentWhereInput> | null
     users?: UserListRelationFilter
+    attachments?: AttachmentListRelationFilter
   }
 
   export type CompanyOrderByWithRelationInput = {
@@ -5687,8 +5741,8 @@ export namespace Prisma {
     lealName?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     photoId?: SortOrderInput | SortOrder
-    photo?: AttachmentOrderByWithRelationInput
     users?: UserOrderByRelationAggregateInput
+    attachments?: AttachmentOrderByRelationAggregateInput
   }
 
   export type CompanyWhereUniqueInput = Prisma.AtLeast<{
@@ -5701,8 +5755,8 @@ export namespace Prisma {
     lealName?: StringNullableFilter<"Company"> | string | null
     createdAt?: DateTimeFilter<"Company"> | Date | string
     photoId?: StringNullableFilter<"Company"> | string | null
-    photo?: XOR<AttachmentNullableScalarRelationFilter, AttachmentWhereInput> | null
     users?: UserListRelationFilter
+    attachments?: AttachmentListRelationFilter
   }, "id" | "cnpj">
 
   export type CompanyOrderByWithAggregationInput = {
@@ -5742,6 +5796,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringFilter<"User"> | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    attachments?: AttachmentListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -5754,6 +5809,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     companyId?: SortOrder
     company?: CompanyOrderByWithRelationInput
+    attachments?: AttachmentOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -5769,6 +5825,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     companyId?: StringFilter<"User"> | string
     company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    attachments?: AttachmentListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -5868,14 +5925,20 @@ export namespace Prisma {
     id?: StringFilter<"Attachment"> | string
     title?: StringFilter<"Attachment"> | string
     url?: StringFilter<"Attachment"> | string
-    companies?: CompanyListRelationFilter
+    companyId?: StringFilter<"Attachment"> | string
+    userId?: StringFilter<"Attachment"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type AttachmentOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
     url?: SortOrder
-    companies?: CompanyOrderByRelationAggregateInput
+    companyId?: SortOrder
+    userId?: SortOrder
+    company?: CompanyOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
   export type AttachmentWhereUniqueInput = Prisma.AtLeast<{
@@ -5885,13 +5948,18 @@ export namespace Prisma {
     NOT?: AttachmentWhereInput | AttachmentWhereInput[]
     title?: StringFilter<"Attachment"> | string
     url?: StringFilter<"Attachment"> | string
-    companies?: CompanyListRelationFilter
+    companyId?: StringFilter<"Attachment"> | string
+    userId?: StringFilter<"Attachment"> | string
+    company?: XOR<CompanyScalarRelationFilter, CompanyWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
 
   export type AttachmentOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
     url?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
     _count?: AttachmentCountOrderByAggregateInput
     _max?: AttachmentMaxOrderByAggregateInput
     _min?: AttachmentMinOrderByAggregateInput
@@ -5904,6 +5972,8 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Attachment"> | string
     title?: StringWithAggregatesFilter<"Attachment"> | string
     url?: StringWithAggregatesFilter<"Attachment"> | string
+    companyId?: StringWithAggregatesFilter<"Attachment"> | string
+    userId?: StringWithAggregatesFilter<"Attachment"> | string
   }
 
   export type CompanyCreateInput = {
@@ -5912,8 +5982,9 @@ export namespace Prisma {
     name: string
     lealName?: string | null
     createdAt?: Date | string
-    photo?: AttachmentCreateNestedOneWithoutCompaniesInput
+    photoId?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
+    attachments?: AttachmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateInput = {
@@ -5924,6 +5995,7 @@ export namespace Prisma {
     createdAt?: Date | string
     photoId?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUpdateInput = {
@@ -5932,8 +6004,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     lealName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    photo?: AttachmentUpdateOneWithoutCompaniesNestedInput
+    photoId?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUpdateManyWithoutCompanyNestedInput
+    attachments?: AttachmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateInput = {
@@ -5944,6 +6017,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     photoId?: NullableStringFieldUpdateOperationsInput | string | null
     users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyCreateManyInput = {
@@ -5961,6 +6035,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     lealName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    photoId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CompanyUncheckedUpdateManyInput = {
@@ -5981,6 +6056,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     company: CompanyCreateNestedOneWithoutUsersInput
+    attachments?: AttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -5992,6 +6068,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     companyId: string
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -6003,6 +6080,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+    attachments?: AttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -6014,6 +6092,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     companyId?: StringFieldUpdateOperationsInput | string
+    attachments?: AttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -6122,34 +6201,40 @@ export namespace Prisma {
     id?: string
     title: string
     url: string
-    companies?: CompanyCreateNestedManyWithoutPhotoInput
+    company: CompanyCreateNestedOneWithoutAttachmentsInput
+    user: UserCreateNestedOneWithoutAttachmentsInput
   }
 
   export type AttachmentUncheckedCreateInput = {
     id?: string
     title: string
     url: string
-    companies?: CompanyUncheckedCreateNestedManyWithoutPhotoInput
+    companyId: string
+    userId: string
   }
 
   export type AttachmentUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    companies?: CompanyUpdateManyWithoutPhotoNestedInput
+    company?: CompanyUpdateOneRequiredWithoutAttachmentsNestedInput
+    user?: UserUpdateOneRequiredWithoutAttachmentsNestedInput
   }
 
   export type AttachmentUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    companies?: CompanyUncheckedUpdateManyWithoutPhotoNestedInput
+    companyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type AttachmentCreateManyInput = {
     id?: string
     title: string
     url: string
+    companyId: string
+    userId: string
   }
 
   export type AttachmentUpdateManyMutationInput = {
@@ -6162,6 +6247,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -6205,15 +6292,16 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type AttachmentNullableScalarRelationFilter = {
-    is?: AttachmentWhereInput | null
-    isNot?: AttachmentWhereInput | null
-  }
-
   export type UserListRelationFilter = {
     every?: UserWhereInput
     some?: UserWhereInput
     none?: UserWhereInput
+  }
+
+  export type AttachmentListRelationFilter = {
+    every?: AttachmentWhereInput
+    some?: AttachmentWhereInput
+    none?: AttachmentWhereInput
   }
 
   export type SortOrderInput = {
@@ -6222,6 +6310,10 @@ export namespace Prisma {
   }
 
   export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttachmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6412,38 +6504,33 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type CompanyListRelationFilter = {
-    every?: CompanyWhereInput
-    some?: CompanyWhereInput
-    none?: CompanyWhereInput
-  }
-
-  export type CompanyOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type AttachmentCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     url?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
   }
 
   export type AttachmentMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     url?: SortOrder
+    companyId?: SortOrder
+    userId?: SortOrder
   }
 
   export type AttachmentMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     url?: SortOrder
-  }
-
-  export type AttachmentCreateNestedOneWithoutCompaniesInput = {
-    create?: XOR<AttachmentCreateWithoutCompaniesInput, AttachmentUncheckedCreateWithoutCompaniesInput>
-    connectOrCreate?: AttachmentCreateOrConnectWithoutCompaniesInput
-    connect?: AttachmentWhereUniqueInput
+    companyId?: SortOrder
+    userId?: SortOrder
   }
 
   export type UserCreateNestedManyWithoutCompanyInput = {
@@ -6453,11 +6540,25 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
+  export type AttachmentCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<AttachmentCreateWithoutCompanyInput, AttachmentUncheckedCreateWithoutCompanyInput> | AttachmentCreateWithoutCompanyInput[] | AttachmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutCompanyInput | AttachmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: AttachmentCreateManyCompanyInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+  }
+
   export type UserUncheckedCreateNestedManyWithoutCompanyInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
     createMany?: UserCreateManyCompanyInputEnvelope
     connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
+  export type AttachmentUncheckedCreateNestedManyWithoutCompanyInput = {
+    create?: XOR<AttachmentCreateWithoutCompanyInput, AttachmentUncheckedCreateWithoutCompanyInput> | AttachmentCreateWithoutCompanyInput[] | AttachmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutCompanyInput | AttachmentCreateOrConnectWithoutCompanyInput[]
+    createMany?: AttachmentCreateManyCompanyInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -6470,16 +6571,6 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
-  }
-
-  export type AttachmentUpdateOneWithoutCompaniesNestedInput = {
-    create?: XOR<AttachmentCreateWithoutCompaniesInput, AttachmentUncheckedCreateWithoutCompaniesInput>
-    connectOrCreate?: AttachmentCreateOrConnectWithoutCompaniesInput
-    upsert?: AttachmentUpsertWithoutCompaniesInput
-    disconnect?: AttachmentWhereInput | boolean
-    delete?: AttachmentWhereInput | boolean
-    connect?: AttachmentWhereUniqueInput
-    update?: XOR<XOR<AttachmentUpdateToOneWithWhereWithoutCompaniesInput, AttachmentUpdateWithoutCompaniesInput>, AttachmentUncheckedUpdateWithoutCompaniesInput>
   }
 
   export type UserUpdateManyWithoutCompanyNestedInput = {
@@ -6496,6 +6587,20 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type AttachmentUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<AttachmentCreateWithoutCompanyInput, AttachmentUncheckedCreateWithoutCompanyInput> | AttachmentCreateWithoutCompanyInput[] | AttachmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutCompanyInput | AttachmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutCompanyInput | AttachmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: AttachmentCreateManyCompanyInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutCompanyInput | AttachmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutCompanyInput | AttachmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
   export type UserUncheckedUpdateManyWithoutCompanyNestedInput = {
     create?: XOR<UserCreateWithoutCompanyInput, UserUncheckedCreateWithoutCompanyInput> | UserCreateWithoutCompanyInput[] | UserUncheckedCreateWithoutCompanyInput[]
     connectOrCreate?: UserCreateOrConnectWithoutCompanyInput | UserCreateOrConnectWithoutCompanyInput[]
@@ -6510,10 +6615,38 @@ export namespace Prisma {
     deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
+  export type AttachmentUncheckedUpdateManyWithoutCompanyNestedInput = {
+    create?: XOR<AttachmentCreateWithoutCompanyInput, AttachmentUncheckedCreateWithoutCompanyInput> | AttachmentCreateWithoutCompanyInput[] | AttachmentUncheckedCreateWithoutCompanyInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutCompanyInput | AttachmentCreateOrConnectWithoutCompanyInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutCompanyInput | AttachmentUpsertWithWhereUniqueWithoutCompanyInput[]
+    createMany?: AttachmentCreateManyCompanyInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutCompanyInput | AttachmentUpdateWithWhereUniqueWithoutCompanyInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutCompanyInput | AttachmentUpdateManyWithWhereWithoutCompanyInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
   export type CompanyCreateNestedOneWithoutUsersInput = {
     create?: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
     connectOrCreate?: CompanyCreateOrConnectWithoutUsersInput
     connect?: CompanyWhereUniqueInput
+  }
+
+  export type AttachmentCreateNestedManyWithoutUserInput = {
+    create?: XOR<AttachmentCreateWithoutUserInput, AttachmentUncheckedCreateWithoutUserInput> | AttachmentCreateWithoutUserInput[] | AttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutUserInput | AttachmentCreateOrConnectWithoutUserInput[]
+    createMany?: AttachmentCreateManyUserInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+  }
+
+  export type AttachmentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AttachmentCreateWithoutUserInput, AttachmentUncheckedCreateWithoutUserInput> | AttachmentCreateWithoutUserInput[] | AttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutUserInput | AttachmentCreateOrConnectWithoutUserInput[]
+    createMany?: AttachmentCreateManyUserInputEnvelope
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
   }
 
   export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -6528,50 +6661,64 @@ export namespace Prisma {
     update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutUsersInput, CompanyUpdateWithoutUsersInput>, CompanyUncheckedUpdateWithoutUsersInput>
   }
 
+  export type AttachmentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AttachmentCreateWithoutUserInput, AttachmentUncheckedCreateWithoutUserInput> | AttachmentCreateWithoutUserInput[] | AttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutUserInput | AttachmentCreateOrConnectWithoutUserInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutUserInput | AttachmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AttachmentCreateManyUserInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutUserInput | AttachmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutUserInput | AttachmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AttachmentCreateWithoutUserInput, AttachmentUncheckedCreateWithoutUserInput> | AttachmentCreateWithoutUserInput[] | AttachmentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttachmentCreateOrConnectWithoutUserInput | AttachmentCreateOrConnectWithoutUserInput[]
+    upsert?: AttachmentUpsertWithWhereUniqueWithoutUserInput | AttachmentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AttachmentCreateManyUserInputEnvelope
+    set?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    disconnect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    delete?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    connect?: AttachmentWhereUniqueInput | AttachmentWhereUniqueInput[]
+    update?: AttachmentUpdateWithWhereUniqueWithoutUserInput | AttachmentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AttachmentUpdateManyWithWhereWithoutUserInput | AttachmentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+  }
+
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
   }
 
-  export type CompanyCreateNestedManyWithoutPhotoInput = {
-    create?: XOR<CompanyCreateWithoutPhotoInput, CompanyUncheckedCreateWithoutPhotoInput> | CompanyCreateWithoutPhotoInput[] | CompanyUncheckedCreateWithoutPhotoInput[]
-    connectOrCreate?: CompanyCreateOrConnectWithoutPhotoInput | CompanyCreateOrConnectWithoutPhotoInput[]
-    createMany?: CompanyCreateManyPhotoInputEnvelope
-    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+  export type CompanyCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<CompanyCreateWithoutAttachmentsInput, CompanyUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutAttachmentsInput
+    connect?: CompanyWhereUniqueInput
   }
 
-  export type CompanyUncheckedCreateNestedManyWithoutPhotoInput = {
-    create?: XOR<CompanyCreateWithoutPhotoInput, CompanyUncheckedCreateWithoutPhotoInput> | CompanyCreateWithoutPhotoInput[] | CompanyUncheckedCreateWithoutPhotoInput[]
-    connectOrCreate?: CompanyCreateOrConnectWithoutPhotoInput | CompanyCreateOrConnectWithoutPhotoInput[]
-    createMany?: CompanyCreateManyPhotoInputEnvelope
-    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
+  export type UserCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<UserCreateWithoutAttachmentsInput, UserUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttachmentsInput
+    connect?: UserWhereUniqueInput
   }
 
-  export type CompanyUpdateManyWithoutPhotoNestedInput = {
-    create?: XOR<CompanyCreateWithoutPhotoInput, CompanyUncheckedCreateWithoutPhotoInput> | CompanyCreateWithoutPhotoInput[] | CompanyUncheckedCreateWithoutPhotoInput[]
-    connectOrCreate?: CompanyCreateOrConnectWithoutPhotoInput | CompanyCreateOrConnectWithoutPhotoInput[]
-    upsert?: CompanyUpsertWithWhereUniqueWithoutPhotoInput | CompanyUpsertWithWhereUniqueWithoutPhotoInput[]
-    createMany?: CompanyCreateManyPhotoInputEnvelope
-    set?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    disconnect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    delete?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    update?: CompanyUpdateWithWhereUniqueWithoutPhotoInput | CompanyUpdateWithWhereUniqueWithoutPhotoInput[]
-    updateMany?: CompanyUpdateManyWithWhereWithoutPhotoInput | CompanyUpdateManyWithWhereWithoutPhotoInput[]
-    deleteMany?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
+  export type CompanyUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<CompanyCreateWithoutAttachmentsInput, CompanyUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: CompanyCreateOrConnectWithoutAttachmentsInput
+    upsert?: CompanyUpsertWithoutAttachmentsInput
+    connect?: CompanyWhereUniqueInput
+    update?: XOR<XOR<CompanyUpdateToOneWithWhereWithoutAttachmentsInput, CompanyUpdateWithoutAttachmentsInput>, CompanyUncheckedUpdateWithoutAttachmentsInput>
   }
 
-  export type CompanyUncheckedUpdateManyWithoutPhotoNestedInput = {
-    create?: XOR<CompanyCreateWithoutPhotoInput, CompanyUncheckedCreateWithoutPhotoInput> | CompanyCreateWithoutPhotoInput[] | CompanyUncheckedCreateWithoutPhotoInput[]
-    connectOrCreate?: CompanyCreateOrConnectWithoutPhotoInput | CompanyCreateOrConnectWithoutPhotoInput[]
-    upsert?: CompanyUpsertWithWhereUniqueWithoutPhotoInput | CompanyUpsertWithWhereUniqueWithoutPhotoInput[]
-    createMany?: CompanyCreateManyPhotoInputEnvelope
-    set?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    disconnect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    delete?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    connect?: CompanyWhereUniqueInput | CompanyWhereUniqueInput[]
-    update?: CompanyUpdateWithWhereUniqueWithoutPhotoInput | CompanyUpdateWithWhereUniqueWithoutPhotoInput[]
-    updateMany?: CompanyUpdateManyWithWhereWithoutPhotoInput | CompanyUpdateManyWithWhereWithoutPhotoInput[]
-    deleteMany?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
+  export type UserUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<UserCreateWithoutAttachmentsInput, UserUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttachmentsInput
+    upsert?: UserUpsertWithoutAttachmentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAttachmentsInput, UserUpdateWithoutAttachmentsInput>, UserUncheckedUpdateWithoutAttachmentsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -6725,23 +6872,6 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type AttachmentCreateWithoutCompaniesInput = {
-    id?: string
-    title: string
-    url: string
-  }
-
-  export type AttachmentUncheckedCreateWithoutCompaniesInput = {
-    id?: string
-    title: string
-    url: string
-  }
-
-  export type AttachmentCreateOrConnectWithoutCompaniesInput = {
-    where: AttachmentWhereUniqueInput
-    create: XOR<AttachmentCreateWithoutCompaniesInput, AttachmentUncheckedCreateWithoutCompaniesInput>
-  }
-
   export type UserCreateWithoutCompanyInput = {
     id?: string
     name: string
@@ -6750,6 +6880,7 @@ export namespace Prisma {
     role: $Enums.UserRole
     createdAt?: Date | string
     updatedAt?: Date | string
+    attachments?: AttachmentCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCompanyInput = {
@@ -6760,6 +6891,7 @@ export namespace Prisma {
     role: $Enums.UserRole
     createdAt?: Date | string
     updatedAt?: Date | string
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCompanyInput = {
@@ -6772,27 +6904,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type AttachmentUpsertWithoutCompaniesInput = {
-    update: XOR<AttachmentUpdateWithoutCompaniesInput, AttachmentUncheckedUpdateWithoutCompaniesInput>
-    create: XOR<AttachmentCreateWithoutCompaniesInput, AttachmentUncheckedCreateWithoutCompaniesInput>
-    where?: AttachmentWhereInput
+  export type AttachmentCreateWithoutCompanyInput = {
+    id?: string
+    title: string
+    url: string
+    user: UserCreateNestedOneWithoutAttachmentsInput
   }
 
-  export type AttachmentUpdateToOneWithWhereWithoutCompaniesInput = {
-    where?: AttachmentWhereInput
-    data: XOR<AttachmentUpdateWithoutCompaniesInput, AttachmentUncheckedUpdateWithoutCompaniesInput>
+  export type AttachmentUncheckedCreateWithoutCompanyInput = {
+    id?: string
+    title: string
+    url: string
+    userId: string
   }
 
-  export type AttachmentUpdateWithoutCompaniesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
+  export type AttachmentCreateOrConnectWithoutCompanyInput = {
+    where: AttachmentWhereUniqueInput
+    create: XOR<AttachmentCreateWithoutCompanyInput, AttachmentUncheckedCreateWithoutCompanyInput>
   }
 
-  export type AttachmentUncheckedUpdateWithoutCompaniesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    url?: StringFieldUpdateOperationsInput | string
+  export type AttachmentCreateManyCompanyInputEnvelope = {
+    data: AttachmentCreateManyCompanyInput | AttachmentCreateManyCompanyInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserUpsertWithWhereUniqueWithoutCompanyInput = {
@@ -6825,13 +6958,41 @@ export namespace Prisma {
     companyId?: StringFilter<"User"> | string
   }
 
+  export type AttachmentUpsertWithWhereUniqueWithoutCompanyInput = {
+    where: AttachmentWhereUniqueInput
+    update: XOR<AttachmentUpdateWithoutCompanyInput, AttachmentUncheckedUpdateWithoutCompanyInput>
+    create: XOR<AttachmentCreateWithoutCompanyInput, AttachmentUncheckedCreateWithoutCompanyInput>
+  }
+
+  export type AttachmentUpdateWithWhereUniqueWithoutCompanyInput = {
+    where: AttachmentWhereUniqueInput
+    data: XOR<AttachmentUpdateWithoutCompanyInput, AttachmentUncheckedUpdateWithoutCompanyInput>
+  }
+
+  export type AttachmentUpdateManyWithWhereWithoutCompanyInput = {
+    where: AttachmentScalarWhereInput
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyWithoutCompanyInput>
+  }
+
+  export type AttachmentScalarWhereInput = {
+    AND?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+    OR?: AttachmentScalarWhereInput[]
+    NOT?: AttachmentScalarWhereInput | AttachmentScalarWhereInput[]
+    id?: StringFilter<"Attachment"> | string
+    title?: StringFilter<"Attachment"> | string
+    url?: StringFilter<"Attachment"> | string
+    companyId?: StringFilter<"Attachment"> | string
+    userId?: StringFilter<"Attachment"> | string
+  }
+
   export type CompanyCreateWithoutUsersInput = {
     id?: string
     cnpj: string
     name: string
     lealName?: string | null
     createdAt?: Date | string
-    photo?: AttachmentCreateNestedOneWithoutCompaniesInput
+    photoId?: string | null
+    attachments?: AttachmentCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyUncheckedCreateWithoutUsersInput = {
@@ -6841,11 +7002,36 @@ export namespace Prisma {
     lealName?: string | null
     createdAt?: Date | string
     photoId?: string | null
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutCompanyInput
   }
 
   export type CompanyCreateOrConnectWithoutUsersInput = {
     where: CompanyWhereUniqueInput
     create: XOR<CompanyCreateWithoutUsersInput, CompanyUncheckedCreateWithoutUsersInput>
+  }
+
+  export type AttachmentCreateWithoutUserInput = {
+    id?: string
+    title: string
+    url: string
+    company: CompanyCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type AttachmentUncheckedCreateWithoutUserInput = {
+    id?: string
+    title: string
+    url: string
+    companyId: string
+  }
+
+  export type AttachmentCreateOrConnectWithoutUserInput = {
+    where: AttachmentWhereUniqueInput
+    create: XOR<AttachmentCreateWithoutUserInput, AttachmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type AttachmentCreateManyUserInputEnvelope = {
+    data: AttachmentCreateManyUserInput | AttachmentCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
   export type CompanyUpsertWithoutUsersInput = {
@@ -6865,7 +7051,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     lealName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    photo?: AttachmentUpdateOneWithoutCompaniesNestedInput
+    photoId?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?: AttachmentUpdateManyWithoutCompanyNestedInput
   }
 
   export type CompanyUncheckedUpdateWithoutUsersInput = {
@@ -6875,62 +7062,139 @@ export namespace Prisma {
     lealName?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     photoId?: NullableStringFieldUpdateOperationsInput | string | null
+    attachments?: AttachmentUncheckedUpdateManyWithoutCompanyNestedInput
   }
 
-  export type CompanyCreateWithoutPhotoInput = {
+  export type AttachmentUpsertWithWhereUniqueWithoutUserInput = {
+    where: AttachmentWhereUniqueInput
+    update: XOR<AttachmentUpdateWithoutUserInput, AttachmentUncheckedUpdateWithoutUserInput>
+    create: XOR<AttachmentCreateWithoutUserInput, AttachmentUncheckedCreateWithoutUserInput>
+  }
+
+  export type AttachmentUpdateWithWhereUniqueWithoutUserInput = {
+    where: AttachmentWhereUniqueInput
+    data: XOR<AttachmentUpdateWithoutUserInput, AttachmentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AttachmentUpdateManyWithWhereWithoutUserInput = {
+    where: AttachmentScalarWhereInput
+    data: XOR<AttachmentUpdateManyMutationInput, AttachmentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CompanyCreateWithoutAttachmentsInput = {
     id?: string
     cnpj: string
     name: string
     lealName?: string | null
     createdAt?: Date | string
+    photoId?: string | null
     users?: UserCreateNestedManyWithoutCompanyInput
   }
 
-  export type CompanyUncheckedCreateWithoutPhotoInput = {
+  export type CompanyUncheckedCreateWithoutAttachmentsInput = {
     id?: string
     cnpj: string
     name: string
     lealName?: string | null
     createdAt?: Date | string
+    photoId?: string | null
     users?: UserUncheckedCreateNestedManyWithoutCompanyInput
   }
 
-  export type CompanyCreateOrConnectWithoutPhotoInput = {
+  export type CompanyCreateOrConnectWithoutAttachmentsInput = {
     where: CompanyWhereUniqueInput
-    create: XOR<CompanyCreateWithoutPhotoInput, CompanyUncheckedCreateWithoutPhotoInput>
+    create: XOR<CompanyCreateWithoutAttachmentsInput, CompanyUncheckedCreateWithoutAttachmentsInput>
   }
 
-  export type CompanyCreateManyPhotoInputEnvelope = {
-    data: CompanyCreateManyPhotoInput | CompanyCreateManyPhotoInput[]
-    skipDuplicates?: boolean
+  export type UserCreateWithoutAttachmentsInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    role: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    company: CompanyCreateNestedOneWithoutUsersInput
   }
 
-  export type CompanyUpsertWithWhereUniqueWithoutPhotoInput = {
-    where: CompanyWhereUniqueInput
-    update: XOR<CompanyUpdateWithoutPhotoInput, CompanyUncheckedUpdateWithoutPhotoInput>
-    create: XOR<CompanyCreateWithoutPhotoInput, CompanyUncheckedCreateWithoutPhotoInput>
+  export type UserUncheckedCreateWithoutAttachmentsInput = {
+    id?: string
+    name: string
+    email: string
+    password: string
+    role: $Enums.UserRole
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    companyId: string
   }
 
-  export type CompanyUpdateWithWhereUniqueWithoutPhotoInput = {
-    where: CompanyWhereUniqueInput
-    data: XOR<CompanyUpdateWithoutPhotoInput, CompanyUncheckedUpdateWithoutPhotoInput>
+  export type UserCreateOrConnectWithoutAttachmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAttachmentsInput, UserUncheckedCreateWithoutAttachmentsInput>
   }
 
-  export type CompanyUpdateManyWithWhereWithoutPhotoInput = {
-    where: CompanyScalarWhereInput
-    data: XOR<CompanyUpdateManyMutationInput, CompanyUncheckedUpdateManyWithoutPhotoInput>
+  export type CompanyUpsertWithoutAttachmentsInput = {
+    update: XOR<CompanyUpdateWithoutAttachmentsInput, CompanyUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<CompanyCreateWithoutAttachmentsInput, CompanyUncheckedCreateWithoutAttachmentsInput>
+    where?: CompanyWhereInput
   }
 
-  export type CompanyScalarWhereInput = {
-    AND?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
-    OR?: CompanyScalarWhereInput[]
-    NOT?: CompanyScalarWhereInput | CompanyScalarWhereInput[]
-    id?: StringFilter<"Company"> | string
-    cnpj?: StringFilter<"Company"> | string
-    name?: StringFilter<"Company"> | string
-    lealName?: StringNullableFilter<"Company"> | string | null
-    createdAt?: DateTimeFilter<"Company"> | Date | string
-    photoId?: StringNullableFilter<"Company"> | string | null
+  export type CompanyUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: CompanyWhereInput
+    data: XOR<CompanyUpdateWithoutAttachmentsInput, CompanyUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type CompanyUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    photoId?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type CompanyUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cnpj?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    lealName?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    photoId?: NullableStringFieldUpdateOperationsInput | string | null
+    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+  }
+
+  export type UserUpsertWithoutAttachmentsInput = {
+    update: XOR<UserUpdateWithoutAttachmentsInput, UserUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<UserCreateWithoutAttachmentsInput, UserUncheckedCreateWithoutAttachmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAttachmentsInput, UserUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type UserUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    company?: CompanyUpdateOneRequiredWithoutUsersNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAttachmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    companyId?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserCreateManyCompanyInput = {
@@ -6943,6 +7207,13 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type AttachmentCreateManyCompanyInput = {
+    id?: string
+    title: string
+    url: string
+    userId: string
+  }
+
   export type UserUpdateWithoutCompanyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -6951,6 +7222,7 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: AttachmentUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCompanyInput = {
@@ -6961,6 +7233,7 @@ export namespace Prisma {
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: AttachmentUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutCompanyInput = {
@@ -6973,38 +7246,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type CompanyCreateManyPhotoInput = {
+  export type AttachmentUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutAttachmentsNestedInput
+  }
+
+  export type AttachmentUncheckedUpdateWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttachmentUncheckedUpdateManyWithoutCompanyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttachmentCreateManyUserInput = {
     id?: string
-    cnpj: string
-    name: string
-    lealName?: string | null
-    createdAt?: Date | string
+    title: string
+    url: string
+    companyId: string
   }
 
-  export type CompanyUpdateWithoutPhotoInput = {
+  export type AttachmentUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cnpj?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    lealName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUpdateManyWithoutCompanyNestedInput
+    title?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    company?: CompanyUpdateOneRequiredWithoutAttachmentsNestedInput
   }
 
-  export type CompanyUncheckedUpdateWithoutPhotoInput = {
+  export type AttachmentUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cnpj?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    lealName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserUncheckedUpdateManyWithoutCompanyNestedInput
+    title?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type CompanyUncheckedUpdateManyWithoutPhotoInput = {
+  export type AttachmentUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cnpj?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    lealName?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    companyId?: StringFieldUpdateOperationsInput | string
   }
 
 

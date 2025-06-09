@@ -17,7 +17,6 @@ import {
   type EditCompanyFormData,
 } from "../lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { GetProfileCompanyResponse } from "@/http/get-profile-company";
 import { formatCNPJ } from "@/utils/validate-cnpj";
 import { editCompanyAction } from "../actions/edit-company-action";
 import { useState } from "react";
@@ -26,11 +25,16 @@ import { CompanyPhotoUpload } from "./company-photo-upload";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export function EditCompany({
-  company,
-}: {
-  company: GetProfileCompanyResponse;
-}) {
+interface EditCompanyProps {
+  cnpj: string;
+  name: string;
+  createdAt: string;
+  lealName: string;
+  photoId: string;
+  urlPhoto: string;
+}
+
+export function EditCompany({ company }: { company: EditCompanyProps }) {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -44,7 +48,7 @@ export function EditCompany({
     defaultValues: {
       name: company.name,
       cnpj: formatCNPJ(company.cnpj),
-      lealName: company.lealName || "",
+      lealName: company.lealName,
     },
   });
 
@@ -55,13 +59,12 @@ export function EditCompany({
   async function handleSave(data: EditCompanyFormData) {
     setError(null);
     try {
-      if (photoFile) {
-        data.photo = photoFile;
-      }
+      data.photo = photoFile;
       const result = await editCompanyAction(data);
 
       if (result.success) {
         router.refresh();
+        // toast.success("Empresa atualizada com sucesso");
         router.push("/company");
       } else {
         setError(result.message || "Erro interno do servidor");
@@ -129,7 +132,7 @@ export function EditCompany({
             <div className="flex-1 flex flex-col items-center justify-start">
               <Label className="mb-2">Logo da Empresa</Label>
               <CompanyPhotoUpload
-                photo={company.photo}
+                urlPhoto={company.urlPhoto}
                 name={company.name}
                 onPhotoChange={(file) => setPhotoFile(file)}
               />

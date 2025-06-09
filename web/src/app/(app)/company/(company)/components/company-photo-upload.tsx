@@ -8,17 +8,17 @@ import { Upload, X } from "lucide-react";
 import { useState } from "react";
 
 interface CompanyPhotoUploadProps {
-  photo: string | null;
+  urlPhoto: string | null;
   name: string;
   onPhotoChange: (file: File) => void;
 }
 
 export function CompanyPhotoUpload({
-  photo,
+  urlPhoto,
   name,
   onPhotoChange,
 }: CompanyPhotoUploadProps) {
-  const [currentPhoto, setCurrentPhoto] = useState<string | null>(photo);
+  const [currentPhoto, setCurrentPhoto] = useState<string | null>(urlPhoto);
   const [isUploading, setIsUploading] = useState(false);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -28,7 +28,6 @@ export function CompanyPhotoUpload({
     onPhotoChange(file);
     setIsUploading(true);
 
-    // Simulando upload - em produção, isso seria uma chamada à API
     const reader = new FileReader();
     reader.onload = (e) => {
       setCurrentPhoto(e.target?.result as string);

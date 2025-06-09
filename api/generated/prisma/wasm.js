@@ -153,7 +153,9 @@ exports.Prisma.EmailScalarFieldEnum = {
 exports.Prisma.AttachmentScalarFieldEnum = {
   id: 'id',
   title: 'title',
-  url: 'url'
+  url: 'url',
+  companyId: 'companyId',
+  userId: 'userId'
 };
 
 exports.Prisma.SortOrder = {

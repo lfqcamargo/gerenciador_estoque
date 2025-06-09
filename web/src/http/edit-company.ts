@@ -3,7 +3,7 @@ import { api } from "./api-client";
 interface EditCompanyRequest {
   name: string;
   lealName: string | null;
-  photo: string | null;
+  photoId: string | null;
 }
 
 type EditCompanyResponse = void;

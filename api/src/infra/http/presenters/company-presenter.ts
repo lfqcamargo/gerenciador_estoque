@@ -7,7 +7,7 @@ export class CompanyPresenter {
       cnpj: company.cnpj,
       name: company.name,
       lealName: company.lealName,
-      photo: company.photo,
+      photoId: company.photoId,
       createdAt: company.createdAt.toISOString(),
     };
   }

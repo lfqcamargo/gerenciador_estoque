@@ -7,6 +7,8 @@ import { EventModule } from "@/infra/event/event.module";
 import { StorageModule } from "@/infra/storage/storage.module";
 import { UploadAttachmentController } from "./upload-attachment.controller";
 import { UploadAndCreateAttachmentUseCase } from "@/domain/shared/application/use-cases/upload-and-create-attachment";
+import { FindByIdUseCase } from "@/domain/shared/application/use-cases/find-by-id";
+import { FindAttachmentByIdController } from "./find-by-id.controller";
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { UploadAndCreateAttachmentUseCase } from "@/domain/shared/application/us
     EventModule,
     StorageModule,
   ],
-  controllers: [UploadAttachmentController],
-  providers: [UploadAndCreateAttachmentUseCase],
+  controllers: [UploadAttachmentController, FindAttachmentByIdController],
+  providers: [UploadAndCreateAttachmentUseCase, FindByIdUseCase],
 })
 export class SharedModule {}

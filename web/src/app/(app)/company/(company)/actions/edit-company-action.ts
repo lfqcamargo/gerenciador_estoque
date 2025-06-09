@@ -3,6 +3,7 @@
 import { editCompany } from "@/http/edit-company";
 import { editCompanySchema, EditCompanyFormData } from "../lib/validations";
 import { AxiosError } from "axios";
+import { uploadFile } from "@/http/upload-file";
 
 interface EditCompanyActionResult {
   success: boolean;
@@ -15,10 +16,16 @@ export async function editCompanyAction(
   try {
     const validatedData = editCompanySchema.parse(data);
 
+    let responseUploadFile = null;
+
+    if (validatedData.photo) {
+      responseUploadFile = await uploadFile({ file: validatedData.photo });
+    }
+
     await editCompany({
       name: validatedData.name,
       lealName: validatedData.lealName || "",
-      photo: "",
+      photoId: responseUploadFile?.attachmentId || "",
     });
 
     return { success: true };

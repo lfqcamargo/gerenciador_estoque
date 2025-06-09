@@ -17,6 +17,8 @@ export function makeAttachment(
     {
       title: faker.lorem.slug(),
       url: faker.lorem.slug(),
+      companyId: faker.string.uuid(),
+      userId: faker.string.uuid(),
       ...override,
     },
     id

@@ -6,10 +6,11 @@ export interface GetProfileCompanyResponse {
   name: string;
   createdAt: string;
   lealName: string;
-  photo: string;
+  photoId: string;
 }
 
 export async function getProfileCompany(): Promise<GetProfileCompanyResponse> {
   const response = await api.get("/companies/me");
+
   return response.data;
 }

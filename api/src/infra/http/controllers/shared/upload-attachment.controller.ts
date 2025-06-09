@@ -11,6 +11,8 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { CurrentUser } from "@/infra/auth/current-user-decorator";
+import { UserPayload } from "@/infra/auth/jwt.strategy";
 
 @Controller("/attachments")
 export class UploadAttachmentController {
@@ -21,6 +23,7 @@ export class UploadAttachmentController {
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   async handle(
+    @CurrentUser() user: UserPayload,
     @UploadedFile(
       new ParseFilePipe({
         validators: [
@@ -39,6 +42,8 @@ export class UploadAttachmentController {
       fileName: file.originalname,
       fileType: file.mimetype,
       body: file.buffer,
+      companyId: user.companyId,
+      userId: user.userId,
     });
 
     if (result.isLeft()) {

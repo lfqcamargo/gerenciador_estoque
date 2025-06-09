@@ -59,11 +59,8 @@ export class EditCompanyUseCase {
 
     company.name = name;
     company.lealName = lealName;
-    console.log("Antes do photoId", photoId);
     company.photoId = photoId;
-    console.log("Depois do photoId", company.photoId);
 
-    console.log("Antes do save", company);
     await this.companiesRepository.save(company);
 
     return right({ company });
