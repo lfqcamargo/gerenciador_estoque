@@ -1,6 +1,6 @@
 import { Either, left, right } from "@/core/either";
 import { CompaniesRepository } from "../repositories/companies-repository";
-import { TempUsersRepository } from "../repositories/temp-users-repository";
+import { TempCompaniesRepository } from "../repositories/temp-companies-repository";
 import { UsersRepository } from "../repositories/users-repository";
 import { ResourceTokenNotFoundError } from "./errors/resource-token-not-found-error";
 import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
@@ -23,7 +23,7 @@ type ConfirmationCreateCompanyUseCaseResponse = Either<
 @Injectable()
 export class ConfirmationCreateCompanyUseCase {
   constructor(
-    private tempUsersRepository: TempUsersRepository,
+    private tempCompaniesRepository: TempCompaniesRepository,
     private usersRepository: UsersRepository,
     private companiesRepository: CompaniesRepository
   ) {}
@@ -31,14 +31,14 @@ export class ConfirmationCreateCompanyUseCase {
   async execute({
     token,
   }: ConfirmationCreateCompanyUseCaseRequest): Promise<ConfirmationCreateCompanyUseCaseResponse> {
-    const tempUser = await this.tempUsersRepository.findByToken(token);
+    const tempCompany = await this.tempCompaniesRepository.findByToken(token);
 
-    if (!tempUser) {
+    if (!tempCompany) {
       return left(new ResourceTokenNotFoundError());
     }
 
     const alreadyExistsCompany = await this.companiesRepository.findByCnpj(
-      tempUser.cnpj
+      tempCompany.cnpj
     );
 
     if (alreadyExistsCompany) {
@@ -46,26 +46,26 @@ export class ConfirmationCreateCompanyUseCase {
     }
 
     const alreadyExistsEmail = await this.usersRepository.findByEmail(
-      tempUser.email
+      tempCompany.email
     );
 
     if (alreadyExistsEmail) {
       return left(new AlreadyExistsEmailError());
     }
 
-    if (tempUser.expiration < new Date()) {
+    if (tempCompany.expiration < new Date()) {
       return left(new ResourceTokenNotFoundError());
     }
 
     const company = Company.create({
-      cnpj: tempUser.cnpj,
-      name: tempUser.companyName,
+      cnpj: tempCompany.cnpj,
+      name: tempCompany.companyName,
     });
 
     const user = User.create({
-      email: tempUser.email,
-      name: tempUser.userName,
-      password: tempUser.password,
+      email: tempCompany.email,
+      name: tempCompany.userName,
+      password: tempCompany.password,
       role: UserRole.ADMIN,
       companyId: company.id.toString(),
     });

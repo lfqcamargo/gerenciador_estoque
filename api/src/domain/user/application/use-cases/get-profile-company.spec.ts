@@ -6,19 +6,19 @@ import { makeUser } from "test/factories/make-user";
 import { makeCompany } from "test/factories/make-company";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { CompanyNotFoundError } from "./errors/company-not-found-error";
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 let sut: GetProfileCompanyUseCase;
 
 describe("Get profile company", () => {
   beforeEach(() => {
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
     sut = new GetProfileCompanyUseCase(

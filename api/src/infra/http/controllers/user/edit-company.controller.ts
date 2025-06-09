@@ -17,6 +17,7 @@ import { CurrentUser } from "@/infra/auth/current-user-decorator";
 import { UserRole } from "@/domain/user/enterprise/entities/user";
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
 import { UserNotAdminError } from "@/domain/user/application/use-cases/errors/user-not-admin-error";
+import { Roles } from "@/infra/auth/roles.decorator";
 
 const editCompanyBodySchema = z.object({
   name: z
@@ -56,16 +57,13 @@ export class EditCompanyController {
 
   @Put()
   @HttpCode(204)
+  @Roles(UserRole.ADMIN)
   async handle(
     @Body(bodyValidationPipe) body: EditCompanyBody,
     @CurrentUser() user: UserPayload
   ) {
-    const { companyId, userId, role } = user;
+    const { companyId, userId } = user;
     const { name, lealName, photoId } = body;
-
-    if (role !== UserRole.ADMIN) {
-      throw new ForbiddenException("User is not an admin");
-    }
 
     const result = await this.editCompanyUseCase.execute({
       companyId,

@@ -21,7 +21,6 @@ export class OnChangePassword {
   }
 
   private async sendPasswordChangeEmail(event: unknown) {
-    console.log("EVENTO RECEBIDO");
     const passwordChangeEvent = event as PasswordChangeEvent;
     const { user } = passwordChangeEvent;
 

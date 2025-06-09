@@ -5,22 +5,22 @@ import { makeUser } from "test/factories/make-user";
 import { makeCompany } from "test/factories/make-company";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { CompanyNotFoundError } from "./errors/company-not-found-error";
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 import { EditCompanyUseCase } from "./edit-company";
 import { UserRole } from "../../enterprise/entities/user";
 import { UserNotAdminError } from "./errors/user-not-admin-error";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 let sut: EditCompanyUseCase;
 
 describe("Edit company", () => {
   beforeEach(() => {
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
     sut = new EditCompanyUseCase(

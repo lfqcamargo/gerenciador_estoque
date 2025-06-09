@@ -7,7 +7,7 @@ export class UserPresenter {
       id: user.id.toString(),
       name: user.name,
       email: user.email,
-      photo: user.photo,
+      photoId: user.photoId,
       role: user.role,
       createdAt: user.createdAt.toISOString(),
     };

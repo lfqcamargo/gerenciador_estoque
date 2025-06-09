@@ -5,7 +5,7 @@ import { FakeUploader } from "test/storage/fake-uploader";
 import { InvalidAttachmentTypeError } from "./errors/invalid-attachment-type-error";
 import { InMemoryCompaniesRepository } from "test/repositories/in-memory-companies-repository";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 import { makeUser } from "test/factories/make-user";
 import { makeCompany } from "test/factories/make-company";
 import { UserNotBelongToCompanyError } from "@/domain/user/application/use-cases/errors/user-not-belong-to-company-error";
@@ -16,7 +16,7 @@ let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let fakeUploader: FakeUploader;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 
 let sut: UploadAndCreateAttachmentUseCase;
 
@@ -25,9 +25,9 @@ describe("Upload and create attachment", () => {
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
     fakeUploader = new FakeUploader();
     inMemoryUsersRepository = new InMemoryUsersRepository();
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
     sut = new UploadAndCreateAttachmentUseCase(

@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 
-import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/create-temp-user";
+import { CreateTempCompanyUseCase } from "@/domain/user/application/use-cases/create-temp-company";
 import { CryptographyModule } from "@/infra/cryptography/cryptography.module";
-import { CreateUserTempController } from "./create-user-temp.controller";
+import { CreateCompanyTempController } from "./create-company-temp.controller";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { ExchangePasswordForTokenController } from "./exchange-password-for-token.controller";
 import { ConfirmationCreateCompanyController } from "./confirmation-create-company.controller";
@@ -20,11 +20,13 @@ import { GetProfileUserController } from "./get-profile-user.controller";
 import { GetProfileUserUseCase } from "@/domain/user/application/use-cases/get-profile-user";
 import { EditCompanyController } from "./edit-company.controller";
 import { EditCompanyUseCase } from "@/domain/user/application/use-cases/edit-company";
+import { CreateUserTempController } from "./create-user-temp.controller";
+import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/create-temp-user";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
   controllers: [
-    CreateUserTempController,
+    CreateCompanyTempController,
     ConfirmationCreateCompanyController,
     GenerateNewPasswordTokenController,
     ExchangePasswordForTokenController,
@@ -32,9 +34,10 @@ import { EditCompanyUseCase } from "@/domain/user/application/use-cases/edit-com
     GetProfileCompanyController,
     GetProfileUserController,
     EditCompanyController,
+    CreateUserTempController,
   ],
   providers: [
-    CreateTempUserUseCase,
+    CreateTempCompanyUseCase,
     ConfirmationCreateCompanyUseCase,
     GenerateNewPasswordTokenUseCase,
     ExchangePasswordForTokenUseCase,
@@ -42,6 +45,7 @@ import { EditCompanyUseCase } from "@/domain/user/application/use-cases/edit-com
     GetProfileCompanyUseCase,
     GetProfileUserUseCase,
     EditCompanyUseCase,
+    CreateTempUserUseCase,
   ],
 })
 export class UserModule {}

@@ -1,15 +1,15 @@
 import { DomainEvent } from "@/core/events/domain-event";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
-import { TempUser } from "../entities/temp-user";
+import { TempCompany } from "../entities/temp-company";
 
-export class TempUserCreatedEvent implements DomainEvent {
+export class TempCompanyCreatedEvent implements DomainEvent {
   public ocurredAt: Date;
 
-  constructor(public tempUser: TempUser) {
+  constructor(public tempCompany: TempCompany) {
     this.ocurredAt = new Date();
   }
 
   getAggregateId(): UniqueEntityID {
-    return this.tempUser.id;
+    return this.tempCompany.id;
   }
 }

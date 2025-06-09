@@ -1,34 +1,34 @@
 import { InMemoryCompaniesRepository } from "test/repositories/in-memory-companies-repository";
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { beforeEach, describe, expect, it } from "vitest";
 import { ConfirmationCreateCompanyUseCase } from "./confirmation-create-company";
-import { makeTempUser } from "test/factories/make-temp-user";
+import { makeTempCompany } from "test/factories/make-temp-company";
 import { ResourceTokenNotFoundError } from "./errors/resource-token-not-found-error";
 
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let sut: ConfirmationCreateCompanyUseCase;
 
 describe("Confirmation create company use case", () => {
   beforeEach(() => {
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
 
     sut = new ConfirmationCreateCompanyUseCase(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository,
       inMemoryCompaniesRepository
     );
   });
 
   it("should be able to confirm create company", async () => {
-    const userTemp = makeTempUser({
+    const userTemp = makeTempCompany({
       cnpj: "12345678901234",
       companyName: "Test Company",
       email: "test@test.com",
@@ -36,7 +36,7 @@ describe("Confirmation create company use case", () => {
       password: "123456",
     });
 
-    await inMemoryTempUsersRepository.create(userTemp);
+    await inMemoryTempCompaniesRepository.create(userTemp);
 
     const result = await sut.execute({ token: userTemp.token });
 
@@ -56,7 +56,7 @@ describe("Confirmation create company use case", () => {
       inMemoryCompaniesRepository.items[0].id.toString()
     );
 
-    expect(inMemoryTempUsersRepository.items).toHaveLength(0);
+    expect(inMemoryTempCompaniesRepository.items).toHaveLength(0);
   });
 
   it("should not be able to confirm create company with invalid token", async () => {
@@ -67,7 +67,7 @@ describe("Confirmation create company use case", () => {
   });
 
   it("should not be able to confirm create company with expired token", async () => {
-    const userTemp = makeTempUser({
+    const userTemp = makeTempCompany({
       cnpj: "12345678901234",
       companyName: "Test Company",
       email: "test@test.com",
@@ -76,7 +76,7 @@ describe("Confirmation create company use case", () => {
       expiration: new Date(Date.now() - 1000),
     });
 
-    await inMemoryTempUsersRepository.create(userTemp);
+    await inMemoryTempCompaniesRepository.create(userTemp);
 
     const result = await sut.execute({ token: userTemp.token });
 

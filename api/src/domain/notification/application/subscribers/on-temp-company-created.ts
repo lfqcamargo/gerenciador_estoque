@@ -1,10 +1,10 @@
 import { DomainEvents } from "@/core/events/domain-events";
-import { TempUserCreatedEvent } from "@/domain/user/enterprise/events/temp-user-created.event";
+import { TempCompanyCreatedEvent } from "@/domain/user/enterprise/events/temp-company-created.event";
 import { SendEmailUseCase } from "../use-cases/send-email";
 import { Injectable } from "@nestjs/common";
 
 @Injectable()
-export class OnTempUserCreated {
+export class OnTempCompanyCreated {
   constructor(private sendEmail: SendEmailUseCase) {
     this.setupSubscriptions();
   }
@@ -12,26 +12,26 @@ export class OnTempUserCreated {
   setupSubscriptions(): void {
     DomainEvents.register(
       this.sendWelcomeEmail.bind(this),
-      TempUserCreatedEvent.name
+      TempCompanyCreatedEvent.name
     );
   }
 
   private async sendWelcomeEmail(event: unknown) {
-    const tempUserCreatedEvent = event as TempUserCreatedEvent;
-    const { tempUser } = tempUserCreatedEvent;
+    const tempCompanyCreatedEvent = event as TempCompanyCreatedEvent;
+    const { tempCompany } = tempCompanyCreatedEvent;
 
     await this.sendEmail.execute({
-      to: tempUser.email,
+      to: tempCompany.email,
       subject: "Bem-vindo ao Sistema de Controle de Vendas",
       body: `
-        Olá ${tempUser.name},
+        Olá ${tempCompany.userName},
 
         Seu cadastro temporário foi criado com sucesso!
 
         Para acessar o sistema, utilize o token abaixo:
-        ${tempUser.token}
+        ${tempCompany.token}
 
-        Este token é válido até ${tempUser.expiration.toLocaleString()}.
+        Este token é válido até ${tempCompany.expiration.toLocaleString()}.
 
         Atenciosamente,
         Equipe de Controle de Vendas

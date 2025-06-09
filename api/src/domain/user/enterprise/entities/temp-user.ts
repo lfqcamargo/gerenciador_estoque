@@ -1,32 +1,24 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
+import { UserRole } from "./user";
 import { TempUserCreatedEvent } from "../events/temp-user-created.event";
 
 export interface TempUserProps {
-  cnpj: string;
-  companyName: string;
+  companyId: string;
   email: string;
-  userName: string;
-  password: string;
+  name: string;
+  userRole: UserRole;
   token: string;
   expiration: Date;
 }
 
 export class TempUser extends AggregateRoot<TempUserProps> {
-  get cnpj() {
-    return this.props.cnpj;
+  get companyId() {
+    return this.props.companyId;
   }
 
-  set cnpj(cnpj: string) {
-    this.props.cnpj = cnpj;
-  }
-
-  get companyName() {
-    return this.props.companyName;
-  }
-
-  set companyName(companyName: string) {
-    this.props.companyName = companyName;
+  set companyId(companyId: string) {
+    this.props.companyId = companyId;
   }
 
   get email() {
@@ -37,20 +29,20 @@ export class TempUser extends AggregateRoot<TempUserProps> {
     this.props.email = email;
   }
 
-  get userName() {
-    return this.props.userName;
+  get name() {
+    return this.props.name;
   }
 
-  set userName(userName: string) {
-    this.props.userName = userName;
+  set name(name: string) {
+    this.props.name = name;
   }
 
-  get password() {
-    return this.props.password;
+  get userRole() {
+    return this.props.userRole;
   }
 
-  set password(password: string) {
-    this.props.password = password;
+  set userRole(userRole: UserRole) {
+    this.props.userRole = userRole;
   }
 
   get token() {

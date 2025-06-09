@@ -69,13 +69,6 @@ export function EmployeeContent() {
       employee.departamento.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  function handleAddEmployee(newEmployee: any) {
-    setEmployee([
-      ...employee,
-      { ...newEmployee, id: (employee.length + 1).toString() },
-    ]);
-  }
-
   function handleEditEmployee(id: string, updatedData: any) {
     setEmployee(
       employee.map((func) =>
@@ -121,7 +114,6 @@ export function EmployeeContent() {
       <AddEmployeeDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddEmployee}
       />
     </div>
   );

@@ -1,6 +1,5 @@
 import { AggregateRoot } from "@/core/entities/aggregate-root";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
-import { User } from "./user";
 import { PasswordTokenCreatedEvent } from "../events/password-token-created.event";
 
 export interface PasswordTokenProps {

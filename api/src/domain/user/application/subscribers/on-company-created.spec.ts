@@ -1,22 +1,22 @@
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 import { InMemoryCompaniesRepository } from "test/repositories/in-memory-companies-repository";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { DomainEvents } from "@/core/events/domain-events";
 import { describe, it, beforeEach, expect } from "vitest";
 import { OnCompanyCreated } from "./on-company-created";
-import { makeTempUser } from "test/factories/make-temp-user";
+import { makeTempCompany } from "test/factories/make-temp-company";
 import { Company } from "../../enterprise/entities/company";
 
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 
 describe("On Company Created", () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
 
@@ -27,19 +27,19 @@ describe("On Company Created", () => {
   it("should delete temporary user when company is created", async () => {
     // Registra o subscriber
     new OnCompanyCreated(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryCompaniesRepository
     );
 
     // Cria um usuário temporário
-    const tempUser = makeTempUser({
+    const tempUser = makeTempCompany({
       cnpj: "12345678901234",
       companyName: "Test Company",
       email: "test@example.com",
       userName: "John Doe",
     });
 
-    await inMemoryTempUsersRepository.create(tempUser);
+    await inMemoryTempCompaniesRepository.create(tempUser);
 
     // Cria uma company com o mesmo CNPJ
     const company = Company.create({
@@ -53,7 +53,7 @@ describe("On Company Created", () => {
     DomainEvents.dispatchEventsForAggregate(company.id);
 
     // Verifica se o usuário temporário foi deletado
-    const deletedTempUser = await inMemoryTempUsersRepository.findByCnpj(
+    const deletedTempUser = await inMemoryTempCompaniesRepository.findByCnpj(
       tempUser.cnpj
     );
     expect(deletedTempUser).toBeNull();
@@ -62,7 +62,7 @@ describe("On Company Created", () => {
   it("should not throw error when temporary user does not exist", async () => {
     // Registra o subscriber
     new OnCompanyCreated(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryCompaniesRepository
     );
 

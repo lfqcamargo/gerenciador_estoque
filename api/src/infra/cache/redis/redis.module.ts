@@ -3,9 +3,11 @@ import { ConfigModule } from "@nestjs/config";
 import Redis from "ioredis";
 import { PasswordTokensRepository } from "@/domain/user/application/repositories/password-tokens-repository";
 import { RedisPasswordTokensRepository } from "./repositories/redis-password-tokens-repository";
+import { TempCompaniesRepository } from "@/domain/user/application/repositories/temp-companies-repository";
+import { RedisTempCompaniesRepository } from "./repositories/redis-temp-compánies-repository";
+import { RedisCacheRepository } from "./redis-cache-repository";
 import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
 import { RedisTempUsersRepository } from "./repositories/redis-temp-users-repository";
-import { RedisCacheRepository } from "./redis-cache-repository";
 
 @Module({
   imports: [ConfigModule],
@@ -29,6 +31,13 @@ import { RedisCacheRepository } from "./redis-cache-repository";
       inject: [RedisCacheRepository, Redis],
     },
     {
+      provide: TempCompaniesRepository,
+      useFactory: (cacheRepository: RedisCacheRepository, redis: Redis) => {
+        return new RedisTempCompaniesRepository(cacheRepository, redis);
+      },
+      inject: [RedisCacheRepository, Redis],
+    },
+    {
       provide: TempUsersRepository,
       useFactory: (cacheRepository: RedisCacheRepository, redis: Redis) => {
         return new RedisTempUsersRepository(cacheRepository, redis);
@@ -40,6 +49,7 @@ import { RedisCacheRepository } from "./redis-cache-repository";
     Redis,
     RedisCacheRepository,
     PasswordTokensRepository,
+    TempCompaniesRepository,
     TempUsersRepository,
   ],
 })

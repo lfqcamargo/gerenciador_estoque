@@ -6,7 +6,7 @@ import { PasswordChangeEvent } from "../events/password-change.event";
 export enum UserRole {
   ADMIN = "ADMIN",
   MANAGER = "MANAGER",
-  USER = "USER",
+  EMPLOYEE = "EMPLOYEE",
 }
 
 export interface UserProps {
@@ -14,7 +14,8 @@ export interface UserProps {
   name: string;
   password: string;
   role: UserRole;
-  photo?: string | null;
+  active: boolean;
+  photoId?: string | null;
   createdAt: Date;
   lastLogin?: Date | null;
 
@@ -56,12 +57,20 @@ export class User extends AggregateRoot<UserProps> {
     this.props.role = role;
   }
 
-  get photo() {
-    return this.props.photo;
+  get active() {
+    return this.props.active;
   }
 
-  set photo(photo: string | null | undefined) {
-    this.props.photo = photo;
+  set active(active: boolean) {
+    this.props.active = active;
+  }
+
+  get photoId() {
+    return this.props.photoId;
+  }
+
+  set photoId(photoId: string | null | undefined) {
+    this.props.photoId = photoId;
   }
 
   get createdAt() {
@@ -88,8 +97,14 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.role === UserRole.ADMIN;
   }
 
-  static create(props: Optional<UserProps, "createdAt">, id?: UniqueEntityID) {
-    const user = new User({ ...props, createdAt: new Date() }, id);
+  static create(
+    props: Optional<UserProps, "createdAt" | "active">,
+    id?: UniqueEntityID
+  ) {
+    const user = new User(
+      { ...props, createdAt: new Date(), active: false },
+      id
+    );
 
     return user;
   }

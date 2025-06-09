@@ -8,7 +8,7 @@ import { DatabaseModule } from "@/infra/database/database.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { CacheModule } from "@/infra/cache/cache.module";
 import { RedisCacheRepository } from "@/infra/cache/redis/redis-cache-repository";
-import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
+import { TempCompany } from "@/domain/user/enterprise/entities/temp-company";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { DomainEvents } from "@/core/events/domain-events";
 
@@ -40,7 +40,7 @@ describe("Confirmation Create Company (E2E)", () => {
     const token = new UniqueEntityID().toString();
     const expiration = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
-    const tempUser = TempUser.create({
+    const tempCompany = TempCompany.create({
       cnpj: "63241761000155",
       companyName: "Lfqcamargo Company",
       email: "lfqcamargo@gmail.com",
@@ -50,15 +50,15 @@ describe("Confirmation Create Company (E2E)", () => {
       expiration,
     });
 
-    await cacheRepository.set("temp-user:" + tempUser.cnpj, {
-      id: tempUser.id.toString(),
-      cnpj: tempUser.cnpj,
-      companyName: tempUser.companyName,
-      email: tempUser.email,
-      userName: tempUser.userName,
-      password: tempUser.password,
-      token: tempUser.token,
-      expiration: tempUser.expiration.toISOString(),
+    await cacheRepository.set("temp-company:" + tempCompany.cnpj, {
+      id: tempCompany.id.toString(),
+      cnpj: tempCompany.cnpj,
+      companyName: tempCompany.companyName,
+      email: tempCompany.email,
+      userName: tempCompany.userName,
+      password: tempCompany.password,
+      token: tempCompany.token,
+      expiration: tempCompany.expiration.toISOString(),
     });
 
     DomainEvents.shouldRun = true;
@@ -68,11 +68,11 @@ describe("Confirmation Create Company (E2E)", () => {
     );
 
     expect(response.statusCode).toBe(201);
-    expect(response.body.email).toBe(tempUser.email);
+    expect(response.body.email).toBe(tempCompany.email);
 
     const company = await prisma.company.findUnique({
       where: {
-        cnpj: tempUser.cnpj,
+        cnpj: tempCompany.cnpj,
       },
       include: {
         users: true,
@@ -80,15 +80,17 @@ describe("Confirmation Create Company (E2E)", () => {
     });
 
     expect(company).toBeTruthy();
-    expect(company?.cnpj).toBe(tempUser.cnpj);
-    expect(company?.name).toBe(tempUser.companyName);
+    expect(company?.cnpj).toBe(tempCompany.cnpj);
+    expect(company?.name).toBe(tempCompany.companyName);
 
     expect(company?.users[0]).toBeTruthy();
-    expect(company?.users[0].email).toBe(tempUser.email);
-    expect(company?.users[0].name).toBe(tempUser.userName);
+    expect(company?.users[0].email).toBe(tempCompany.email);
+    expect(company?.users[0].name).toBe(tempCompany.userName);
     expect(company?.users[0].role).toBe("ADMIN");
 
-    const cachedUser = await cacheRepository.get("temp-user:" + tempUser.cnpj);
-    expect(cachedUser).toBeNull();
+    const cachedCompany = await cacheRepository.get(
+      "temp-company:" + tempCompany.cnpj
+    );
+    expect(cachedCompany).toBeNull();
   });
 });

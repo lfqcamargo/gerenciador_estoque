@@ -3,25 +3,23 @@ import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repos
 import { InMemoryCompaniesRepository } from "test/repositories/in-memory-companies-repository";
 import { makeUser } from "test/factories/make-user";
 import { makeCompany } from "test/factories/make-company";
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
-import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
-import { CompanyNotFoundError } from "@/domain/user/application/use-cases/errors/company-not-found-error";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 import { FindByIdUseCase } from "./find-by-id";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 import { makeAttachment } from "test/factories/make-attachment";
 import { UserNotBelongToCompanyError } from "@/domain/user/application/use-cases/errors/user-not-belong-to-company-error";
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let sut: FindByIdUseCase;
 
 describe("Get profile company", () => {
   beforeEach(() => {
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();

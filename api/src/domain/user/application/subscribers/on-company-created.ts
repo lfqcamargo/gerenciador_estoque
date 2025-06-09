@@ -2,13 +2,13 @@ import { DomainEvents } from "@/core/events/domain-events";
 import { EventHandler } from "@/core/events/event-handler";
 import { CompanyCreatedEvent } from "../../enterprise/events/company-created.event";
 import { Injectable, OnModuleInit } from "@nestjs/common";
-import { TempUsersRepository } from "../repositories/temp-users-repository";
+import { TempCompaniesRepository } from "../repositories/temp-companies-repository";
 import { CompaniesRepository } from "../repositories/companies-repository";
 
 @Injectable()
 export class OnCompanyCreated implements EventHandler, OnModuleInit {
   constructor(
-    private tempUsersRepository: TempUsersRepository,
+    private tempCompaniesRepository: TempCompaniesRepository,
     private companiesRepository: CompaniesRepository
   ) {}
 
@@ -33,10 +33,12 @@ export class OnCompanyCreated implements EventHandler, OnModuleInit {
       return;
     }
 
-    const tempUser = await this.tempUsersRepository.findByCnpj(company.cnpj);
+    const tempCompany = await this.tempCompaniesRepository.findByCnpj(
+      company.cnpj
+    );
 
-    if (tempUser) {
-      await this.tempUsersRepository.delete(tempUser);
+    if (tempCompany) {
+      await this.tempCompaniesRepository.delete(tempCompany);
     }
   }
 }

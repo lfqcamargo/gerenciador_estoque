@@ -2,19 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useState } from "react";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AlertTriangle } from "lucide-react";
 
 interface Employee {
   id: string;
   nome: string;
+  email: string;
 }
 
 interface DeleteEmployeeDialogProps {
@@ -30,40 +30,28 @@ export function DeleteEmployeeDialog({
   onOpenChange,
   onConfirm,
 }: DeleteEmployeeDialogProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  async function handleDelete() {
-    setIsDeleting(true);
-    try {
-      // Simulando uma chamada de API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      onConfirm();
-    } finally {
-      setIsDeleting(false);
-    }
-  }
-
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-          <AlertDialogDescription>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            Confirmar Exclusão
+          </DialogTitle>
+          <DialogDescription>
             Tem certeza que deseja excluir o funcionário{" "}
             <strong>{employee.nome}</strong>? Esta ação não pode ser desfeita.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Excluindo..." : "Excluir"}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancelar
           </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          <Button variant="destructive" onClick={onConfirm}>
+            Excluir
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

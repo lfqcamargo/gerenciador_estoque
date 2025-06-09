@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryAttachmentsRepository } from "test/repositories/in-memory-attachments-repository";
 import { InMemoryUsersRepository } from "test/repositories/in-memory-users-repository";
 import { InMemoryCompaniesRepository } from "test/repositories/in-memory-companies-repository";
-import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
+import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
 import { makeCompany } from "test/factories/make-company";
 import { makeUser } from "test/factories/make-user";
 import { Attachment } from "@/domain/shared/enterprise/entities/attachment";
@@ -16,7 +16,7 @@ import { UserNotBelongToCompanyError } from "@/domain/user/application/use-cases
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
-let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
+let inMemoryTempCompaniesRepository: InMemoryTempCompaniesRepository;
 let fakeUploader: FakeUploader;
 let sut: DeleteAttachmentUseCase;
 
@@ -24,9 +24,9 @@ describe("Delete attachment by id   ", () => {
   beforeEach(() => {
     inMemoryAttachmentsRepository = new InMemoryAttachmentsRepository();
     inMemoryUsersRepository = new InMemoryUsersRepository();
-    inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
+    inMemoryTempCompaniesRepository = new InMemoryTempCompaniesRepository();
     inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
+      inMemoryTempCompaniesRepository,
       inMemoryUsersRepository
     );
     fakeUploader = new FakeUploader();

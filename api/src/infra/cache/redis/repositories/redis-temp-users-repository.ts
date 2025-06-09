@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { TempUsersRepository } from "@/domain/user/application/repositories/temp-users-repository";
-import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
+import { TempUser } from "@/domain/user/enterprise/entities/temp-user";
 import { DomainEvents } from "@/core/events/domain-events";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { RedisCacheRepository } from "../redis-cache-repository";
@@ -24,16 +24,15 @@ export class RedisTempUsersRepository implements TempUsersRepository {
 
     const data = {
       id: tempUser.id.toString(),
-      userName: tempUser.userName,
+      name: tempUser.name,
       email: tempUser.email,
-      password: tempUser.password,
-      companyName: tempUser.companyName,
-      cnpj: tempUser.cnpj,
+      companyId: tempUser.companyId,
       token: tempUser.token,
       expiration: tempUser.expiration.toISOString(),
+      userRole: tempUser.userRole,
     };
 
-    await this.cacheRepository.set(this.prefix + tempUser.cnpj, data, ttl);
+    await this.cacheRepository.set(this.prefix + tempUser.email, data, ttl);
 
     DomainEvents.dispatchEventsForAggregate(tempUser.id);
   }
@@ -53,13 +52,6 @@ export class RedisTempUsersRepository implements TempUsersRepository {
     return null;
   }
 
-  async findByCnpj(cnpj: string): Promise<TempUser | null> {
-    const data = await this.cacheRepository.get(this.prefix + cnpj);
-    if (!data) return null;
-
-    return this.mapToTempUser(data);
-  }
-
   async findByToken(token: string): Promise<TempUser | null> {
     const keys = await this.redis.keys(this.prefix + "*");
 
@@ -76,26 +68,22 @@ export class RedisTempUsersRepository implements TempUsersRepository {
   }
 
   async delete(tempUser: TempUser): Promise<void> {
-    await this.cacheRepository.delete(this.prefix + tempUser.cnpj);
+    await this.cacheRepository.delete(this.prefix + tempUser.email);
   }
 
-  async deleteByCnpj(cnpj: string): Promise<void> {
-    const tempUser = await this.findByCnpj(cnpj);
-    if (tempUser) {
-      await this.delete(tempUser);
-    }
+  async deleteByEmail(email: string): Promise<void> {
+    await this.cacheRepository.delete(this.prefix + email);
   }
 
   private mapToTempUser(data: any): TempUser {
     return TempUser.create(
       {
-        userName: data.userName,
+        name: data.name,
         email: data.email,
-        password: data.password,
-        companyName: data.companyName,
-        cnpj: data.cnpj,
+        companyId: data.companyId,
         token: data.token,
         expiration: new Date(data.expiration),
+        userRole: data.userRole,
       },
       new UniqueEntityID(data.id)
     );

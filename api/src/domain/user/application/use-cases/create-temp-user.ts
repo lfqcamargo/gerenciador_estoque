@@ -1,24 +1,24 @@
-import { TempUser } from "@/domain/user/enterprise/entities/tempUser";
 import { UsersRepository } from "../repositories/users-repository";
-import { TempUsersRepository } from "../repositories/temp-users-repository";
-import { CompaniesRepository } from "../repositories/companies-repository";
 import { HashGenerator } from "../cryptography/hash-generator";
 import { Either, left, right } from "@/core/either";
-import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
 import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
 import { Injectable } from "@nestjs/common";
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
+import { UserRole } from "@/domain/user/enterprise/entities/user";
+import { TempUser } from "../../enterprise/entities/temp-user";
+import { TempUsersRepository } from "../repositories/temp-users-repository";
+import { UserNotFoundError } from "./errors/user-not-found-error";
+import { UserNotAdminError } from "./errors/user-not-admin-error";
 
 interface CreateTempUserUseCaseRequest {
-  cnpj: string;
-  companyName: string;
+  authenticateId: string;
   email: string;
-  userName: string;
-  password: string;
+  name: string;
+  role: UserRole;
 }
 
 type CreateTempUserUseCaseResponse = Either<
-  AlreadyExistsCnpjError | AlreadyExistsEmailError,
+  AlreadyExistsEmailError,
   { tempUser: TempUser }
 >;
 
@@ -26,22 +26,24 @@ type CreateTempUserUseCaseResponse = Either<
 export class CreateTempUserUseCase {
   constructor(
     private tempUsersRepository: TempUsersRepository,
-    private companiesRepository: CompaniesRepository,
     private usersRepository: UsersRepository,
     private hashGenerator: HashGenerator
   ) {}
 
   async execute({
-    cnpj,
-    companyName,
+    authenticateId,
     email,
-    userName,
-    password,
+    name,
+    role,
   }: CreateTempUserUseCaseRequest): Promise<CreateTempUserUseCaseResponse> {
-    const companyExists = await this.companiesRepository.findByCnpj(cnpj);
+    const authenticate = await this.usersRepository.findById(authenticateId);
 
-    if (companyExists) {
-      return left(new AlreadyExistsCnpjError());
+    if (!authenticate) {
+      return left(new UserNotFoundError());
+    }
+
+    if (authenticate.role !== UserRole.ADMIN) {
+      return left(new UserNotAdminError());
     }
 
     const emailExists = await this.usersRepository.findByEmail(email);
@@ -54,24 +56,16 @@ export class CreateTempUserUseCase {
 
     if (alreadyExists) {
       await this.tempUsersRepository.delete(alreadyExists);
-    } else {
-      const alreadyExists = await this.tempUsersRepository.findByCnpj(cnpj);
-
-      if (alreadyExists) {
-        await this.tempUsersRepository.delete(alreadyExists);
-      }
     }
 
     const token = new UniqueEntityID().toString();
     const expiration = new Date(Date.now() + 1000 * 60 * 60 * 24); // 1 day
-    const hashedPassword = await this.hashGenerator.hash(password);
 
     const tempUser = TempUser.create({
-      cnpj,
-      companyName,
+      companyId: authenticate.companyId,
       email,
-      userName,
-      password: hashedPassword,
+      name,
+      userRole: role,
       token,
       expiration,
     });

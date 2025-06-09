@@ -1,44 +1,49 @@
 import { InMemoryEmailsRepository } from "test/repositories/in-memory-emails-repository";
 import { FakeEmailSender } from "test/services/fake-email-sender";
 import { SendEmailUseCase } from "../use-cases/send-email";
-import { OnTempUserCreated } from "./on-temp-user-created";
-import { TempUser } from "@/domain/user/enterprise/entities/temp-user";
+import { OnTempCompanyCreated } from "./on-temp-company-created";
+import { TempCompany } from "@/domain/user/enterprise/entities/temp-company";
 import { DomainEvents } from "@/core/events/domain-events";
 import { describe, it, beforeEach, expect } from "vitest";
-import { UserRole } from "@/domain/user/enterprise/entities/user";
 
 let inMemoryEmailsRepository: InMemoryEmailsRepository;
 let fakeEmailSender: FakeEmailSender;
 let sendEmail: SendEmailUseCase;
 
-describe("On Temp User Created", () => {
+describe("On Temp Company Created", () => {
   beforeEach(() => {
     inMemoryEmailsRepository = new InMemoryEmailsRepository();
     fakeEmailSender = new FakeEmailSender();
     sendEmail = new SendEmailUseCase(inMemoryEmailsRepository, fakeEmailSender);
 
+    // Limpa os handlers de eventos anteriores
     DomainEvents.clearHandlers();
   });
 
-  it("should send a welcome email when temp user is created", async () => {
-    new OnTempUserCreated(sendEmail);
+  it("should send a welcome email when temp company is created", async () => {
+    // Registra o subscriber
+    new OnTempCompanyCreated(sendEmail);
 
-    const tempUser = TempUser.create({
-      companyId: "12345678901234",
+    // Cria um usuário temporário
+    const tempCompany = TempCompany.create({
+      cnpj: "12345678901234",
+      companyName: "Test Company",
       email: "test@example.com",
       userName: "John Doe",
-      password: "hashedPassword123",
-      userRole: UserRole.ADMIN,
+      password: "123456",
       token: "test-token",
       expiration: new Date(),
     });
 
-    DomainEvents.dispatchEventsForAggregate(tempUser.id);
+    DomainEvents.dispatchEventsForAggregate(tempCompany.id);
 
     const sentEmail = fakeEmailSender.sentEmails[0];
 
     expect(sentEmail).toBeDefined();
     expect(sentEmail.to).toBe("test@example.com");
+    expect(sentEmail.subject).toBe(
+      "Bem-vindo ao Sistema de Controle de Vendas"
+    );
     expect(sentEmail.body).toContain("John Doe");
     expect(sentEmail.body).toContain("test-token");
   });
