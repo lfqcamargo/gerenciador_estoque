@@ -21,10 +21,21 @@ export class InMemoryUsersRepository implements UsersRepository {
     return user ?? null;
   }
 
+  async fetchAll(companyId: string): Promise<User[]> {
+    return this.items.filter(
+      (item) => item.companyId === companyId && !item.deletedAt
+    );
+  }
+
   async update(user: User): Promise<void> {
     const index = this.items.findIndex((item) => item.id === user.id);
     this.items[index] = user;
 
     DomainEvents.dispatchEventsForAggregate(user.id);
+  }
+
+  async delete(user: User): Promise<void> {
+    const index = this.items.findIndex((item) => item.id === user.id);
+    this.items[index] = user;
   }
 }

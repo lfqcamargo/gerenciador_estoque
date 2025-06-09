@@ -18,6 +18,7 @@ export interface UserProps {
   photoId?: string | null;
   createdAt: Date;
   lastLogin?: Date | null;
+  deletedAt?: Date | null;
 
   companyId: string;
 }
@@ -87,6 +88,18 @@ export class User extends AggregateRoot<UserProps> {
 
   set lastLogin(lastLogin: Date | null | undefined) {
     this.props.lastLogin = lastLogin;
+  }
+
+  get deletedAt() {
+    if (!this.props.deletedAt) {
+      return null;
+    }
+
+    return this.props.deletedAt;
+  }
+
+  set deletedAt(deletedAt: Date | null | undefined) {
+    this.props.deletedAt = deletedAt;
   }
 
   get companyId() {

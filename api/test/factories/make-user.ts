@@ -26,7 +26,8 @@ export function makeUser(
       companyId: faker.string.uuid(),
       createdAt: new Date(),
       lastLogin: new Date(),
-      photo: faker.image.url(),
+      photoId: faker.image.url(),
+      deletedAt: null,
       ...override,
     },
     id

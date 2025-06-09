@@ -1,6 +1,10 @@
 import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { User, UserRole } from "@/domain/user/enterprise/entities/user";
-import { User as PrismaUser, Prisma } from "generated/prisma";
+import {
+  User as PrismaUser,
+  Prisma,
+  UserRole as PrismaUserRole,
+} from "generated/prisma";
 
 export class PrismaUserMapper {
   static toDomain(raw: PrismaUser): User {
@@ -11,6 +15,11 @@ export class PrismaUserMapper {
         password: raw.password,
         role: raw.role as UserRole,
         companyId: raw.companyId,
+        active: raw.active,
+        photoId: raw.photoId,
+        createdAt: raw.createdAt,
+        lastLogin: raw.lastLogin ?? null,
+        deletedAt: raw.deletedAt,
       },
       new UniqueEntityID(raw.id)
     );
@@ -22,8 +31,18 @@ export class PrismaUserMapper {
       name: user.name,
       email: user.email,
       password: user.password,
-      role: "ADMIN",
+      role: user.role as PrismaUserRole,
+      active: user.active,
+      photoId: user.photoId,
       companyId: user.companyId,
+      lastLogin: user.lastLogin ?? null,
+      deletedAt: user.deletedAt ?? null,
     };
   }
 }
+
+// const domainToPrismaUserRoleMap: Record<UserRole, PrismaUserRole> = {
+//   ADMIN: PrismaUserRole.ADMIN,
+//   MANAGER: PrismaUserRole.MANAGER,
+//   EMPLOYEE: PrismaUserRole.EMPLOYEE,
+// };

@@ -109,7 +109,7 @@ describe("Edit company", () => {
 
     const user = makeUser({
       companyId: company.id.toString(),
-      role: UserRole.USER,
+      role: UserRole.EMPLOYEE,
     });
     await inMemoryUsersRepository.create(user);
 

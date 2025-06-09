@@ -24,6 +24,12 @@ import { CreateUserTempController } from "./create-user-temp.controller";
 import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/create-temp-user";
 import { ConfirmationCreateUserController } from "./confirmation-create-user.controller";
 import { ConfirmationCreateUserUseCase } from "@/domain/user/application/use-cases/confirmation-create-user";
+import { FetchUsersCompanyIdController } from "./fetch-users-company-id.controller";
+import { FetchUsersCompanyIdUseCase } from "@/domain/user/application/use-cases/fetch-users-company-id";
+import { EditUserController } from "./edit-user.controller";
+import { EditUserUseCase } from "@/domain/user/application/use-cases/edit-user";
+import { DeleteUserController } from "./delete-user-controller";
+import { DeleteUserUseCase } from "@/domain/user/application/use-cases/delete-user";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
@@ -38,6 +44,9 @@ import { ConfirmationCreateUserUseCase } from "@/domain/user/application/use-cas
     EditCompanyController,
     CreateUserTempController,
     ConfirmationCreateUserController,
+    FetchUsersCompanyIdController,
+    EditUserController,
+    DeleteUserController,
   ],
   providers: [
     CreateTempCompanyUseCase,
@@ -50,6 +59,9 @@ import { ConfirmationCreateUserUseCase } from "@/domain/user/application/use-cas
     EditCompanyUseCase,
     CreateTempUserUseCase,
     ConfirmationCreateUserUseCase,
+    FetchUsersCompanyIdUseCase,
+    EditUserUseCase,
+    DeleteUserUseCase,
   ],
 })
 export class UserModule {}

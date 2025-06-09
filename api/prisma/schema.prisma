@@ -14,7 +14,7 @@ datasource db {
 enum UserRole {
   ADMIN
   MANAGER
-  USER
+  EMPLOYEE
 }
 
 enum EmailStatus {
@@ -47,7 +47,8 @@ model User {
   active    Boolean  @default(false)
   photoId   String?  @map("photo_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  lastLogin DateTime? @map("last_login")
+  deletedAt DateTime? @map("deleted_at")
 
   companyId String  @map("company_id")
   company   Company @relation(fields: [companyId], references: [id])

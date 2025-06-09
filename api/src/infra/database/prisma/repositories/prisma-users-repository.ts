@@ -29,6 +29,13 @@ export class PrismaUsersRepository implements UsersRepository {
     return user ? PrismaUserMapper.toDomain(user) : null;
   }
 
+  async fetchAll(companyId: string): Promise<User[]> {
+    const users = await this.prisma.user.findMany({
+      where: { companyId, deletedAt: null },
+    });
+    return users.map(PrismaUserMapper.toDomain);
+  }
+
   async update(user: User): Promise<void> {
     await this.prisma.user.update({
       where: { id: user.id.toString() },
@@ -36,5 +43,12 @@ export class PrismaUsersRepository implements UsersRepository {
     });
 
     DomainEvents.dispatchEventsForAggregate(user.id);
+  }
+
+  async delete(user: User): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: user.id.toString() },
+      data: PrismaUserMapper.toPrisma(user),
+    });
   }
 }

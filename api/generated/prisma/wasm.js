@@ -138,7 +138,8 @@ exports.Prisma.UserScalarFieldEnum = {
   active: 'active',
   photoId: 'photoId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
+  lastLogin: 'lastLogin',
+  deletedAt: 'deletedAt',
   companyId: 'companyId'
 };
 
@@ -177,7 +178,7 @@ exports.Prisma.NullsOrder = {
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
   MANAGER: 'MANAGER',
-  USER: 'USER'
+  EMPLOYEE: 'EMPLOYEE'
 };
 
 exports.Prisma.ModelName = {
