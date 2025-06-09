@@ -9,14 +9,9 @@ import { FakeEmailSender } from "test/services/fake-email-sender";
 import { SendEmailUseCase } from "@/domain/notification/application/use-cases/send-email";
 import { OnTempCompanyCreated } from "@/domain/notification/application/subscribers/on-temp-company-created";
 import { DomainEvents } from "@/core/events/domain-events";
-import { AlreadyExistsCnpjError } from "./errors/already-exists-cnpj-error";
-import { AlreadyExistsEmailError } from "./errors/already-exists-email-error";
-import { makeCompany } from "test/factories/make-company";
 import { makeUser } from "test/factories/make-user";
-import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-users-repository";
 import { UserRole } from "../../enterprise/entities/user";
-import { UserNotAdminError } from "./errors/user-not-admin-error";
 
 let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
@@ -32,10 +27,6 @@ describe("Create temp user use case", () => {
     DomainEvents.clearHandlers();
 
     inMemoryTempUsersRepository = new InMemoryTempUsersRepository();
-    inMemoryCompaniesRepository = new InMemoryCompaniesRepository(
-      inMemoryTempUsersRepository,
-      inMemoryUsersRepository
-    );
     inMemoryUsersRepository = new InMemoryUsersRepository();
     inMemoryEmailsRepository = new InMemoryEmailsRepository();
     fakeEmailSender = new FakeEmailSender();
@@ -63,8 +54,7 @@ describe("Create temp user use case", () => {
     const result = await createTempUser.execute({
       authenticateId: user.id.toString(),
       email: "test@test.com.br",
-      userName: "test",
-      password: "test",
+      name: "test",
       role: UserRole.ADMIN,
     });
 
@@ -74,8 +64,8 @@ describe("Create temp user use case", () => {
     expect(tempUser.id).toBeDefined();
     expect(tempUser.companyId).toBe(user.companyId.toString());
     expect(tempUser.email).toBe("test@test.com.br");
-    expect(tempUser.userName).toBe("test");
-    expect(tempUser.password).toBe("test-hashed");
+    expect(tempUser.name).toBe("test");
+    expect(tempUser.userRole).toBe(UserRole.ADMIN);
     expect(tempUser.expiration).toBeDefined();
   });
 

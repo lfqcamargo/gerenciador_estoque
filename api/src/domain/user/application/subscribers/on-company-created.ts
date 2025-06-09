@@ -18,12 +18,12 @@ export class OnCompanyCreated implements EventHandler, OnModuleInit {
 
   setupSubscriptions(): void {
     DomainEvents.register(
-      this.deleteTemporaryUser.bind(this),
+      this.deleteTemporaryCompany.bind(this),
       CompanyCreatedEvent.name
     );
   }
 
-  private async deleteTemporaryUser(event: unknown): Promise<void> {
+  private async deleteTemporaryCompany(event: unknown): Promise<void> {
     const companyCreatedEvent = event as CompanyCreatedEvent;
     const company = await this.companiesRepository.findById(
       companyCreatedEvent.company.id.toString()

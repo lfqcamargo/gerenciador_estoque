@@ -1,13 +1,13 @@
 import { CompaniesRepository } from "@/domain/user/application/repositories/companies-repository";
 import { Company } from "@/domain/user/enterprise/entities/company";
 import { InMemoryUsersRepository } from "./in-memory-users-repository";
-import { InMemoryTempUsersRepository } from "./in-memory-temp-companies-repository";
+import { InMemoryTempCompaniesRepository } from "./in-memory-temp-companies-repository";
 
 export class InMemoryCompaniesRepository implements CompaniesRepository {
   public items: Company[] = [];
 
   constructor(
-    private tempUsersRepository: InMemoryTempUsersRepository,
+    private tempCompaniesRepository: InMemoryTempCompaniesRepository,
     private usersRepository: InMemoryUsersRepository
   ) {}
 
@@ -15,7 +15,7 @@ export class InMemoryCompaniesRepository implements CompaniesRepository {
     this.items.push(company);
 
     await this.usersRepository.create(company.users[0]);
-    await this.tempUsersRepository.deleteByCnpj(company.cnpj);
+    await this.tempCompaniesRepository.deleteByCnpj(company.cnpj);
   }
 
   async findById(id: string): Promise<Company | null> {

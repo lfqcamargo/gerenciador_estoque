@@ -22,6 +22,8 @@ import { EditCompanyController } from "./edit-company.controller";
 import { EditCompanyUseCase } from "@/domain/user/application/use-cases/edit-company";
 import { CreateUserTempController } from "./create-user-temp.controller";
 import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/create-temp-user";
+import { ConfirmationCreateUserController } from "./confirmation-create-user.controller";
+import { ConfirmationCreateUserUseCase } from "@/domain/user/application/use-cases/confirmation-create-user";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
@@ -35,6 +37,7 @@ import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/creat
     GetProfileUserController,
     EditCompanyController,
     CreateUserTempController,
+    ConfirmationCreateUserController,
   ],
   providers: [
     CreateTempCompanyUseCase,
@@ -46,6 +49,7 @@ import { CreateTempUserUseCase } from "@/domain/user/application/use-cases/creat
     GetProfileUserUseCase,
     EditCompanyUseCase,
     CreateTempUserUseCase,
+    ConfirmationCreateUserUseCase,
   ],
 })
 export class UserModule {}

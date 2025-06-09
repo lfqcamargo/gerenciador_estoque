@@ -56,9 +56,8 @@ describe("Create User Temp (E2E)", () => {
 
     const userData = {
       email: "lfqcamargo@gmail.com",
-      userName: "Lucas Camargo",
-      password: "123456789Lfqcamargo@",
-      role: UserRole.USER,
+      name: "Lucas Camargo",
+      role: UserRole.ADMIN,
     };
 
     const response = await request(app.getHttpServer())
@@ -72,11 +71,10 @@ describe("Create User Temp (E2E)", () => {
     expect(cachedUser).toBeTruthy();
     expect(cachedUser).toMatchObject({
       email: userData.email,
-      userName: userData.userName,
+      name: userData.name,
+      userRole: userData.role,
     });
     expect(cachedUser.token).toBeDefined();
     expect(cachedUser.expiration).toBeDefined();
-    expect(cachedUser.password).toBeDefined();
-    expect(cachedUser.password).not.toBe(userData.password);
   });
 });

@@ -26,8 +26,7 @@ describe("On Temp User Created", () => {
     const tempUser = TempUser.create({
       companyId: "12345678901234",
       email: "test@example.com",
-      userName: "John Doe",
-      password: "hashedPassword123",
+      name: "John Doe",
       userRole: UserRole.ADMIN,
       token: "test-token",
       expiration: new Date(),
