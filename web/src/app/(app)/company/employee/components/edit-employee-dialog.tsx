@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { useState, useEffect } from "react";
 
-interface Funcionario {
+interface Employee {
   id: string;
   nome: string;
   email: string;
@@ -32,20 +32,20 @@ interface Funcionario {
   dataContratacao: string;
 }
 
-interface EditFuncionarioDialogProps {
-  funcionario: Funcionario;
+interface EditEmployeeDialogProps {
+  employee: Employee;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (data: Partial<Funcionario>) => void;
+  onSave: (data: Partial<Employee>) => void;
 }
 
-export function EditFuncionarioDialog({
-  funcionario,
+export function EditEmployeeDialog({
+  employee,
   open,
   onOpenChange,
   onSave,
-}: EditFuncionarioDialogProps) {
-  const [formData, setFormData] = useState<Funcionario>({
+}: EditEmployeeDialogProps) {
+  const [formData, setFormData] = useState<Employee>({
     id: "",
     nome: "",
     email: "",
@@ -58,10 +58,10 @@ export function EditFuncionarioDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (funcionario) {
-      setFormData(funcionario);
+    if (employee) {
+      setFormData(employee);
     }
-  }, [funcionario]);
+  }, [employee]);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

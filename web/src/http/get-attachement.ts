@@ -13,11 +13,15 @@ interface GetAttachementResponse {
 
 export async function getAttachement(
   data: GetAttachementRequest
-): Promise<GetAttachementResponse> {
-  const response = await api.get(`/attachments/${data.id}`);
+): Promise<GetAttachementResponse | null> {
+  try {
+    const response = await api.get(`/attachments/${data.id}`);
 
-  return {
-    ...response.data,
-    url: `${env.NEXT_CLOUD_URL}/${response.data.url}`,
-  };
+    return {
+      ...response.data,
+      url: `${env.NEXT_CLOUD_URL}/${response.data.url}`,
+    };
+  } catch {
+    return null;
+  }
 }

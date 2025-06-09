@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { FuncionariosTable } from "./funcionarios-table";
-import { AddFuncionarioDialog } from "./add-funcionario-dialog";
+import { EmployeesTable } from "./employees-table";
+import { AddEmployeeDialog } from "./add-employee-dialog";
 import Link from "next/link";
 
 // Dados de exemplo - em produção viriam da API
-const funcionariosData = [
+const employeeData = [
   {
     id: "1",
     nome: "João Silva",
@@ -56,36 +56,36 @@ const funcionariosData = [
   },
 ];
 
-export function FuncionariosContent() {
+export function EmployeeContent() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [funcionarios, setFuncionarios] = useState(funcionariosData);
+  const [employee, setEmployee] = useState(employeeData);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredFuncionarios = funcionarios.filter(
-    (funcionario) =>
-      funcionario.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      funcionario.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      funcionario.cargo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      funcionario.departamento.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployee = employee.filter(
+    (employee) =>
+      employee.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.cargo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      employee.departamento.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  function handleAddFuncionario(newFuncionario: any) {
-    setFuncionarios([
-      ...funcionarios,
-      { ...newFuncionario, id: (funcionarios.length + 1).toString() },
+  function handleAddEmployee(newEmployee: any) {
+    setEmployee([
+      ...employee,
+      { ...newEmployee, id: (employee.length + 1).toString() },
     ]);
   }
 
-  function handleEditFuncionario(id: string, updatedData: any) {
-    setFuncionarios(
-      funcionarios.map((func) =>
+  function handleEditEmployee(id: string, updatedData: any) {
+    setEmployee(
+      employee.map((func) =>
         func.id === id ? { ...func, ...updatedData } : func
       )
     );
   }
 
-  function handleDeleteFuncionario(id: string) {
-    setFuncionarios(funcionarios.filter((func) => func.id !== id));
+  function handleDeleteEmployee(id: string) {
+    setEmployee(employee.filter((func) => func.id !== id));
   }
 
   return (
@@ -110,18 +110,18 @@ export function FuncionariosContent() {
         </Button>
       </div>
 
-      <FuncionariosTable
-        funcionarios={filteredFuncionarios}
-        onEdit={handleEditFuncionario}
-        onDelete={handleDeleteFuncionario}
+      <EmployeesTable
+        employees={filteredEmployee}
+        onEdit={handleEditEmployee}
+        onDelete={handleDeleteEmployee}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
       />
 
-      <AddFuncionarioDialog
+      <AddEmployeeDialog
         open={isAddDialogOpen}
         onOpenChange={setIsAddDialogOpen}
-        onAdd={handleAddFuncionario}
+        onAdd={handleAddEmployee}
       />
     </div>
   );

@@ -22,8 +22,7 @@ import { editCompanyAction } from "../actions/edit-company-action";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CompanyPhotoUpload } from "./company-photo-upload";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 interface EditCompanyProps {
   cnpj: string;
@@ -31,12 +30,11 @@ interface EditCompanyProps {
   createdAt: string;
   lealName: string;
   photoId: string;
-  urlPhoto: string;
+  urlPhoto: string | null;
 }
 
 export function EditCompany({ company }: { company: EditCompanyProps }) {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const {
@@ -57,32 +55,25 @@ export function EditCompany({ company }: { company: EditCompanyProps }) {
   }
 
   async function handleSave(data: EditCompanyFormData) {
-    setError(null);
     try {
       data.photo = photoFile;
-      const result = await editCompanyAction(data);
+      const result = await editCompanyAction(data, company.photoId);
 
       if (result.success) {
         router.refresh();
-        // toast.success("Empresa atualizada com sucesso");
+        toast.success("Empresa atualizada com sucesso");
         router.push("/company");
       } else {
-        setError(result.message || "Erro interno do servidor");
+        toast.error(result.message || "Erro interno do servidor");
       }
     } catch (err) {
       console.error(err);
-      setError("Ocorreu um erro ao salvar as informações. Tente novamente.");
+      toast.error("Ocorreu um erro ao salvar as informações. Tente novamente.");
     }
   }
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit(handleSave)}>
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
       <Card>
         <CardHeader>
           <CardTitle>Informações Gerais</CardTitle>

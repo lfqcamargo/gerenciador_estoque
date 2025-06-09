@@ -1,7 +1,13 @@
 "use client";
 
-import type React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  addEmployeeSchema,
+  type AddEmployeeFormData,
+} from "../lib/add-validations";
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,51 +26,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
 
-interface AddFuncionarioDialogProps {
+interface AddEmployeeDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAdd: (funcionario: any) => void;
+  onAdd: (employee: AddEmployeeFormData) => void;
 }
 
-export function AddFuncionarioDialog({
+export function AddEmployeeDialog({
   open,
   onOpenChange,
   onAdd,
-}: AddFuncionarioDialogProps) {
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    cargo: "",
-    departamento: "",
-    status: "ativo",
-    dataContratacao: new Date().toISOString().split("T")[0],
+}: AddEmployeeDialogProps) {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<AddEmployeeFormData>({
+    resolver: zodResolver(addEmployeeSchema),
+    defaultValues: {
+      nome: "",
+      email: "",
+      cargo: "",
+      departamento: "",
+      status: "ativo",
+      dataContratacao: new Date().toISOString().split("T")[0],
+    },
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function handleSelectChange(name: string, value: string) {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      // Simulando uma chamada de API
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      onAdd(formData);
-      onOpenChange(false);
-      setFormData({
+  useEffect(() => {
+    if (open) {
+      reset({
         nome: "",
         email: "",
         cargo: "",
@@ -72,71 +66,72 @@ export function AddFuncionarioDialog({
         status: "ativo",
         dataContratacao: new Date().toISOString().split("T")[0],
       });
-    } finally {
-      setIsSubmitting(false);
     }
-  }
+  }, [open, reset]);
+
+  const onSubmit = async (data: AddEmployeeFormData) => {
+    onAdd(data);
+    onOpenChange(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
             <DialogTitle>Adicionar Funcionário</DialogTitle>
             <DialogDescription>
               Preencha os dados do novo funcionário
             </DialogDescription>
           </DialogHeader>
+
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 gap-2">
               <Label htmlFor="nome">Nome Completo</Label>
-              <Input
-                id="nome"
-                name="nome"
-                value={formData.nome}
-                onChange={handleChange}
-                required
-              />
+              <Input id="nome" {...register("nome")} />
+              {errors.nome && (
+                <p className="text-sm text-destructive">
+                  {errors.nome.message}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-1 gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
+              <Input id="email" type="email" {...register("email")} />
+              {errors.email && (
+                <p className="text-sm text-destructive">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="cargo">Cargo</Label>
-                <Input
-                  id="cargo"
-                  name="cargo"
-                  value={formData.cargo}
-                  onChange={handleChange}
-                  required
-                />
+                <Input id="cargo" {...register("cargo")} />
+                {errors.cargo && (
+                  <p className="text-sm text-destructive">
+                    {errors.cargo.message}
+                  </p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="departamento">Departamento</Label>
-                <Input
-                  id="departamento"
-                  name="departamento"
-                  value={formData.departamento}
-                  onChange={handleChange}
-                  required
-                />
+                <Input id="departamento" {...register("departamento")} />
+                {errors.departamento && (
+                  <p className="text-sm text-destructive">
+                    {errors.departamento.message}
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="status">Status</Label>
                 <Select
-                  value={formData.status}
-                  onValueChange={(value) => handleSelectChange("status", value)}
+                  defaultValue="ativo"
+                  onValueChange={(value) =>
+                    setValue("status", value as "ativo" | "inativo")
+                  }
                 >
                   <SelectTrigger id="status">
                     <SelectValue placeholder="Selecione" />
@@ -146,20 +141,28 @@ export function AddFuncionarioDialog({
                     <SelectItem value="inativo">Inativo</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.status && (
+                  <p className="text-sm text-destructive">
+                    {errors.status.message}
+                  </p>
+                )}
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="dataContratacao">Data de Contratação</Label>
                 <Input
                   id="dataContratacao"
-                  name="dataContratacao"
                   type="date"
-                  value={formData.dataContratacao}
-                  onChange={handleChange}
-                  required
+                  {...register("dataContratacao")}
                 />
+                {errors.dataContratacao && (
+                  <p className="text-sm text-destructive">
+                    {errors.dataContratacao.message}
+                  </p>
+                )}
               </div>
             </div>
           </div>
+
           <DialogFooter>
             <Button
               type="button"

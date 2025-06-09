@@ -8,5 +8,7 @@ export default async function CompanyPage() {
 
   const attachement = await getAttachement({ id: company.photoId });
 
-  return <EditCompany company={{ ...company, urlPhoto: attachement.url }} />;
+  return (
+    <EditCompany company={{ ...company, urlPhoto: attachement?.url || null }} />
+  );
 }

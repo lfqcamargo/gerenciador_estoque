@@ -4,6 +4,7 @@ import { editCompany } from "@/http/edit-company";
 import { editCompanySchema, EditCompanyFormData } from "../lib/validations";
 import { AxiosError } from "axios";
 import { uploadFile } from "@/http/upload-file";
+import { deleteFile } from "@/http/delete-file";
 
 interface EditCompanyActionResult {
   success: boolean;
@@ -11,12 +12,16 @@ interface EditCompanyActionResult {
 }
 
 export async function editCompanyAction(
-  data: EditCompanyFormData
+  data: EditCompanyFormData,
+  oldPhotoId: string | null
 ): Promise<EditCompanyActionResult> {
   try {
     const validatedData = editCompanySchema.parse(data);
 
     let responseUploadFile = null;
+    if (oldPhotoId) {
+      await deleteFile({ id: oldPhotoId });
+    }
 
     if (validatedData.photo) {
       responseUploadFile = await uploadFile({ file: validatedData.photo });

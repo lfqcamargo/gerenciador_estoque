@@ -12,24 +12,24 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
 
-interface Funcionario {
+interface Employee {
   id: string;
   nome: string;
 }
 
-interface DeleteFuncionarioDialogProps {
-  funcionario: Funcionario;
+interface DeleteEmployeeDialogProps {
+  employee: Employee;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
 }
 
-export function DeleteFuncionarioDialog({
-  funcionario,
+export function DeleteEmployeeDialog({
+  employee,
   open,
   onOpenChange,
   onConfirm,
-}: DeleteFuncionarioDialogProps) {
+}: DeleteEmployeeDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
@@ -50,8 +50,7 @@ export function DeleteFuncionarioDialog({
           <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
           <AlertDialogDescription>
             Tem certeza que deseja excluir o funcionário{" "}
-            <strong>{funcionario.nome}</strong>? Esta ação não pode ser
-            desfeita.
+            <strong>{employee.nome}</strong>? Esta ação não pode ser desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

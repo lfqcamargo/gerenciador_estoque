@@ -13,10 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Edit2, Trash2, Search } from "lucide-react";
-import { EditFuncionarioDialog } from "./edit-funcionario-dialog";
-import { DeleteFuncionarioDialog } from "./delete-funcionario-dialog";
+import { EditEmployeeDialog } from "./edit-employee-dialog";
+import { DeleteEmployeeDialog } from "./delete-employee-dialog";
 
-interface Funcionario {
+interface Employee {
   id: string;
   nome: string;
   email: string;
@@ -26,25 +26,25 @@ interface Funcionario {
   dataContratacao: string;
 }
 
-interface FuncionariosTableProps {
-  funcionarios: Funcionario[];
-  onEdit: (id: string, data: Partial<Funcionario>) => void;
+interface EmployeesTableProps {
+  employees: Employee[];
+  onEdit: (id: string, data: Partial<Employee>) => void;
   onDelete: (id: string) => void;
   searchTerm: string;
   onSearchChange: (term: string) => void;
 }
 
-export function FuncionariosTable({
-  funcionarios,
+export function EmployeesTable({
+  employees,
   onEdit,
   onDelete,
   searchTerm,
   onSearchChange,
-}: FuncionariosTableProps) {
-  const [editingFuncionario, setEditingFuncionario] =
-    useState<Funcionario | null>(null);
-  const [deletingFuncionario, setDeletingFuncionario] =
-    useState<Funcionario | null>(null);
+}: EmployeesTableProps) {
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [deletingEmployee, setDeletingEmployee] = useState<Employee | null>(
+    null
+  );
 
   function formatDate(dateString: string) {
     return new Date(dateString).toLocaleDateString("pt-BR");
@@ -82,50 +82,48 @@ export function FuncionariosTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {funcionarios.length === 0 ? (
+            {employees.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-8">
                   Nenhum funcionário encontrado
                 </TableCell>
               </TableRow>
             ) : (
-              funcionarios.map((funcionario) => (
-                <TableRow key={funcionario.id}>
-                  <TableCell className="font-medium">
-                    {funcionario.nome}
-                  </TableCell>
+              employees.map((employee) => (
+                <TableRow key={employee.id}>
+                  <TableCell className="font-medium">{employee.nome}</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {funcionario.email}
+                    {employee.email}
                   </TableCell>
-                  <TableCell>{funcionario.cargo}</TableCell>
+                  <TableCell>{employee.cargo}</TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {funcionario.departamento}
+                    {employee.departamento}
                   </TableCell>
                   <TableCell>
                     <Badge
                       variant={
-                        funcionario.status === "ativo" ? "default" : "secondary"
+                        employee.status === "ativo" ? "default" : "secondary"
                       }
                     >
-                      {funcionario.status === "ativo" ? "Ativo" : "Inativo"}
+                      {employee.status === "ativo" ? "Ativo" : "Inativo"}
                     </Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {formatDate(funcionario.dataContratacao)}
+                    {formatDate(employee.dataContratacao)}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => setEditingFuncionario(funcionario)}
+                        onClick={() => setEditingEmployee(employee)}
                       >
                         <Edit2 className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => setDeletingFuncionario(funcionario)}
+                        onClick={() => setDeletingEmployee(employee)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -138,30 +136,30 @@ export function FuncionariosTable({
         </Table>
       </div>
 
-      {editingFuncionario && (
-        <EditFuncionarioDialog
-          funcionario={editingFuncionario}
-          open={!!editingFuncionario}
+      {editingEmployee && (
+        <EditEmployeeDialog
+          employee={editingEmployee}
+          open={!!editingEmployee}
           onOpenChange={(open) => {
-            if (!open) setEditingFuncionario(null);
+            if (!open) setEditingEmployee(null);
           }}
           onSave={(data) => {
-            onEdit(editingFuncionario.id, data);
-            setEditingFuncionario(null);
+            onEdit(editingEmployee.id, data);
+            setEditingEmployee(null);
           }}
         />
       )}
 
-      {deletingFuncionario && (
-        <DeleteFuncionarioDialog
-          funcionario={deletingFuncionario}
-          open={!!deletingFuncionario}
+      {deletingEmployee && (
+        <DeleteEmployeeDialog
+          employee={deletingEmployee}
+          open={!!deletingEmployee}
           onOpenChange={(open) => {
-            if (!open) setDeletingFuncionario(null);
+            if (!open) setDeletingEmployee(null);
           }}
           onConfirm={() => {
-            onDelete(deletingFuncionario.id);
-            setDeletingFuncionario(null);
+            onDelete(deletingEmployee.id);
+            setDeletingEmployee(null);
           }}
         />
       )}

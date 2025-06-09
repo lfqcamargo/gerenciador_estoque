@@ -1,5 +1,5 @@
-import { FuncionariosContent } from "./components/funcionarios-content";
+import { EmployeeContent } from "./components/employee-content";
 
 export default function FuncionariosPage() {
-  return <FuncionariosContent />;
+  return <EmployeeContent />;
 }
