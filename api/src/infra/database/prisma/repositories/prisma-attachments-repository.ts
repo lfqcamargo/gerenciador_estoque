@@ -22,4 +22,10 @@ export class PrismaAttachmentsRepository implements AttachmentsRepository {
     });
     return attachment ? PrismaAttachmentMapper.toDomain(attachment) : null;
   }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.attachment.delete({
+      where: { id },
+    });
+  }
 }

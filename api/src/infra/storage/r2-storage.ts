@@ -3,7 +3,11 @@ import {
   Uploader,
 } from "@/domain/shared/application/storage/uploader";
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  DeleteObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { Injectable } from "@nestjs/common";
 import { EnvService } from "../env/env.service";
 import { randomUUID } from "node:crypto";
@@ -45,5 +49,14 @@ export class R2Storage implements Uploader {
     return {
       url: uniqueFileName,
     };
+  }
+
+  async delete(fileKey: string): Promise<void> {
+    await this.client.send(
+      new DeleteObjectCommand({
+        Bucket: this.envService.get("AWS_BUCKET_NAME"),
+        Key: fileKey,
+      })
+    );
   }
 }

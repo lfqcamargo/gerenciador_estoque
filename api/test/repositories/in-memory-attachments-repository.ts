@@ -12,4 +12,11 @@ export class InMemoryAttachmentsRepository implements AttachmentsRepository {
     const attachment = this.items.find((item) => item.id.toString() === id);
     return attachment ?? null;
   }
+
+  async delete(id: string) {
+    const attachmentIndex = this.items.findIndex(
+      (item) => item.id.toString() === id
+    );
+    this.items.splice(attachmentIndex, 1);
+  }
 }

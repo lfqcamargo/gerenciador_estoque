@@ -22,4 +22,9 @@ export class FakeUploader implements Uploader {
 
     return { url };
   }
+
+  async delete(key: string): Promise<void> {
+    const uploadIndex = this.uploads.findIndex((upload) => upload.url === key);
+    this.uploads.splice(uploadIndex, 1);
+  }
 }
