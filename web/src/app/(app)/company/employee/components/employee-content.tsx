@@ -6,79 +6,44 @@ import { useState } from "react";
 import { EmployeesTable } from "./employees-table";
 import { AddEmployeeDialog } from "./add-employee-dialog";
 import Link from "next/link";
+import { FetchUsersResponse } from "@/http/fetch-users";
+import { toast } from "sonner";
+import { deleteEmployeeAction } from "../actions/delete-employee-action";
 
-// Dados de exemplo - em produção viriam da API
-const employeeData = [
-  {
-    id: "1",
-    nome: "João Silva",
-    email: "joao.silva@empresa.com",
-    cargo: "Desenvolvedor",
-    departamento: "TI",
-    status: "ativo",
-    dataContratacao: "2022-01-15",
-  },
-  {
-    id: "2",
-    nome: "Maria Oliveira",
-    email: "maria.oliveira@empresa.com",
-    cargo: "Designer",
-    departamento: "Marketing",
-    status: "ativo",
-    dataContratacao: "2021-11-05",
-  },
-  {
-    id: "3",
-    nome: "Pedro Santos",
-    email: "pedro.santos@empresa.com",
-    cargo: "Analista",
-    departamento: "Financeiro",
-    status: "inativo",
-    dataContratacao: "2020-03-22",
-  },
-  {
-    id: "4",
-    nome: "Ana Costa",
-    email: "ana.costa@empresa.com",
-    cargo: "Gerente",
-    departamento: "Operações",
-    status: "ativo",
-    dataContratacao: "2019-07-10",
-  },
-  {
-    id: "5",
-    nome: "Carlos Ferreira",
-    email: "carlos.ferreira@empresa.com",
-    cargo: "Assistente",
-    departamento: "RH",
-    status: "ativo",
-    dataContratacao: "2023-02-28",
-  },
-];
+interface EmployeeContentProps {
+  employees: (FetchUsersResponse["users"][number] & {
+    photoUrl: string | null;
+  })[];
+}
 
-export function EmployeeContent() {
+export function EmployeeContent({ employees }: EmployeeContentProps) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [employee, setEmployee] = useState(employeeData);
+  const [employeesState, setEmployeesState] = useState(() => [
+    ...(employees ?? []),
+  ]);
+
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredEmployee = employee.filter(
-    (employee) =>
-      employee.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.cargo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.departamento.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredEmployees = employeesState.filter((emp) =>
+    [emp.name, emp.email, emp.role]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
-  function handleEditEmployee(id: string, updatedData: any) {
-    setEmployee(
-      employee.map((func) =>
-        func.id === id ? { ...func, ...updatedData } : func
-      )
-    );
-  }
-
-  function handleDeleteEmployee(id: string) {
-    setEmployee(employee.filter((func) => func.id !== id));
+  async function handleDeleteEmployee(id: string) {
+    try {
+      const result = await deleteEmployeeAction(id);
+      if (result.success) {
+        setEmployeesState((prev) => prev.filter((emp) => emp.id !== id));
+        toast.success("Funcionário excluído com sucesso.");
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao excluir funcionário.");
+    }
   }
 
   return (
@@ -104,8 +69,7 @@ export function EmployeeContent() {
       </div>
 
       <EmployeesTable
-        employees={filteredEmployee}
-        onEdit={handleEditEmployee}
+        employees={filteredEmployees}
         onDelete={handleDeleteEmployee}
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}

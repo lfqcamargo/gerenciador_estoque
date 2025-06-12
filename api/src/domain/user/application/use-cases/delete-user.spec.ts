@@ -48,8 +48,6 @@ describe("Delete User", () => {
       authenticatedUserId: user2.id.toString(),
     });
 
-    console.log(result);
-
     expect(result.isRight()).toBe(true);
   });
 

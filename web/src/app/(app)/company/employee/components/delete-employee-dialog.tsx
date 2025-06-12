@@ -13,7 +13,7 @@ import { AlertTriangle } from "lucide-react";
 
 interface Employee {
   id: string;
-  nome: string;
+  name: string;
   email: string;
 }
 
@@ -40,7 +40,7 @@ export function DeleteEmployeeDialog({
           </DialogTitle>
           <DialogDescription>
             Tem certeza que deseja excluir o funcionário{" "}
-            <strong>{employee.nome}</strong>? Esta ação não pode ser desfeita.
+            <strong>{employee.name}</strong>? Esta ação não pode ser desfeita.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

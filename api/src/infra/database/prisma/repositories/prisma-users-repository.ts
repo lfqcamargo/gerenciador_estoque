@@ -33,6 +33,7 @@ export class PrismaUsersRepository implements UsersRepository {
     const users = await this.prisma.user.findMany({
       where: { companyId, deletedAt: null },
     });
+
     return users.map(PrismaUserMapper.toDomain);
   }
 

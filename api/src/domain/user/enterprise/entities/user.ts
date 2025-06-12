@@ -115,7 +115,11 @@ export class User extends AggregateRoot<UserProps> {
     id?: UniqueEntityID
   ) {
     const user = new User(
-      { ...props, createdAt: new Date(), active: false },
+      {
+        ...props,
+        createdAt: new Date(),
+        active: props.active ?? false,
+      },
       id
     );
 

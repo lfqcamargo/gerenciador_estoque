@@ -9,7 +9,9 @@ export class UserPresenter {
       email: user.email,
       photoId: user.photoId,
       role: user.role,
+      active: user.active,
       createdAt: user.createdAt.toISOString(),
+      lastLogin: user.lastLogin?.toISOString() ?? null,
     };
   }
 }

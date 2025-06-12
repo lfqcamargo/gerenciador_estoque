@@ -41,22 +41,23 @@ import {
 } from "@/components/ui/select";
 import { EditEmployeeDialog } from "./edit-employee-dialog";
 import { DeleteEmployeeDialog } from "./delete-employee-dialog";
+import { roleUser } from "@/utils/role-user";
 
 interface Employee {
+  companyId: string;
   id: string;
-  nome: string;
+  name: string;
   email: string;
-  cargo: string;
-  departamento: string;
-  status: "ativo" | "inativo";
-  dataContratacao: string;
-  ultimoLogin?: string;
-  avatar?: string;
+  photoId: string | null;
+  photoUrl: string | null;
+  role: string;
+  active: boolean;
+  createdAt: string;
+  lastLogin: string | null;
 }
 
 interface EmployeesTableProps {
   employees: Employee[];
-  onEdit: (id: string, data: Partial<Employee>) => void;
   onDelete: (id: string) => void;
   searchTerm: string;
   onSearchChange: (term: string) => void;
@@ -68,7 +69,6 @@ type SortDirection = "asc" | "desc";
 
 export function EmployeesTable({
   employees,
-  onEdit,
   onDelete,
   searchTerm,
   onSearchChange,
@@ -83,26 +83,34 @@ export function EmployeesTable({
   const [sortField, setSortField] = useState<SortField>("nome");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
-  // Get unique cargos for filter
-  const uniqueCargos = Array.from(new Set(employees.map((emp) => emp.cargo)));
-
-  // Filter and sort employees
   const filteredAndSortedEmployees = employees
     .filter((employee) => {
       const matchesSearch =
-        employee.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         employee.email.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus =
-        statusFilter === "all" || employee.status === statusFilter;
+        statusFilter === "all" || employee.active.toString() === statusFilter;
       const matchesCargo =
-        cargoFilter === "all" || employee.cargo === cargoFilter;
+        cargoFilter === "all" || employee.role === cargoFilter;
       return matchesSearch && matchesStatus && matchesCargo;
     })
     .sort((a, b) => {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
+      const aValue = a[sortField as keyof Employee];
+      const bValue = b[sortField as keyof Employee];
       const direction = sortDirection === "asc" ? 1 : -1;
-      return aValue.localeCompare(bValue) * direction;
+
+      // Se os valores forem strings, use localeCompare
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return aValue.localeCompare(bValue) * direction;
+      }
+
+      // Se forem booleanos, converta para número para comparar (false = 0, true = 1)
+      if (typeof aValue === "boolean" && typeof bValue === "boolean") {
+        return (Number(aValue) - Number(bValue)) * direction;
+      }
+
+      // Para outros tipos (ex: undefined), só retorna 0 (sem ordenação)
+      return 0;
     });
 
   function formatDate(dateString: string) {
@@ -205,9 +213,9 @@ export function EmployeesTable({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos cargos</SelectItem>
-              {uniqueCargos.map((cargo) => (
-                <SelectItem key={cargo} value={cargo}>
-                  {cargo}
+              {Object.keys(roleUser).map((role) => (
+                <SelectItem key={role} value={role}>
+                  {role}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -220,8 +228,7 @@ export function EmployeesTable({
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4" />
           <span>
-            {filteredAndSortedEmployees.length} de {employees.length}{" "}
-            funcionários
+            {employees.length} de {employees.length} funcionários
           </span>
         </div>
         {(statusFilter !== "all" || cargoFilter !== "all" || searchTerm) && (
@@ -312,22 +319,22 @@ export function EmployeesTable({
                 </TableCell>
               </TableRow>
             ) : (
-              filteredAndSortedEmployees.map((employee) => (
+              employees.map((employee) => (
                 <TableRow key={employee.id} className="group">
                   <TableCell>
                     <Avatar className="h-10 w-10">
                       <AvatarImage
-                        src={employee.avatar || "/placeholder.svg"}
-                        alt={employee.nome}
+                        src={employee.photoUrl || "/placeholder.svg"}
+                        alt={employee.name}
                       />
                       <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                        {getInitials(employee.nome)}
+                        {getInitials(employee.name)}
                       </AvatarFallback>
                     </Avatar>
                   </TableCell>
                   <TableCell>
                     <div className="space-y-1">
-                      <div className="font-medium">{employee.nome}</div>
+                      <div className="font-medium">{employee.name}</div>
                       <div className="text-sm text-muted-foreground lg:hidden flex items-center gap-1">
                         <Mail className="h-3 w-3" />
                         {employee.email}
@@ -343,37 +350,37 @@ export function EmployeesTable({
                   <TableCell>
                     <Badge
                       variant="outline"
-                      className={getCargoColor(employee.cargo)}
+                      className={getCargoColor(employee.role)}
                     >
-                      {employee.cargo}
+                      {employee.role}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge
                       variant="outline"
-                      className={getStatusColor(employee.status)}
+                      className={getStatusColor(employee.active.toString())}
                     >
                       <div
                         className={`w-2 h-2 rounded-full mr-2 ${
-                          employee.status === "ativo"
+                          employee.active === true
                             ? "bg-green-600"
                             : "bg-gray-400"
                         }`}
                       />
-                      {employee.status === "ativo" ? "Ativo" : "Inativo"}
+                      {employee.active === true ? "Ativo" : "Inativo"}
                     </Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     <div className="flex items-center gap-2 text-sm">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
-                      {formatDate(employee.dataContratacao)}
+                      {formatDate(employee.createdAt)}
                     </div>
                   </TableCell>
                   <TableCell className="hidden xl:table-cell">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      {employee.ultimoLogin
-                        ? formatRelativeTime(employee.ultimoLogin)
+                      {employee.lastLogin
+                        ? formatRelativeTime(employee.lastLogin)
                         : "Nunca"}
                     </div>
                   </TableCell>
@@ -421,10 +428,6 @@ export function EmployeesTable({
           open={!!editingEmployee}
           onOpenChange={(open) => {
             if (!open) setEditingEmployee(null);
-          }}
-          onSave={(data) => {
-            onEdit(editingEmployee.id, data);
-            setEditingEmployee(null);
           }}
         />
       )}

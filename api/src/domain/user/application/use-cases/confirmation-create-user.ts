@@ -58,6 +58,7 @@ export class ConfirmationCreateUserUseCase {
       password: hashedPassword,
       role: tempUser.userRole,
       companyId: tempUser.companyId,
+      active: true,
     });
 
     await this.tempUsersRepository.delete(tempUser);

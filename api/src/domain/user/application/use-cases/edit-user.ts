@@ -37,7 +37,6 @@ export class EditUserUseCase {
     active,
     photoId,
   }: EditUserUseCaseRequest): Promise<EditUserUseCaseResponse> {
-    console.log("role:", role);
     const user = await this.usersRepository.findById(userId);
 
     if (!user) {
@@ -62,8 +61,6 @@ export class EditUserUseCase {
 
     user.name = name;
     user.photoId = photoId;
-
-    console.log("user:", user);
 
     await this.usersRepository.update(user);
 

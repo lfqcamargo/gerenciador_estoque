@@ -84,8 +84,6 @@ describe("[PUT] /users/:id (E2E)", () => {
       where: { id: employee.id.toString() },
     });
 
-    console.log(updatedUser);
-
     expect(updatedUser?.name).toBe("Updated Employee");
     expect(updatedUser?.role).toBe(UserRole.EMPLOYEE);
     expect(updatedUser?.active).toBe(true);
