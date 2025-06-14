@@ -1,4 +1,4 @@
-import { api } from "@/http/api-client";
+import { api } from "@/lib/axios";
 
 interface DeleteFileRequest {
   id: string;

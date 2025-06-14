@@ -3,11 +3,14 @@ import { SignInPage } from "./pages/auth/sign-in/sign-in-page";
 import { AuthLayout } from "./pages/_layouts/auth-layout";
 import { SignUpPage } from "./pages/auth/sign-up/sign-up-page";
 import { ConfirmEmailCompanyPage } from "./pages/auth/confirmation-email-company/confirmation-email-company-page";
-import ConfirmationEmailUserPage from "./pages/auth/confirmation-email-user/confirmation-email-user-page";
-import ForgotPasswordPage from "./pages/auth/forgot-password/forgot-password-page";
-import ResetPasswordPage from "./pages/auth/reset-password/reset-password-page";
+import { ConfirmationEmailUserPage } from "./pages/auth/confirmation-email-user/confirmation-email-user-page";
+import { ForgotPasswordPage } from "./pages/auth/forgot-password/forgot-password-page";
+import { ResetPasswordPage } from "./pages/auth/reset-password/reset-password-page";
 import { AppLayout } from "./pages/_layouts/app-layout";
-import DashboardPage from "./pages/app/dashboard/dashbaord-page";
+import { DashboardPage } from "./pages/app/dashboard/dashbaord-page";
+import { CompanyPage } from "./pages/app/company/company-page";
+import { EmployeePage } from "./pages/app/employee/employee-page";
+import { ProfilePage } from "./pages/app/profile/profile-page";
 
 export const routes = createBrowserRouter([
   {
@@ -47,6 +50,18 @@ export const routes = createBrowserRouter([
       {
         index: true,
         element: <DashboardPage />,
+      },
+      {
+        path: "company",
+        element: <CompanyPage />,
+      },
+      {
+        path: "employee",
+        element: <EmployeePage />,
+      },
+      {
+        path: "profile",
+        element: <ProfilePage />,
       },
     ],
   },

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { ResetPasswordForm } from "./components/reset-password-form";
 
-export default function ResetPasswordPage() {
+export function ResetPasswordPage() {
   return (
     <div className="flex w-full flex-col items-center px-12 py-8">
       <div className="mb-6 flex justify-center">

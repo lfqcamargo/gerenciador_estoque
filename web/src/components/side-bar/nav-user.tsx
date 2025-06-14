@@ -38,16 +38,13 @@ export function NavUser({
   const { isMobile } = useSidebar();
 
   const handleLogout = async () => {
+    console.log("clicado");
     try {
-      const res = await fetch("/api/auth/sign-out", {
-        method: "GET",
-      });
-
-      if (res.redirected) {
-        window.location.href = res.url;
-      } else {
-        console.error("Logout falhou");
-      }
+      console.log(localStorage.getItem("token"));
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+      console.log(localStorage.getItem("token"));
+      window.location.href = "/auth/sign-in";
     } catch (err) {
       console.error("Erro ao deslogar:", err);
     }

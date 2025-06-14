@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -23,27 +22,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-const resetPasswordSchema = z
-  .object({
-    password: z
-      .string({
-        required_error: "Senha é obrigatória",
-      })
-      .min(8, "A senha deve ter pelo menos 8 caracteres")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "A senha deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial"
-      ),
-    confirmPassword: z.string({
-      required_error: "Confirmação de senha é obrigatória",
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-    path: ["confirmPassword"],
-  });
-
-type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+import {
+  resetPasswordSchema,
+  type ResetPasswordFormData,
+} from "../lib/validations";
+import { resetPasswordAction } from "../actions/reset-password-action";
 
 export function ConfirmationEmailForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -88,7 +71,15 @@ export function ConfirmationEmailForm() {
     setError(null);
 
     try {
-      console.log(data);
+      const result = await resetPasswordAction({
+        token,
+        password: data.password,
+      });
+      if (result.success) {
+        setIsPasswordReset(true);
+      } else {
+        setError(result.message || "Erro ao redefinir senha");
+      }
     } catch (error) {
       console.error("Reset password error:", error);
       setError("Erro inesperado. Tente novamente.");

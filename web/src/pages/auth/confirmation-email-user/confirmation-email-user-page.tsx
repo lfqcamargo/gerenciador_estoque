@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { ConfirmationEmailForm } from "./components/confirmation-email-form";
 
-export default function ConfirmationEmailUserPage() {
+export function ConfirmationEmailUserPage() {
   return (
     <div className="flex w-full flex-col items-center px-12 py-8">
       <div className="mb-6 flex justify-center">

@@ -1,5 +1,5 @@
 import { DashboardContent } from "./components/dashboard-content";
 
-export default function DashboardPage() {
+export function DashboardPage() {
   return <DashboardContent />;
 }

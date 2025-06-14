@@ -19,7 +19,7 @@ export async function getAttachement(
 
     return {
       ...response.data,
-      url: `${env.NEXT_CLOUD_URL}/${response.data.url}`,
+      url: `${env.VITE_CLOUD_URL}/${response.data.url}`,
     };
   } catch {
     return null;
