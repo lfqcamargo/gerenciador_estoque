@@ -23,7 +23,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { signOut } from "@/api/sign-out";
 
 export function NavUser({
   user,
@@ -36,15 +37,12 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
-    console.log("clicado");
     try {
-      console.log(localStorage.getItem("token"));
-      localStorage.removeItem("token");
-      sessionStorage.removeItem("token");
-      console.log(localStorage.getItem("token"));
-      window.location.href = "/auth/sign-in";
+      await signOut();
+      navigate("/auth/sign-in");
     } catch (err) {
       console.error("Erro ao deslogar:", err);
     }

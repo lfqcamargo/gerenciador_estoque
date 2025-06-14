@@ -9,9 +9,13 @@ export function AppLayout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated()) {
-      navigate("/auth/sign-in");
+    async function checkAuth() {
+      const authenticated = await isAuthenticated();
+      if (!authenticated) {
+        navigate("/auth/sign-in");
+      }
     }
+    checkAuth();
   }, [navigate]);
 
   return (

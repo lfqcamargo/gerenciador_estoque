@@ -49,7 +49,7 @@ export function SignInForm() {
       const result = await signInAction(data);
 
       if (result.success) {
-        navigate("/dashboard");
+        navigate("/");
       } else {
         toast.error(result.message || "Erro ao fazer login");
       }

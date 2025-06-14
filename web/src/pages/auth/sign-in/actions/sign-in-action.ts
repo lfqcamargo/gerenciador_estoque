@@ -18,7 +18,7 @@ export async function signInAction(
       password: validatedData.password,
     });
 
-    localStorage.setItem("token", result.access_token);
+    // localStorage.setItem("token", result.access_token);
     document.cookie = `token=${result.access_token}; path=/; max-age=${
       60 * 60 * 24 * 30
     }; SameSite=Lax; ${import.meta.env.PROD ? "Secure;" : ""}`;

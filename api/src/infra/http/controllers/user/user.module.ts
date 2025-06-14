@@ -30,6 +30,7 @@ import { EditUserController } from "./edit-user.controller";
 import { EditUserUseCase } from "@/domain/user/application/use-cases/edit-user";
 import { DeleteUserController } from "./delete-user-controller";
 import { DeleteUserUseCase } from "@/domain/user/application/use-cases/delete-user";
+import { LogoutController } from "./logout.controller";
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, RedisModule, EventModule],
@@ -47,6 +48,7 @@ import { DeleteUserUseCase } from "@/domain/user/application/use-cases/delete-us
     FetchUsersCompanyIdController,
     EditUserController,
     DeleteUserController,
+    LogoutController,
   ],
   providers: [
     CreateTempCompanyUseCase,
