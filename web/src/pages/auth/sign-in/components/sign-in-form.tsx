@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
@@ -6,33 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { z } from "zod";
-import { Link } from "react-router-dom";
-
-const signInSchema = z.object({
-  email: z
-    .string({
-      required_error: "Email é obrigatório",
-    })
-    .email("Formato de email inválido")
-    .transform((email) => email.toLowerCase().trim()),
-  password: z
-    .string({
-      required_error: "Senha é obrigatória",
-    })
-    .min(6, "A senha deve ter pelo menos 6 caracteres"),
-  rememberMe: z.boolean().optional(),
-});
-
-export type SignInFormData = z.infer<typeof signInSchema>;
+import { signInSchema, type SignInFormData } from "../lib/validations";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { signInAction } from "../actions/sign-in-action";
+import { toast } from "sonner";
 
 export function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -43,6 +31,14 @@ export function SignInForm() {
     },
   });
 
+  useEffect(() => {
+    const email = searchParams.get("email");
+
+    if (email) {
+      setValue("email", email);
+    }
+  }, [searchParams, setValue]);
+
   const emailWatch = watch("email");
   const passwordWatch = watch("password");
 
@@ -50,9 +46,16 @@ export function SignInForm() {
 
   async function handleSignIn(data: SignInFormData) {
     try {
-      console.log(data);
+      const result = await signInAction(data);
+
+      if (result.success) {
+        navigate("/dashboard");
+      } else {
+        toast.error(result.message || "Erro ao fazer login");
+      }
     } catch (error) {
       console.error("Sign in error:", error);
+      toast.error("Erro inesperado. Tente novamente.");
     }
   }
 

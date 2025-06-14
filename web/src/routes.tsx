@@ -6,6 +6,8 @@ import { ConfirmEmailCompanyPage } from "./pages/auth/confirmation-email-company
 import ConfirmationEmailUserPage from "./pages/auth/confirmation-email-user/confirmation-email-user-page";
 import ForgotPasswordPage from "./pages/auth/forgot-password/forgot-password-page";
 import ResetPasswordPage from "./pages/auth/reset-password/reset-password-page";
+import { AppLayout } from "./pages/_layouts/app-layout";
+import DashboardPage from "./pages/app/dashboard/dashbaord-page";
 
 export const routes = createBrowserRouter([
   {
@@ -35,6 +37,16 @@ export const routes = createBrowserRouter([
       {
         path: "reset-password",
         element: <ResetPasswordPage />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <AppLayout />,
+    children: [
+      {
+        index: true,
+        element: <DashboardPage />,
       },
     ],
   },
