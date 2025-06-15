@@ -6,6 +6,7 @@ import { Test } from "@nestjs/testing";
 import request from "supertest";
 import { CompanyFactory } from "test/factories/make-company";
 import { UserFactory } from "test/factories/make-user";
+import cookieParser from "cookie-parser";
 
 describe("Delete attachment (E2E)", () => {
   let app: INestApplication;
@@ -20,6 +21,8 @@ describe("Delete attachment (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
 
     jwtService = moduleRef.get(JwtService);
     companyFactory = moduleRef.get(CompanyFactory);
@@ -31,7 +34,7 @@ describe("Delete attachment (E2E)", () => {
   test("[DELETE] /attachments/:attachmentId", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
     });
 
     const accessToken = jwtService.sign({
@@ -43,7 +46,7 @@ describe("Delete attachment (E2E)", () => {
     // Upload para garantir que há um anexo a ser deletado
     const uploadResponse = await request(app.getHttpServer())
       .post("/attachments")
-      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Cookie", `token=${accessToken}`)
       .attach("file", "./test/e2e/sample-upload.png");
 
     expect(uploadResponse.statusCode).toBe(201);
@@ -52,7 +55,7 @@ describe("Delete attachment (E2E)", () => {
     // Agora deletar o anexo
     const deleteResponse = await request(app.getHttpServer())
       .delete(`/attachments/${attachmentId}`)
-      .set("Authorization", `Bearer ${accessToken}`);
+      .set("Cookie", `token=${accessToken}`);
 
     expect(deleteResponse.statusCode).toBe(200);
     expect(deleteResponse.body).toEqual({

@@ -9,6 +9,7 @@ import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-tem
 import { EditCompanyUseCase } from "./edit-company";
 import { UserRole } from "../../enterprise/entities/user";
 import { UserNotAdminError } from "./errors/user-not-admin-error";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
@@ -33,7 +34,7 @@ describe("Edit company", () => {
     const company = makeCompany();
     await inMemoryCompaniesRepository.create(company);
 
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({
@@ -67,7 +68,7 @@ describe("Edit company", () => {
   });
 
   it("should not be able to edit the company if the company does not exist", async () => {
-    const user = makeUser({ companyId: "company-id" });
+    const user = makeUser({ companyId: new UniqueEntityID("company-id") });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({
@@ -88,7 +89,7 @@ describe("Edit company", () => {
     await inMemoryCompaniesRepository.create(company);
     await inMemoryCompaniesRepository.create(anotherCompany);
 
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({
@@ -108,7 +109,7 @@ describe("Edit company", () => {
     await inMemoryCompaniesRepository.create(company);
 
     const user = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.EMPLOYEE,
     });
     await inMemoryUsersRepository.create(user);

@@ -8,6 +8,7 @@ import { InMemoryTempUsersRepository } from "test/repositories/in-memory-temp-us
 import { makeTempUser } from "test/factories/make-temp-user";
 import { UserRole } from "../../enterprise/entities/user";
 import { DomainEvents } from "@/core/events/domain-events";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 let inMemoryTempUsersRepository: InMemoryTempUsersRepository;
 let inMemoryUsersRepository: InMemoryUsersRepository;
@@ -29,7 +30,7 @@ describe("Confirmation create user use case", () => {
 
   it("should be able to confirm create user", async () => {
     const userTemp = makeTempUser({
-      companyId: "12345678901234",
+      companyId: new UniqueEntityID("12345678901234"),
       name: "Test User",
       email: "test@test.com",
       userRole: UserRole.ADMIN,
@@ -63,7 +64,7 @@ describe("Confirmation create user use case", () => {
 
   it("should not be able to confirm create user with expired token", async () => {
     const userTemp = makeTempUser({
-      companyId: "12345678901234",
+      companyId: new UniqueEntityID("12345678901234"),
       name: "Test User",
       email: "test@test.com",
       expiration: new Date(Date.now() - 1000),

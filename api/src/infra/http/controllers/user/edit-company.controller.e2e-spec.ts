@@ -10,6 +10,7 @@ import { UserFactory } from "test/factories/make-user";
 import { CacheModule } from "@/infra/cache/cache.module";
 import { JwtService } from "@nestjs/jwt";
 import { AttachmentFactory } from "test/factories/make-attachment";
+import cookieParser from "cookie-parser";
 
 describe("[PUT] /companies (E2E)", () => {
   let app: INestApplication;
@@ -26,6 +27,8 @@ describe("[PUT] /companies (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
 
     prisma = moduleRef.get(PrismaService);
     companyFactory = moduleRef.get(CompanyFactory);
@@ -43,14 +46,14 @@ describe("[PUT] /companies (E2E)", () => {
   it("should update company information when user is admin", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       email: "admin@company.com",
       password: "12345678A@",
     });
 
     const attachment = await attachmentFactory.makePrismaAttachment({
-      companyId: company.id.toString(),
-      userId: user.id.toString(),
+      companyId: company.id,
+      userId: user.id,
     });
 
     const accessToken = jwtService.sign({
@@ -61,7 +64,7 @@ describe("[PUT] /companies (E2E)", () => {
 
     const response = await request(app.getHttpServer())
       .put("/companies")
-      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Cookie", `token=${accessToken}`)
       .send({
         name: "NewCompany1@",
         lealName: "New Legal Name",

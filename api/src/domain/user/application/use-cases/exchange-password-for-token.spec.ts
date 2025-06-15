@@ -50,7 +50,7 @@ describe("Exchange password for token use case", () => {
     await inMemoryUsersRepository.create(user);
 
     const passwordToken = makePasswordToken({
-      userId: user.id.toString(),
+      userId: user.id,
       token: "token-test",
       expiration: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
@@ -77,7 +77,7 @@ describe("Exchange password for token use case", () => {
     await inMemoryUsersRepository.create(user);
 
     const passwordToken = makePasswordToken({
-      userId: user.id.toString(),
+      userId: user.id,
       token: "token-test",
       expiration: new Date(Date.now() - 1000 * 60 * 60 * 24),
     });

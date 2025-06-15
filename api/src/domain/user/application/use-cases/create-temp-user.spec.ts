@@ -62,7 +62,7 @@ describe("Create temp user use case", () => {
 
     const tempUser = inMemoryTempUsersRepository.items[0];
     expect(tempUser.id).toBeDefined();
-    expect(tempUser.companyId).toBe(user.companyId.toString());
+    expect(tempUser.companyId.toString()).toBe(user.companyId.toString());
     expect(tempUser.email).toBe("test@test.com.br");
     expect(tempUser.name).toBe("test");
     expect(tempUser.userRole).toBe(UserRole.ADMIN);

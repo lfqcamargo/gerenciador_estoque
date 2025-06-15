@@ -67,7 +67,7 @@ export class ConfirmationCreateCompanyUseCase {
       name: tempCompany.userName,
       password: tempCompany.password,
       role: UserRole.ADMIN,
-      companyId: company.id.toString(),
+      companyId: company.id,
       active: true,
     });
 

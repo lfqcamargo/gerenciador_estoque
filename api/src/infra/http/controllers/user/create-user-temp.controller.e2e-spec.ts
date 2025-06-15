@@ -12,6 +12,7 @@ import { CompanyFactory } from "test/factories/make-company";
 import { UserFactory } from "test/factories/make-user";
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@/domain/user/enterprise/entities/user";
+import cookieParser from "cookie-parser";
 
 describe("Create User Temp (E2E)", () => {
   let app: INestApplication;
@@ -29,6 +30,9 @@ describe("Create User Temp (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
+
     prisma = moduleRef.get(PrismaService);
     redis = moduleRef.get(Redis);
     cacheRepository = moduleRef.get(RedisCacheRepository);
@@ -42,7 +46,7 @@ describe("Create User Temp (E2E)", () => {
   test("[POST] /users", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       email: "auth@company.com",
       password: "12345678A@",
       role: UserRole.ADMIN,
@@ -62,7 +66,7 @@ describe("Create User Temp (E2E)", () => {
 
     const response = await request(app.getHttpServer())
       .post("/users")
-      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Cookie", `token=${accessToken}`)
       .send(userData);
 
     expect(response.statusCode).toBe(201);

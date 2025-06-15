@@ -14,7 +14,7 @@ export class PrismaUserMapper {
         email: raw.email,
         password: raw.password,
         role: raw.role as UserRole,
-        companyId: raw.companyId,
+        companyId: new UniqueEntityID(raw.companyId),
         active: raw.active,
         photoId: raw.photoId,
         createdAt: raw.createdAt,
@@ -26,6 +26,8 @@ export class PrismaUserMapper {
   }
 
   static toPrisma(user: User): Prisma.UserUncheckedCreateInput {
+    console.log(user.id.toString());
+    console.log(user.companyId.toString());
     return {
       id: user.id.toString(),
       name: user.name,
@@ -34,7 +36,7 @@ export class PrismaUserMapper {
       role: user.role as PrismaUserRole,
       active: user.active,
       photoId: user.photoId,
-      companyId: user.companyId,
+      companyId: user.companyId.toString(),
       lastLogin: user.lastLogin ?? null,
       deletedAt: user.deletedAt ?? null,
     };

@@ -23,7 +23,7 @@ export function makeUser(
       name: faker.person.fullName(),
       password: faker.internet.password(),
       role: UserRole.ADMIN,
-      companyId: faker.string.uuid(),
+      companyId: new UniqueEntityID(faker.string.uuid()),
       createdAt: new Date(),
       lastLogin: new Date(),
       photoId: faker.image.url(),

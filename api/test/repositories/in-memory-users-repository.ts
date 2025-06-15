@@ -23,7 +23,7 @@ export class InMemoryUsersRepository implements UsersRepository {
 
   async fetchAll(companyId: string): Promise<User[]> {
     return this.items.filter(
-      (item) => item.companyId === companyId && !item.deletedAt
+      (item) => item.companyId.toString() === companyId && !item.deletedAt
     );
   }
 

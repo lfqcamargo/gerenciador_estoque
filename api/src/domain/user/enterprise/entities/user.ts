@@ -20,7 +20,7 @@ export interface UserProps {
   lastLogin?: Date | null;
   deletedAt?: Date | null;
 
-  companyId: string;
+  companyId: UniqueEntityID;
 }
 
 export class User extends AggregateRoot<UserProps> {

@@ -12,9 +12,9 @@ export function makeTempUser(
 ) {
   const tempUser = TempUser.create(
     {
-      companyId: faker.string.uuid(),
+      companyId: new UniqueEntityID(faker.string.uuid()),
       email: faker.internet.email(),
-      userName: faker.person.fullName(),
+      name: faker.person.fullName(),
       userRole: UserRole.ADMIN,
       token: faker.string.uuid(),
       expiration: faker.date.future(),

@@ -29,7 +29,7 @@ describe("Authenticate (E2E)", () => {
   test("[POST] /auth", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       password: await hash("123456789Lfqcamargo@", 8),
     });
 

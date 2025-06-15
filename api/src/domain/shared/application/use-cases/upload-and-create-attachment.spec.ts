@@ -11,6 +11,7 @@ import { makeCompany } from "test/factories/make-company";
 import { UserNotBelongToCompanyError } from "@/domain/user/application/use-cases/errors/user-not-belong-to-company-error";
 import { CompanyNotFoundError } from "@/domain/user/application/use-cases/errors/company-not-found-error";
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 let inMemoryAttachmentsRepository: InMemoryAttachmentsRepository;
 let fakeUploader: FakeUploader;
@@ -41,7 +42,7 @@ describe("Upload and create attachment", () => {
   it("should be able to upload and create an attachment", async () => {
     const company = makeCompany();
     const user = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
     });
 
     await inMemoryCompaniesRepository.create(company);
@@ -83,7 +84,7 @@ describe("Upload and create attachment", () => {
   it("should not be able to upload an attachment if user does not belong to company", async () => {
     const company = makeCompany();
     const user = makeUser({
-      companyId: "company-2",
+      companyId: new UniqueEntityID("company-2"),
     });
 
     await inMemoryCompaniesRepository.create(company);
@@ -103,7 +104,7 @@ describe("Upload and create attachment", () => {
 
   it("should not be able to upload an attachment if company does not exist", async () => {
     const user = makeUser({
-      companyId: "company-1",
+      companyId: new UniqueEntityID("company-1"),
     });
     await inMemoryUsersRepository.create(user);
 
@@ -122,7 +123,7 @@ describe("Upload and create attachment", () => {
   it("should not be able to upload an attachment if user does not exist", async () => {
     const company = makeCompany();
     const user = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
     });
 
     await inMemoryCompaniesRepository.create(company);

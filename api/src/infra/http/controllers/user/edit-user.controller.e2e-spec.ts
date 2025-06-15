@@ -11,6 +11,7 @@ import { CacheModule } from "@/infra/cache/cache.module";
 import { JwtService } from "@nestjs/jwt";
 import { AttachmentFactory } from "test/factories/make-attachment";
 import { UserRole } from "@/domain/user/enterprise/entities/user";
+import cookieParser from "cookie-parser";
 
 describe("[PUT] /users/:id (E2E)", () => {
   let app: INestApplication;
@@ -27,6 +28,8 @@ describe("[PUT] /users/:id (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
 
     prisma = moduleRef.get(PrismaService);
     companyFactory = moduleRef.get(CompanyFactory);
@@ -45,21 +48,21 @@ describe("[PUT] /users/:id (E2E)", () => {
     const company = await companyFactory.makePrismaCompany();
 
     const admin = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       name: "Admin",
       role: UserRole.ADMIN,
     });
 
     const employee = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       name: "Employee",
       role: UserRole.EMPLOYEE,
       email: "employee@example.com",
     });
 
     const attachment = await attachmentFactory.makePrismaAttachment({
-      companyId: company.id.toString(),
-      userId: admin.id.toString(),
+      companyId: company.id,
+      userId: admin.id,
     });
 
     const accessToken = jwtService.sign({
@@ -70,7 +73,7 @@ describe("[PUT] /users/:id (E2E)", () => {
 
     const response = await request(app.getHttpServer())
       .put(`/users/${employee.id.toString()}`)
-      .set("Authorization", `Bearer ${accessToken}`)
+      .set("Cookie", `token=${accessToken}`)
       .send({
         name: "Updated Employee",
         role: UserRole.EMPLOYEE,

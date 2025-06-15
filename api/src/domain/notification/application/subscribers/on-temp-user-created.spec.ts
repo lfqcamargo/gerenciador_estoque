@@ -6,6 +6,7 @@ import { TempUser } from "@/domain/user/enterprise/entities/temp-user";
 import { DomainEvents } from "@/core/events/domain-events";
 import { describe, it, beforeEach, expect } from "vitest";
 import { UserRole } from "@/domain/user/enterprise/entities/user";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 let inMemoryEmailsRepository: InMemoryEmailsRepository;
 let fakeEmailSender: FakeEmailSender;
@@ -24,7 +25,7 @@ describe("On Temp User Created", () => {
     new OnTempUserCreated(sendEmail);
 
     const tempUser = TempUser.create({
-      companyId: "12345678901234",
+      companyId: new UniqueEntityID("12345678901234"),
       email: "test@example.com",
       name: "John Doe",
       userRole: UserRole.ADMIN,

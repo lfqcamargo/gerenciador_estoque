@@ -5,8 +5,8 @@ export interface AttachmentProps {
   title: string;
   url: string;
 
-  companyId: string;
-  userId: string;
+  companyId: UniqueEntityID;
+  userId: UniqueEntityID;
 }
 
 export class Attachment extends Entity<AttachmentProps> {
@@ -26,11 +26,11 @@ export class Attachment extends Entity<AttachmentProps> {
     return this.props.userId;
   }
 
-  set companyId(companyId: string) {
+  set companyId(companyId: UniqueEntityID) {
     this.props.companyId = companyId;
   }
 
-  set userId(userId: string) {
+  set userId(userId: UniqueEntityID) {
     this.props.userId = userId;
   }
 

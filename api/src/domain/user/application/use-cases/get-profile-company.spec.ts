@@ -7,6 +7,7 @@ import { makeCompany } from "test/factories/make-company";
 import { UserNotFoundError } from "./errors/user-not-found-error";
 import { CompanyNotFoundError } from "./errors/company-not-found-error";
 import { InMemoryTempCompaniesRepository } from "test/repositories/in-memory-temp-companies-repository";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let inMemoryCompaniesRepository: InMemoryCompaniesRepository;
@@ -31,7 +32,7 @@ describe("Get profile company", () => {
     const company = makeCompany();
     await inMemoryCompaniesRepository.create(company);
 
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({
@@ -56,7 +57,7 @@ describe("Get profile company", () => {
   });
 
   it("should return CompanyNotFoundError if the company does not exist", async () => {
-    const user = makeUser({ companyId: "company-id" });
+    const user = makeUser({ companyId: new UniqueEntityID("company-id") });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({
@@ -74,7 +75,7 @@ describe("Get profile company", () => {
     await inMemoryCompaniesRepository.create(company);
     await inMemoryCompaniesRepository.create(anotherCompany);
 
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({

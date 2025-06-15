@@ -10,6 +10,7 @@ import { UserFactory } from "test/factories/make-user";
 import { CacheModule } from "@/infra/cache/cache.module";
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@/domain/user/enterprise/entities/user";
+import cookieParser from "cookie-parser";
 
 describe("[GET] /users (E2E)", () => {
   let app: INestApplication;
@@ -25,6 +26,8 @@ describe("[GET] /users (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
 
     prisma = moduleRef.get(PrismaService);
     companyFactory = moduleRef.get(CompanyFactory);
@@ -38,12 +41,12 @@ describe("[GET] /users (E2E)", () => {
     const company = await companyFactory.makePrismaCompany();
 
     const admin = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.ADMIN,
     });
 
     await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.EMPLOYEE,
     });
 
@@ -55,7 +58,7 @@ describe("[GET] /users (E2E)", () => {
 
     const response = await request(app.getHttpServer())
       .get("/users")
-      .set("Authorization", `Bearer ${accessToken}`);
+      .set("Cookie", `token=${accessToken}`);
 
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(response.body.users)).toBe(true);

@@ -39,7 +39,7 @@ describe("Exchange Password For Token (E2E)", () => {
   test("[POST] /users/password/reset/:token", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       email: "lfqcamargo@gmail.com",
     });
 

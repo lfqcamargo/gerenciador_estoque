@@ -2,14 +2,11 @@ import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
 import { Redis } from "ioredis";
-
 import { AppModule } from "@/infra/app.module";
 import { DatabaseModule } from "@/infra/database/database.module";
 import { PrismaService } from "@/infra/database/prisma/prisma.service";
 import { CacheModule } from "@/infra/cache/cache.module";
 import { RedisCacheRepository } from "@/infra/cache/redis/redis-cache-repository";
-import { makeUser } from "test/factories/make-user";
-import { makeCompany } from "test/factories/make-company";
 import { CompanyFactory } from "test/factories/make-company";
 import { UserFactory } from "test/factories/make-user";
 
@@ -41,7 +38,7 @@ describe("Generate New Password Token (E2E)", () => {
   test("[GET] /users/forgot-password/:email", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
     });
 
     const response = await request(app.getHttpServer()).get(
@@ -56,7 +53,7 @@ describe("Generate New Password Token (E2E)", () => {
 
     const token = await cacheRepository.get(keys[0]);
     expect(token).toBeTruthy();
-    expect(token.userId).toBe(user.id.toString());
+    expect(token.userId.value).toBe(user.id.toString());
     expect(token.expiration).toBeDefined();
   });
 });

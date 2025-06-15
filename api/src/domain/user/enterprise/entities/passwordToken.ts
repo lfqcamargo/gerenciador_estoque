@@ -5,7 +5,7 @@ import { PasswordTokenCreatedEvent } from "../events/password-token-created.even
 export interface PasswordTokenProps {
   token: string;
   expiration: Date;
-  userId: string;
+  userId: UniqueEntityID;
 }
 
 export class PasswordToken extends AggregateRoot<PasswordTokenProps> {
@@ -25,7 +25,7 @@ export class PasswordToken extends AggregateRoot<PasswordTokenProps> {
     const passwordToken = new PasswordToken(props, id);
 
     passwordToken.addDomainEvent(
-      new PasswordTokenCreatedEvent(passwordToken, props.userId)
+      new PasswordTokenCreatedEvent(passwordToken, props.userId.toString())
     );
 
     return passwordToken;

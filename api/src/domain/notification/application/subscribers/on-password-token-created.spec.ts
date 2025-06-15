@@ -34,7 +34,7 @@ describe("On Password Token Created", () => {
     await inMemoryUsersRepository.create(user);
 
     const passwordToken = makePasswordToken({
-      userId: user.id.toString(),
+      userId: user.id,
     });
 
     await inMemoryPasswordTokensRepository.create(passwordToken);

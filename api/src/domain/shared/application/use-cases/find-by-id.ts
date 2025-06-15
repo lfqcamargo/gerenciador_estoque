@@ -31,7 +31,7 @@ export class FindByIdUseCase {
       return left(new AttachmentNotFoundError());
     }
 
-    if (attachment.companyId !== companyId) {
+    if (attachment.companyId.toString() !== companyId) {
       return left(new UserNotBelongToCompanyError());
     }
 

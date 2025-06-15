@@ -29,7 +29,9 @@ export class RedisPasswordTokensRepository implements PasswordTokensRepository {
     }
 
     // Remove token antigo do usuário se existir
-    const oldTokens = await this.findTokensByUserId(passwordToken.userId);
+    const oldTokens = await this.findTokensByUserId(
+      passwordToken.userId.toString()
+    );
     if (oldTokens.length > 0) {
       await Promise.all(
         oldTokens.map((token) =>

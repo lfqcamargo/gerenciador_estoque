@@ -9,6 +9,7 @@ import { CompanyNotFoundError } from "@/domain/user/application/use-cases/errors
 import { UserNotFoundError } from "@/domain/user/application/use-cases/errors/user-not-found-error";
 import { UsersRepository } from "@/domain/user/application/repositories/users-repository";
 import { UserNotBelongToCompanyError } from "@/domain/user/application/use-cases/errors/user-not-belong-to-company-error";
+import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 
 interface UploadAndCreateAttachmentRequest {
   fileName: string;
@@ -57,7 +58,7 @@ export class UploadAndCreateAttachmentUseCase {
       return left(new UserNotFoundError());
     }
 
-    if (user.companyId !== companyId) {
+    if (user.companyId.toString() !== companyId) {
       return left(new UserNotBelongToCompanyError());
     }
 
@@ -66,8 +67,8 @@ export class UploadAndCreateAttachmentUseCase {
     const attachment = Attachment.create({
       title: fileName,
       url,
-      companyId,
-      userId,
+      companyId: new UniqueEntityID(companyId),
+      userId: new UniqueEntityID(userId),
     });
 
     await this.attachmentsRepository.create(attachment);

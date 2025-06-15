@@ -30,8 +30,8 @@ describe("FetchUsersUseCase", () => {
 
   it("should return all users for a valid company and authenticated user", async () => {
     const company = makeCompany();
-    const user = makeUser({ companyId: company.id.toString() });
-    const otherUser = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
+    const otherUser = makeUser({ companyId: company.id });
 
     await inMemoryCompaniesRepository.create(company);
     await inMemoryUsersRepository.create(user);
@@ -39,7 +39,7 @@ describe("FetchUsersUseCase", () => {
 
     const otherCompany = makeCompany();
     const otherUserCompany = makeUser({
-      companyId: otherCompany.id.toString(),
+      companyId: otherCompany.id,
     });
     await inMemoryCompaniesRepository.create(otherCompany);
     await inMemoryUsersRepository.create(otherUserCompany);
@@ -61,7 +61,7 @@ describe("FetchUsersUseCase", () => {
     await inMemoryCompaniesRepository.create(company);
     await inMemoryCompaniesRepository.create(anotherCompany);
 
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryUsersRepository.create(user);
 
     const result = await sut.execute({
@@ -75,7 +75,7 @@ describe("FetchUsersUseCase", () => {
 
   it("should return UserNotFoundError if user does not exist", async () => {
     const company = makeCompany();
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryCompaniesRepository.create(company);
 
     const result = await sut.execute({
@@ -90,7 +90,7 @@ describe("FetchUsersUseCase", () => {
   it("should return UserNotBelongToCompanyError if user does not belong to the company", async () => {
     const company = makeCompany();
     const anotherCompany = makeCompany();
-    const user = makeUser({ companyId: anotherCompany.id.toString() });
+    const user = makeUser({ companyId: anotherCompany.id });
 
     await inMemoryCompaniesRepository.create(company);
     await inMemoryCompaniesRepository.create(anotherCompany);

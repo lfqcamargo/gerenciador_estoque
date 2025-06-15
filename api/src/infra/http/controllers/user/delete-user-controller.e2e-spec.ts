@@ -9,6 +9,7 @@ import { UserFactory } from "test/factories/make-user";
 import { JwtService } from "@nestjs/jwt";
 import { UserRole } from "@/domain/user/enterprise/entities/user";
 import { CompanyFactory } from "test/factories/make-company";
+import cookieParser from "cookie-parser";
 
 describe("[DELETE] /users/:id (E2E)", () => {
   let app: INestApplication;
@@ -24,25 +25,28 @@ describe("[DELETE] /users/:id (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    await app.init();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
 
     prisma = moduleRef.get(PrismaService);
     companyFactory = moduleRef.get(CompanyFactory);
     userFactory = moduleRef.get(UserFactory);
     jwtService = moduleRef.get(JwtService);
+
+    await app.init();
   });
 
   it("should allow admin to delete a user", async () => {
     const company = await companyFactory.makePrismaCompany();
 
     const admin = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       name: "Admin",
       role: UserRole.ADMIN,
     });
 
     const employee = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       name: "Employee",
       email: "employee@example.com",
     });
@@ -55,8 +59,9 @@ describe("[DELETE] /users/:id (E2E)", () => {
 
     const response = await request(app.getHttpServer())
       .delete(`/users/${employee.id.toString()}`)
-      .set("Authorization", `Bearer ${accessToken}`);
+      .set("Cookie", `token=${accessToken}`);
 
+    console.log(response.body);
     expect(response.statusCode).toBe(204);
 
     const deletedUser = await prisma.user.findUnique({

@@ -29,12 +29,12 @@ describe("Get profile company", () => {
   it("should return the attachment when user is authenticated and belongs to the company", async () => {
     const company = makeCompany();
     await inMemoryCompaniesRepository.create(company);
-    const user = makeUser({ companyId: company.id.toString() });
+    const user = makeUser({ companyId: company.id });
     await inMemoryUsersRepository.create(user);
 
     const attachment = makeAttachment({
-      companyId: company.id.toString(),
-      userId: user.id.toString(),
+      companyId: company.id,
+      userId: user.id,
     });
     await inMemoryAttachmentsRepository.create(attachment);
 

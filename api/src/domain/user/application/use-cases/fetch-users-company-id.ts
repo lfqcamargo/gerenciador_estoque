@@ -39,7 +39,7 @@ export class FetchUsersCompanyIdUseCase {
       return left(new UserNotFoundError());
     }
 
-    if (user.companyId !== companyId) {
+    if (user.companyId.toString() !== companyId) {
       return left(new UserNotBelongToCompanyError());
     }
 

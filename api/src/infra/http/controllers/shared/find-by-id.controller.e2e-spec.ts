@@ -10,6 +10,7 @@ import { UserFactory } from "test/factories/make-user";
 import { CacheModule } from "@/infra/cache/cache.module";
 import { JwtService } from "@nestjs/jwt";
 import { AttachmentFactory } from "test/factories/make-attachment";
+import cookieParser from "cookie-parser";
 
 describe("[GET] /attachments/:id (E2E)", () => {
   let app: INestApplication;
@@ -26,6 +27,8 @@ describe("[GET] /attachments/:id (E2E)", () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
+    app.use(cookieParser());
+    app.enableCors({ credentials: true });
 
     prisma = moduleRef.get(PrismaService);
     companyFactory = moduleRef.get(CompanyFactory);
@@ -39,11 +42,11 @@ describe("[GET] /attachments/:id (E2E)", () => {
   it("should return attachment when authenticated", async () => {
     const company = await companyFactory.makePrismaCompany();
     const user = await userFactory.makePrismaUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
     });
     const attachment = await attachmentFactory.makePrismaAttachment({
-      companyId: company.id.toString(),
-      userId: user.id.toString(),
+      companyId: company.id,
+      userId: user.id,
     });
 
     const accessToken = jwtService.sign({
@@ -54,7 +57,7 @@ describe("[GET] /attachments/:id (E2E)", () => {
 
     const response = await request(app.getHttpServer())
       .get(`/attachments/${attachment.id}`)
-      .set("Authorization", `Bearer ${accessToken}`);
+      .set("Cookie", `token=${accessToken}`);
 
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(

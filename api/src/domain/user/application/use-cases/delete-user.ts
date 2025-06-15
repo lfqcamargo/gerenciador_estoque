@@ -48,7 +48,9 @@ export class DeleteUserUseCase {
       return left(new UserNotAdminError());
     }
 
-    if (authenticatedUser.companyId !== targetUser.companyId) {
+    if (
+      authenticatedUser.companyId.toString() !== targetUser.companyId.toString()
+    ) {
       return left(new UserNotBelongToCompanyError());
     }
 

@@ -26,7 +26,7 @@ export class RedisTempUsersRepository implements TempUsersRepository {
       id: tempUser.id.toString(),
       name: tempUser.name,
       email: tempUser.email,
-      companyId: tempUser.companyId,
+      companyId: tempUser.companyId.toString(),
       token: tempUser.token,
       expiration: tempUser.expiration.toISOString(),
       userRole: tempUser.userRole,

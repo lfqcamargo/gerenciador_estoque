@@ -8,8 +8,8 @@ export class PrismaAttachmentMapper {
       {
         title: raw.title,
         url: raw.url,
-        companyId: raw.companyId,
-        userId: raw.userId,
+        companyId: new UniqueEntityID(raw.companyId),
+        userId: new UniqueEntityID(raw.userId),
       },
       new UniqueEntityID(raw.id)
     );

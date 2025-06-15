@@ -31,12 +31,12 @@ describe("Delete User", () => {
     await inMemoryCompaniesRepository.create(company);
 
     const user = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.ADMIN,
     });
 
     const user2 = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.ADMIN,
     });
 
@@ -56,7 +56,7 @@ describe("Delete User", () => {
     await inMemoryCompaniesRepository.create(company);
 
     const user1 = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.EMPLOYEE,
     });
     const user2 = makeUser({ role: UserRole.EMPLOYEE });
@@ -78,7 +78,7 @@ describe("Delete User", () => {
     await inMemoryCompaniesRepository.create(company);
 
     const user1 = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.ADMIN,
     });
     const user2 = makeUser({ role: UserRole.EMPLOYEE });
@@ -100,7 +100,7 @@ describe("Delete User", () => {
     await inMemoryCompaniesRepository.create(company);
 
     const user1 = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.ADMIN,
     });
 
@@ -118,7 +118,7 @@ describe("Delete User", () => {
     await inMemoryCompaniesRepository.create(company);
 
     const user1 = makeUser({
-      companyId: company.id.toString(),
+      companyId: company.id,
       role: UserRole.ADMIN,
     });
 

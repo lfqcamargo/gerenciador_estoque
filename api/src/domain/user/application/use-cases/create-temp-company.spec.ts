@@ -79,7 +79,7 @@ describe("Create temp user use case", () => {
         cnpj: "12345678901234",
         users: [user],
       },
-      new UniqueEntityID(user.companyId)
+      new UniqueEntityID(user.companyId.toString())
     );
     await inMemoryCompaniesRepository.create(company);
 

@@ -36,11 +36,6 @@ describe("Confirmation Create User (E2E)", () => {
     await app.init();
   });
 
-  afterAll(async () => {
-    await redis.quit();
-    await app.close();
-  });
-
   test("[GET] /users/token/:token", async () => {
     const companyNew = await companyFactory.makePrismaCompany();
 
@@ -48,7 +43,7 @@ describe("Confirmation Create User (E2E)", () => {
     const expiration = new Date(Date.now() + 1000 * 60 * 60 * 24);
 
     const tempUser = TempUser.create({
-      companyId: companyNew.id.toString(),
+      companyId: companyNew.id,
       email: "lfqcamargo@gmail.com",
       name: "Lucas Camargo",
       userRole: UserRole.ADMIN,
@@ -58,7 +53,7 @@ describe("Confirmation Create User (E2E)", () => {
 
     await cacheRepository.set("temp-user:" + tempUser.email, {
       id: tempUser.id.toString(),
-      companyId: tempUser.companyId,
+      companyId: tempUser.companyId.toString(),
       email: "lfqcamargo@gmail.com",
       name: "Lucas Camargo",
       userRole: tempUser.userRole,
@@ -87,7 +82,7 @@ describe("Confirmation Create User (E2E)", () => {
     expect(user?.name).toBe(tempUser.name);
     expect(user?.email).toBe(tempUser.email);
     expect(user?.role).toBe(tempUser.userRole);
-    expect(user?.companyId).toBe(tempUser.companyId);
+    expect(user?.companyId).toBe(tempUser.companyId.toString());
 
     const cachedUser = await cacheRepository.get("temp-user:" + tempUser.email);
     expect(cachedUser).toBeNull();

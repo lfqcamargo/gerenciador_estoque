@@ -4,7 +4,7 @@ import { UserRole } from "./user";
 import { TempUserCreatedEvent } from "../events/temp-user-created.event";
 
 export interface TempUserProps {
-  companyId: string;
+  companyId: UniqueEntityID;
   email: string;
   name: string;
   userRole: UserRole;
@@ -17,7 +17,7 @@ export class TempUser extends AggregateRoot<TempUserProps> {
     return this.props.companyId;
   }
 
-  set companyId(companyId: string) {
+  set companyId(companyId: UniqueEntityID) {
     this.props.companyId = companyId;
   }
 
