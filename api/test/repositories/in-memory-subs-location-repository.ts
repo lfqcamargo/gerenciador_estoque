@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { SubsLocationRepository } from "@/domain/stock/application/repositories/subs-location-repository";
 import { SubLocation } from "@/domain/stock/enterprise/entities/sub-location";
 
@@ -27,8 +28,36 @@ export class InMemorySubsLocationRepository implements SubsLocationRepository {
     return sublocation ?? null;
   }
 
-  async fetchAll(companyId: string): Promise<SubLocation[]> {
-    return this.items.filter((item) => item.companyId.toString() === companyId);
+  async fetchAll(
+    companyId: string,
+    locationId: string,
+    { page, itemsPerPage }: PaginationParams
+  ) {
+    const sublocation = this.items.filter(
+      (item) =>
+        item.companyId.toString() === companyId &&
+        item.locationId.toString() === locationId
+    );
+
+    const totalItems = sublocation.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginatedSubLocation = sublocation.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    const meta = {
+      totalItems,
+      itemCount: paginatedSubLocation.length,
+      itemsPerPage,
+      totalPages,
+      currentPage: page,
+    };
+
+    return {
+      data: paginatedSubLocation.length > 0 ? paginatedSubLocation : null,
+      meta,
+    };
   }
 
   async update(sublocation: SubLocation): Promise<void> {

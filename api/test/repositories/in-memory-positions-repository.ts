@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { PositionsRepository } from "@/domain/stock/application/repositories/positions-repository";
 import { Position } from "@/domain/stock/enterprise/entities/position";
 
@@ -22,8 +23,30 @@ export class InMemoryPositionsRepository implements PositionsRepository {
     return position ?? null;
   }
 
-  async fetchAll(companyId: string): Promise<Position[]> {
-    return this.items.filter((item) => item.companyId.toString() === companyId);
+  async fetchAll(companyId: string, { page, itemsPerPage }: PaginationParams) {
+    const positions = this.items.filter(
+      (item) => item.companyId.toString() === companyId
+    );
+
+    const totalItems = positions.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginatedPositions = positions.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    const meta = {
+      totalItems,
+      itemCount: paginatedPositions.length,
+      itemsPerPage,
+      totalPages,
+      currentPage: page,
+    };
+
+    return {
+      data: paginatedPositions.length > 0 ? paginatedPositions : null,
+      meta,
+    };
   }
 
   async update(position: Position): Promise<void> {

@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { AddressingsRepository } from "@/domain/stock/application/repositories/addressings-repository";
 import { Addressing } from "@/domain/stock/enterprise/entities/addressing";
 
@@ -13,8 +14,30 @@ export class InMemoryAddressingsRepository implements AddressingsRepository {
     return addressing ?? null;
   }
 
-  async fetchAll(companyId: string): Promise<Addressing[]> {
-    return this.items.filter((item) => item.companyId.toString() === companyId);
+  async fetchAll(companyId: string, { page, itemsPerPage }: PaginationParams) {
+    const addressings = this.items.filter(
+      (item) => item.companyId.toString() === companyId
+    );
+
+    const totalItems = addressings.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginatedAddressings = addressings.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    const meta = {
+      totalItems,
+      itemCount: paginatedAddressings.length,
+      itemsPerPage,
+      totalPages,
+      currentPage: page,
+    };
+
+    return {
+      data: paginatedAddressings.length > 0 ? paginatedAddressings : null,
+      meta,
+    };
   }
 
   async update(addressing: Addressing): Promise<void> {

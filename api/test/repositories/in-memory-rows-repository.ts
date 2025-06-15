@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { RowsRepository } from "@/domain/stock/application/repositories/rows-repository";
 import { Row } from "@/domain/stock/enterprise/entities/row";
 
@@ -22,8 +23,30 @@ export class InMemoryRowsRepository implements RowsRepository {
     return row ?? null;
   }
 
-  async fetchAll(companyId: string): Promise<Row[]> {
-    return this.items.filter((item) => item.companyId.toString() === companyId);
+  async fetchAll(companyId: string, { page, itemsPerPage }: PaginationParams) {
+    const rows = this.items.filter(
+      (item) => item.companyId.toString() === companyId
+    );
+
+    const totalItems = rows.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginatedRows = rows.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    const meta = {
+      totalItems,
+      itemCount: paginatedRows.length,
+      itemsPerPage,
+      totalPages,
+      currentPage: page,
+    };
+
+    return {
+      data: paginatedRows.length > 0 ? paginatedRows : null,
+      meta,
+    };
   }
 
   async update(row: Row): Promise<void> {

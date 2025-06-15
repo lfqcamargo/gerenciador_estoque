@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { Position } from "@/domain/stock/enterprise/entities/position";
 
 export abstract class PositionsRepository {
@@ -7,7 +8,19 @@ export abstract class PositionsRepository {
     companyId: string,
     name: string
   ): Promise<Position | null>;
-  abstract fetchAll(companyId: string): Promise<Position[]>;
+  abstract fetchAll(
+    companyId: string,
+    { page, itemsPerPage }: PaginationParams
+  ): Promise<{
+    data: Position[] | null;
+    meta: {
+      totalItems: number;
+      itemCount: number;
+      itemsPerPage: number;
+      totalPages: number;
+      currentPage: number;
+    };
+  } | null>;
   abstract update(position: Position): Promise<void>;
   abstract delete(position: Position): Promise<void>;
 }

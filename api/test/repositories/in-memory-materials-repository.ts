@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { MaterialsRepository } from "@/domain/stock/application/repositories/materials-repository";
 import { Material } from "@/domain/stock/enterprise/entities/material";
 
@@ -22,8 +23,30 @@ export class InMemoryMaterialsRepository implements MaterialsRepository {
     return material ?? null;
   }
 
-  async fetchAll(companyId: string): Promise<Material[]> {
-    return this.items.filter((item) => item.companyId.toString() === companyId);
+  async fetchAll(companyId: string, { page, itemsPerPage }: PaginationParams) {
+    const materials = this.items.filter(
+      (item) => item.companyId.toString() === companyId
+    );
+
+    const totalItems = materials.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const paginatedMaterials = materials.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    const meta = {
+      totalItems,
+      itemCount: paginatedMaterials.length,
+      itemsPerPage,
+      totalPages,
+      currentPage: page,
+    };
+
+    return {
+      data: paginatedMaterials.length > 0 ? paginatedMaterials : null,
+      meta,
+    };
   }
 
   async update(material: Material): Promise<void> {

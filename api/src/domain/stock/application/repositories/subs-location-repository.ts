@@ -1,3 +1,4 @@
+import { PaginationParams } from "@/core/repositories/pagination-params";
 import { SubLocation } from "@/domain/stock/enterprise/entities/sub-location";
 
 export abstract class SubsLocationRepository {
@@ -8,7 +9,20 @@ export abstract class SubsLocationRepository {
     locationId: string,
     name: string
   ): Promise<SubLocation | null>;
-  abstract fetchAll(companyId: string): Promise<SubLocation[]>;
+  abstract fetchAll(
+    companyId: string,
+    locationId: string,
+    { page, itemsPerPage }: PaginationParams
+  ): Promise<{
+    data: SubLocation[] | null;
+    meta: {
+      totalItems: number;
+      itemCount: number;
+      itemsPerPage: number;
+      totalPages: number;
+      currentPage: number;
+    };
+  } | null>;
   abstract update(sublocation: SubLocation): Promise<void>;
   abstract delete(sublocation: SubLocation): Promise<void>;
 }
