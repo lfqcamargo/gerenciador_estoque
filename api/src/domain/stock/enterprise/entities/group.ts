@@ -10,6 +10,10 @@ export interface GroupProps {
 }
 
 export class Group extends AggregateRoot<GroupProps> {
+  get companyId(): UniqueEntityID {
+    return this.props.companyId;
+  }
+
   get name(): string {
     return this.props.name;
   }
@@ -24,10 +28,6 @@ export class Group extends AggregateRoot<GroupProps> {
 
   set active(value: boolean) {
     this.props.active = value;
-  }
-
-  get companyId(): UniqueEntityID {
-    return this.props.companyId;
   }
 
   get createdAt(): Date {

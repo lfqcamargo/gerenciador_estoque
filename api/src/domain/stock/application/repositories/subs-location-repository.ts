@@ -1,0 +1,13 @@
+import { SubLocation } from "@/domain/stock/enterprise/entities/sub-location";
+
+export abstract class SubsLocationRepository {
+  abstract create(sublocation: SubLocation): Promise<void>;
+  abstract findById(id: string): Promise<SubLocation | null>;
+  abstract findByName(
+    companyId: string,
+    name: string
+  ): Promise<SubLocation | null>;
+  abstract fetchAll(companyId: string): Promise<SubLocation[]>;
+  abstract update(sublocation: SubLocation): Promise<void>;
+  abstract delete(sublocation: SubLocation): Promise<void>;
+}

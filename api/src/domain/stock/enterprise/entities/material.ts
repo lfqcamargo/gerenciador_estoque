@@ -3,26 +3,41 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 
 export interface MaterialProps {
-  name: string;
+  companyId: UniqueEntityID;
   groupId: UniqueEntityID;
+
+  name: string;
+  active: boolean;
   createdAt: Date;
 }
 
 export class Material extends AggregateRoot<MaterialProps> {
-  get name() {
-    return this.props.name;
+  get companyId() {
+    return this.props.companyId;
   }
 
   get groupId() {
     return this.props.groupId;
   }
 
-  get createdAt() {
-    return this.props.createdAt;
+  get name() {
+    return this.props.name;
   }
 
   set name(value: string) {
     this.props.name = value;
+  }
+
+  get active() {
+    return this.props.active;
+  }
+
+  set active(value: boolean) {
+    this.props.active = value;
+  }
+
+  get createdAt() {
+    return this.props.createdAt;
   }
 
   static create(

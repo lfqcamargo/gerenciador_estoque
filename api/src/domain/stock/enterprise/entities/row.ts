@@ -3,22 +3,32 @@ import { UniqueEntityID } from "@/core/entities/unique-entity-id";
 import { Optional } from "@/core/types/optional";
 
 export interface RowProps {
+  companyId: UniqueEntityID;
+
   name: string;
-  subLocationId: UniqueEntityID;
+  active: boolean;
   createdAt: Date;
 }
 
 export class Row extends AggregateRoot<RowProps> {
+  get companyId() {
+    return this.props.companyId;
+  }
+
   get name() {
     return this.props.name;
   }
 
-  get subLocationId() {
-    return this.props.subLocationId;
-  }
-
   set name(value: string) {
     this.props.name = value;
+  }
+
+  get active() {
+    return this.props.active;
+  }
+
+  set active(value: boolean) {
+    this.props.active = value;
   }
 
   get createdAt() {
