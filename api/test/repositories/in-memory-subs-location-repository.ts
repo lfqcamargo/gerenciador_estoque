@@ -15,11 +15,13 @@ export class InMemorySubsLocationRepository implements SubsLocationRepository {
 
   async findByName(
     companyId: string,
+    locationId: string,
     name: string
   ): Promise<SubLocation | null> {
     const sublocation = this.items.find(
       (item) =>
         item.companyId.toString() === companyId &&
+        item.locationId.toString() === locationId &&
         item.name.toLowerCase() === name.toLowerCase()
     );
     return sublocation ?? null;

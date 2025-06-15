@@ -4,6 +4,7 @@ import { Optional } from "@/core/types/optional";
 
 export interface GroupProps {
   companyId: UniqueEntityID;
+
   name: string;
   active: boolean;
   createdAt: Date;

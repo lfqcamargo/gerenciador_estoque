@@ -5,6 +5,7 @@ export abstract class SubsLocationRepository {
   abstract findById(id: string): Promise<SubLocation | null>;
   abstract findByName(
     companyId: string,
+    locationId: string,
     name: string
   ): Promise<SubLocation | null>;
   abstract fetchAll(companyId: string): Promise<SubLocation[]>;
